@@ -13,11 +13,11 @@
         }
 
         :root {
-            --primary-orange: #FF6B35;
-            --primary-orange-dark: #E85A28;
+            --primary-orange: #E55A20;
+            --primary-orange-dark: #C94D1A;
             --primary-orange-light: #FFF5F0;
 
-            --success-green: #10B981;
+            --success-green: #059669;
             --success-green-light: #D1FAE5;
 
             --warning-yellow: #F59E0B;
@@ -29,7 +29,7 @@
             --purple: #8B5CF6;
             --purple-light: #EDE9FE;
 
-            --danger-red: #EF4444;
+            --danger-red: #DC2626;
             --danger-red-light: #FEE2E2;
 
             --gray-50: #FAFAFA;
@@ -45,6 +45,17 @@
 
             --white: #FFFFFF;
             --border: #E5E7EB;
+
+            --blue-50: #EFF6FF;
+            --blue-200: #BFDBFE;
+            --blue-700: #1E40AF;
+            --blue-800: #1E3A8A;
+            --amber-600: #D97706;
+            --amber-900: #92400E;
+            --green-800: #065F46;
+            --red-700: #DC2626;
+            --slate-100: #F1F5F9;
+            --yellow-300: #FDE68A;
 
             --spacing-xs: 4px;
             --spacing-sm: 8px;
@@ -131,7 +142,7 @@
 
         /* Buttons */
         .btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: var(--radius-lg);
             font-size: 14px;
             font-weight: 600;
@@ -165,25 +176,20 @@
         }
 
         .btn-configure {
-            background: #1E40AF;
+            background: var(--blue-700);
             color: white;
-            border: none;
-            padding: 8px 16px;
             border-radius: var(--radius-md);
             font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
         .btn-configure:hover {
-            background: #1E3A8A;
+            background: var(--blue-800);
         }
 
         /* Agent Status Bar */
         .agent-status-bar {
-            background: #EFF6FF;
-            border: 1px solid #BFDBFE;
+            background: var(--blue-50);
+            border: 1px solid var(--blue-200);
             border-radius: var(--radius-lg);
             padding: 12px var(--spacing-md);
             display: flex;
@@ -209,7 +215,7 @@
 
         .agent-status-label {
             font-weight: 700;
-            color: #1E40AF;
+            color: var(--blue-700);
             font-size: 14px;
         }
 
@@ -253,8 +259,8 @@
         }
 
         .agent-dropdown-item.active {
-            background: #EFF6FF;
-            color: #1E40AF;
+            background: var(--blue-50);
+            color: var(--blue-700);
             font-weight: 600;
         }
 
@@ -273,7 +279,7 @@
 
         .agent-status-bar.mode-test {
             background: #FEF3C7;
-            border-color: #FDE68A;
+            border-color: var(--yellow-300);
         }
 
         .agent-status-bar.mode-test .agent-status-dot {
@@ -281,7 +287,7 @@
         }
 
         .agent-status-bar.mode-test .agent-status-label {
-            color: #92400E;
+            color: var(--amber-900);
         }
 
         /* Anchor Navigation */
@@ -293,8 +299,8 @@
         }
 
         .anchor-link {
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 10px 16px;
+            border-radius: 16px;
             font-size: 12px;
             font-weight: 600;
             color: var(--gray-500);
@@ -407,14 +413,14 @@
         /* Summary Pills */
         .summary-pills {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-shrink: 0;
             flex-wrap: wrap;
         }
 
         .summary-pill {
-            padding: 3px 10px;
-            border-radius: 12px;
+            padding: 4px 12px;
+            border-radius: 16px;
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.03em;
@@ -423,7 +429,7 @@
 
         .pill-agent {
             background: #D1FAE5;
-            color: #065F46;
+            color: var(--green-800);
         }
 
         .pill-flag {
@@ -432,8 +438,8 @@
         }
 
         .pill-confidential {
-            background: #FDE68A;
-            color: #92400E;
+            background: var(--yellow-300);
+            color: var(--amber-900);
         }
 
         .expand-icon {
@@ -484,11 +490,11 @@
 
         .rule-group-confidential {
             background: #FEF3C7;
-            border-color: #FDE68A;
+            border-color: var(--yellow-300);
         }
 
         .rule-group-header {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .rule-group-badge {
@@ -496,13 +502,13 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            padding: 3px 10px;
-            border-radius: 12px;
+            padding: 4px 12px;
+            border-radius: 16px;
         }
 
         .badge-agent {
             background: #D1FAE5;
-            color: #065F46;
+            color: var(--green-800);
         }
 
         .badge-flag {
@@ -511,8 +517,8 @@
         }
 
         .badge-confidential {
-            background: #FDE68A;
-            color: #92400E;
+            background: var(--yellow-300);
+            color: var(--amber-900);
         }
 
         .rule-group-item {
@@ -543,7 +549,7 @@
         .access-roles {
             text-decoration: underline dotted;
             cursor: pointer;
-            color: #92400E;
+            color: var(--amber-900);
             font-weight: 600;
         }
 
@@ -598,7 +604,7 @@
 
         .flags-override-header {
             font-weight: 700;
-            color: #DC2626;
+            color: var(--red-700);
             font-size: 14px;
             margin-bottom: 12px;
         }
@@ -617,7 +623,7 @@
         .flags-override-note {
             font-size: 11px;
             color: var(--gray-500);
-            margin-top: 10px;
+            margin-top: 12px;
             font-style: italic;
         }
 
@@ -839,12 +845,12 @@
             border: 1.5px solid var(--purple);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .action-approver {
             background: var(--warning-yellow-light);
-            color: #D97706;
+            color: var(--amber-600);
             padding: 6px 14px;
             border-radius: var(--radius-md);
             font-size: 14px;
@@ -858,7 +864,7 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #D97706;
+            background: var(--amber-600);
             color: white;
             display: flex;
             align-items: center;
@@ -898,7 +904,7 @@
         .default-badge {
             display: inline-block;
             background: #D1FAE5;
-            color: #065F46;
+            color: var(--green-800);
             font-size: 10px;
             font-weight: 700;
             padding: 2px 8px;
@@ -933,7 +939,7 @@
         }
 
         .agent-panel-header {
-            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+            background: linear-gradient(135deg, var(--blue-50), #DBEAFE);
             padding: var(--spacing-lg);
             border-bottom: 1px solid var(--border);
         }
@@ -997,11 +1003,11 @@
         .agent-mode-options {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         .mode-option {
-            padding: 10px 12px;
+            padding: 12px 16px;
             border-radius: var(--radius-lg);
             font-size: 13px;
             color: var(--gray-600);
@@ -1018,9 +1024,9 @@
         }
 
         .mode-option.active {
-            background: #EFF6FF;
-            border-color: #BFDBFE;
-            color: #1E40AF;
+            background: var(--blue-50);
+            border-color: var(--blue-200);
+            color: var(--blue-700);
             font-weight: 600;
         }
 
@@ -1057,14 +1063,14 @@
         .hierarchy-flow {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-size: 12px;
             flex-wrap: wrap;
         }
 
         .hierarchy-item {
             padding: 4px 10px;
-            border-radius: 12px;
+            border-radius: 16px;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -1081,7 +1087,7 @@
 
         .hierarchy-item.workflows {
             background: var(--info-blue-light);
-            color: #1E40AF;
+            color: var(--blue-700);
         }
 
         .hierarchy-arrow {
@@ -1110,7 +1116,7 @@
 
         .suggestion-card {
             background: #FFFBEB;
-            border: 1px solid #FDE68A;
+            border: 1px solid var(--yellow-300);
             border-radius: var(--radius-lg);
             padding: 12px;
             margin-bottom: var(--spacing-sm);
@@ -1132,14 +1138,14 @@
 
         .suggestion-actions {
             display: flex;
-            gap: 6px;
+            gap: 8px;
         }
 
         .btn-apply {
-            background: #1E40AF;
+            background: var(--blue-700);
             color: white;
             border: none;
-            padding: 5px 12px;
+            padding: 10px 16px;
             border-radius: var(--radius-md);
             font-size: 11px;
             font-weight: 600;
@@ -1148,14 +1154,14 @@
         }
 
         .btn-apply:hover {
-            background: #1E3A8A;
+            background: var(--blue-800);
         }
 
         .btn-ignore {
             background: transparent;
             color: var(--gray-500);
             border: 1px solid var(--gray-300);
-            padding: 5px 12px;
+            padding: 10px 16px;
             border-radius: var(--radius-md);
             font-size: 11px;
             font-weight: 500;
@@ -1228,7 +1234,7 @@
 
         /* Navigation Tabs */
         .nav-tabs {
-            background: #F1F5F9;
+            background: var(--slate-100);
             border-radius: var(--radius-lg);
             padding: 4px;
             display: flex;
@@ -1237,7 +1243,8 @@
         }
 
         .nav-tab {
-            padding: 8px 20px;
+            padding: 10px 20px;
+            min-height: 44px;
             border: none;
             background: transparent;
             border-radius: var(--radius-md);
@@ -1312,8 +1319,8 @@
         }
 
         .modal-close {
-            width: 32px;
-            height: 32px;
+            width: 44px;
+            height: 44px;
             border-radius: var(--radius-md);
             background: var(--gray-100);
             border: none;
@@ -1605,7 +1612,7 @@
             position: fixed;
             bottom: 24px;
             right: 24px;
-            background: #065F46;
+            background: var(--green-800);
             color: white;
             padding: 12px 20px;
             border-radius: var(--radius-lg);
@@ -1657,15 +1664,43 @@
             max-width: 480px;
         }
 
-        /* Responsive: >= 1024px */
+        /* Focus-visible styles */
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        [tabindex]:focus-visible {
+            outline: 3px solid var(--info-blue);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
+        }
+        .modal-close:focus-visible {
+            outline: 2px solid var(--info-blue);
+            outline-offset: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1280px) {
+            .container { padding: var(--spacing-lg); }
+        }
         @media (max-width: 1100px) {
             .hub-layout {
                 grid-template-columns: 1fr;
             }
-
             .agent-panel {
                 position: static;
+                order: -1;
             }
+            .agent-panel-card {
+                margin-bottom: var(--spacing-lg);
+            }
+        }
+        @media (max-width: 1024px) {
+            .container { padding: var(--spacing-md); }
+        }
+        @media (max-width: 768px) {
+            .header-content { flex-wrap: wrap; gap: var(--spacing-md); }
+            .agent-status-bar { flex-direction: column; align-items: flex-start; gap: var(--spacing-sm); }
+            .nav-tabs { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -1685,6 +1720,7 @@
     </div>
 
     <!-- Main Content -->
+    <main>
     <div class="container">
         <div>
             <h1 class="page-title">Políticas de Gastos</h1>
@@ -1696,10 +1732,10 @@
             <div class="agent-status-left">
                 <span class="agent-status-dot"></span>
                 <span class="agent-status-label">Policy Agent ativo</span>
-                <span class="agent-status-info">Modo: Aprovação automática para &lt; R$ 2.000 · 99.1% acurácia (90 dias) · 847 transações avaliadas</span>
+                <span class="agent-status-info">Modo: Aprovação automática para até R$ 2.000 · 99.1% acurácia (90 dias) · 847 transações avaliadas</span>
             </div>
             <div class="agent-status-right">
-                <button class="btn-configure" onclick="toggleAgentDropdown(event)">Configurar</button>
+                <button class="btn btn-configure" onclick="toggleAgentDropdown(event)">Alterar modo</button>
                 <div class="agent-dropdown" id="agentDropdown">
                     <div class="agent-dropdown-item" onclick="setAgentMode('off', event)">Desativar Agent</div>
                     <div class="agent-dropdown-item" onclick="setAgentMode('test', event)">Modo teste (admins only)</div>
@@ -1710,12 +1746,14 @@
         </div>
 
         <!-- Navigation Tabs -->
-        <div class="nav-tabs" id="navTabs">
-            <button class="nav-tab active" onclick="switchMainTab('regras', event)">Regras</button>
-            <button class="nav-tab" onclick="switchMainTab('documento', event)">Documento</button>
-            <button class="nav-tab" onclick="switchMainTab('compliance', event)">Compliance</button>
-            <button class="nav-tab" onclick="switchMainTab('historico', event)">Histórico</button>
+        <nav aria-label="Navegação principal">
+        <div class="nav-tabs" id="navTabs" role="tablist" aria-label="Seções">
+            <button class="nav-tab active" role="tab" onclick="switchMainTab('regras', event)">Regras</button>
+            <button class="nav-tab" role="tab" onclick="switchMainTab('documento', event)">Documento</button>
+            <button class="nav-tab" role="tab" onclick="switchMainTab('compliance', event)">Compliance</button>
+            <button class="nav-tab" role="tab" onclick="switchMainTab('historico', event)">Histórico</button>
         </div>
+        </nav>
 
         <!-- Tab Placeholders -->
         <div class="tab-placeholder" id="placeholder-documento" style="display:none;">
@@ -1744,27 +1782,29 @@
                 </div>
 
                 <!-- Anchor Navigation -->
+                <nav aria-label="Links rápidos">
                 <div class="anchor-nav">
                     <a class="anchor-link" onclick="scrollToPolicy('policy-solicitacoes')">📋 Solicitações</a>
                     <a class="anchor-link" onclick="scrollToPolicy('policy-cartao')">💳 Cartão</a>
                     <a class="anchor-link" onclick="scrollToPolicy('policy-reembolsos')">📄 Reembolsos</a>
                     <a class="anchor-link" onclick="scrollToPolicy('policy-viagens')">✈️ Viagens</a>
                 </div>
+                </nav>
 
                 <!-- Política 1: Solicitações -->
                 <div class="accordion-card" id="policy-solicitacoes" style="--bg-start: #F0F9FF; --bg-end: #E0F2FE;">
-                    <div class="accordion-header" onclick="toggleAccordion(this.parentElement)">
+                    <div class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
                         <div class="accordion-header-left">
                             <div class="policy-icon">📋</div>
                             <div>
-                                <div class="policy-name">Solicitações</div>
+                                <h3 class="policy-name">Solicitações</h3>
                                 <div class="policy-description">Aprovação de solicitações de compra</div>
                             </div>
                         </div>
                         <div class="summary-pills">
                             <span class="summary-pill pill-agent">2 Agent</span>
                             <span class="summary-pill pill-flag">2 Flags</span>
-                            <span class="summary-pill pill-confidential">1 Conf.</span>
+                            <span class="summary-pill pill-confidential">1 Confid.</span>
                         </div>
                         <svg class="expand-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -1948,18 +1988,18 @@
 
                 <!-- Política 2: Despesas de Cartão -->
                 <div class="accordion-card" id="policy-cartao" style="--bg-start: #FEF3C7; --bg-end: #FDE68A;">
-                    <div class="accordion-header" onclick="toggleAccordion(this.parentElement)">
+                    <div class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
                         <div class="accordion-header-left">
                             <div class="policy-icon">💳</div>
                             <div>
-                                <div class="policy-name">Despesas de Cartão</div>
+                                <h3 class="policy-name">Despesas de Cartão</h3>
                                 <div class="policy-description">Transações com cartões corporativos</div>
                             </div>
                         </div>
                         <div class="summary-pills">
                             <span class="summary-pill pill-agent">2 Agent</span>
                             <span class="summary-pill pill-flag">3 Flags</span>
-                            <span class="summary-pill pill-confidential">1 Conf.</span>
+                            <span class="summary-pill pill-confidential">1 Confid.</span>
                         </div>
                         <svg class="expand-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -2000,7 +2040,7 @@
                                 <span>✏️</span> <span>Editar Regras</span>
                             </button>
                             <button class="btn btn-primary" onclick="event.stopPropagation()">
-                                <span>👁️</span> <span>Ver Detalhes</span>
+                                <span>👁️</span> <span>Ver Regras</span>
                             </button>
                         </div>
                     </div>
@@ -2008,18 +2048,18 @@
 
                 <!-- Política 3: Reembolsos -->
                 <div class="accordion-card" id="policy-reembolsos" style="--bg-start: #F3E8FF; --bg-end: #E9D5FF;">
-                    <div class="accordion-header" onclick="toggleAccordion(this.parentElement)">
+                    <div class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
                         <div class="accordion-header-left">
                             <div class="policy-icon">📄</div>
                             <div>
-                                <div class="policy-name">Reembolsos</div>
+                                <h3 class="policy-name">Reembolsos</h3>
                                 <div class="policy-description">Solicitações de reembolso de despesas</div>
                             </div>
                         </div>
                         <div class="summary-pills">
                             <span class="summary-pill pill-agent">2 Agent</span>
                             <span class="summary-pill pill-flag">3 Flags</span>
-                            <span class="summary-pill pill-confidential">1 Conf.</span>
+                            <span class="summary-pill pill-confidential">1 Confid.</span>
                         </div>
                         <svg class="expand-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -2060,7 +2100,7 @@
                                 <span>✏️</span> <span>Editar Regras</span>
                             </button>
                             <button class="btn btn-primary" onclick="event.stopPropagation()">
-                                <span>👁️</span> <span>Ver Detalhes</span>
+                                <span>👁️</span> <span>Ver Regras</span>
                             </button>
                         </div>
                     </div>
@@ -2068,18 +2108,18 @@
 
                 <!-- Política 4: Viagens -->
                 <div class="accordion-card" id="policy-viagens" style="--bg-start: #D1FAE5; --bg-end: #A7F3D0;">
-                    <div class="accordion-header" onclick="toggleAccordion(this.parentElement)">
+                    <div class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
                         <div class="accordion-header-left">
                             <div class="policy-icon">✈️</div>
                             <div>
-                                <div class="policy-name">Viagens</div>
+                                <h3 class="policy-name">Viagens</h3>
                                 <div class="policy-description">Despesas de viagens corporativas</div>
                             </div>
                         </div>
                         <div class="summary-pills">
                             <span class="summary-pill pill-agent">2 Agent</span>
                             <span class="summary-pill pill-flag">2 Flags</span>
-                            <span class="summary-pill pill-confidential">1 Conf.</span>
+                            <span class="summary-pill pill-confidential">1 Confid.</span>
                         </div>
                         <svg class="expand-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -2119,7 +2159,7 @@
                                 <span>✏️</span> <span>Editar Regras</span>
                             </button>
                             <button class="btn btn-primary" onclick="event.stopPropagation()">
-                                <span>👁️</span> <span>Ver Detalhes</span>
+                                <span>👁️</span> <span>Ver Regras</span>
                             </button>
                         </div>
                     </div>
@@ -2212,6 +2252,9 @@
                                     <button class="btn-ignore" onclick="ignoreSuggestion('suggestion-3', event)">Ignorar</button>
                                 </div>
                             </div>
+                            <div class="suggestions-empty" id="suggestionsEmpty" style="display:none; text-align:center; padding:24px; color:var(--gray-500); font-size:13px;">
+                                Nenhuma sugestão pendente. O Agent analisará novos padrões em breve.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2235,28 +2278,29 @@
             </div>
         </div>
     </div>
+    </main>
 
     <!-- Modal: Nova Política -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModalIfOutside(event)">
-        <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-overlay" id="modalOverlay" role="presentation" onclick="closeModalIfOutside(event)">
+        <div class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <div class="modal-header-top">
-                    <h2 class="modal-title">✨ Criar Nova Política</h2>
-                    <button class="modal-close" onclick="closeModal()">✕</button>
+                    <h2 class="modal-title" id="modal-title">✨ Criar Nova Política</h2>
+                    <button class="modal-close" aria-label="Fechar modal" onclick="closeModal()">✕</button>
                 </div>
                 <p class="modal-subtitle">Escolha como deseja criar sua política</p>
             </div>
 
             <div class="modal-body">
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('upload', event)">📄 Upload de PDF</button>
-                    <button class="tab" onclick="switchTab('prompt', event)">💬 Descrever com IA</button>
-                    <button class="tab" onclick="switchTab('template', event)">📋 Template Payfy</button>
-                    <button class="tab" onclick="switchTab('manual', event)">✏️ Criar Manualmente</button>
+                <div class="tabs" role="tablist" aria-label="Método de criação">
+                    <button class="tab active" role="tab" aria-selected="true" onclick="switchTab('upload', event)">📄 Upload de PDF</button>
+                    <button class="tab" role="tab" aria-selected="false" onclick="switchTab('prompt', event)">💬 Descrever com IA</button>
+                    <button class="tab" role="tab" aria-selected="false" onclick="switchTab('template', event)">📋 Template Payfy</button>
+                    <button class="tab" role="tab" aria-selected="false" onclick="switchTab('manual', event)">✏️ Criar Manualmente</button>
                 </div>
 
                 <!-- Upload Tab -->
-                <div class="tab-content active" id="tab-upload">
+                <div class="tab-content active" id="tab-upload" role="tabpanel">
                     <div class="upload-container" id="uploadContainer">
                         <div class="upload-area" id="uploadArea">
                             <div class="upload-icon">📄</div>
@@ -2324,14 +2368,14 @@
                 </div>
 
                 <!-- Prompt Tab -->
-                <div class="tab-content" id="tab-prompt">
+                <div class="tab-content" id="tab-prompt" role="tabpanel">
                     <p style="color: var(--gray-600); margin-bottom: var(--spacing-md);">
                         Em breve: Descreva suas regras em linguagem natural e deixe a IA criar automaticamente.
                     </p>
                 </div>
 
                 <!-- Template Tab -->
-                <div class="tab-content" id="tab-template">
+                <div class="tab-content" id="tab-template" role="tabpanel">
                     <div style="background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: 12px; padding: 32px; text-align: center;">
                         <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
                         <h3 style="font-size: 18px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px;">Template Payfy — Melhores Práticas Brasil</h3>
@@ -2350,7 +2394,7 @@
                 </div>
 
                 <!-- Manual Tab -->
-                <div class="tab-content" id="tab-manual">
+                <div class="tab-content" id="tab-manual" role="tabpanel">
                     <p style="color: var(--gray-600); margin-bottom: var(--spacing-lg);">
                         Você será redirecionado para o configurador visual de regras.
                     </p>
@@ -2366,6 +2410,11 @@
         // Accordion Toggle
         function toggleAccordion(card) {
             card.classList.toggle('expanded');
+            var header = card.querySelector('.accordion-header');
+            if (header) {
+                var expanded = card.classList.contains('expanded');
+                header.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            }
         }
 
         // Anchor Navigation
@@ -2388,6 +2437,7 @@
 
         function setAgentMode(mode, event) {
             event.stopPropagation();
+            if (mode === 'off' && !confirm('Tem certeza que deseja desativar o Policy Agent?')) { return; }
             var bar = document.getElementById('agentStatusBar');
             var label = bar.querySelector('.agent-status-label');
             var info = bar.querySelector('.agent-status-info');
@@ -2417,7 +2467,7 @@
                     break;
                 case 'auto':
                     label.textContent = 'Policy Agent ativo';
-                    info.textContent = 'Modo: Aprovação automática para < R$ 2.000 · 99.1% acurácia (90 dias) · 847 transações avaliadas';
+                    info.textContent = 'Modo: Aprovação automática para até R$ 2.000 · 99.1% acurácia (90 dias) · 847 transações avaliadas';
                     break;
             }
             document.getElementById('agentDropdown').classList.remove('show');
@@ -2425,6 +2475,7 @@
 
         // Agent Panel Mode Selector
         function setAgentModePanel(mode, element) {
+            if (mode === 'off' && !confirm('Tem certeza que deseja desativar o Policy Agent?')) { return; }
             document.querySelectorAll('.mode-option').forEach(function(opt) {
                 opt.classList.remove('active');
             });
@@ -2461,7 +2512,7 @@
                     break;
                 case 'auto':
                     label.textContent = 'Policy Agent ativo';
-                    info.textContent = 'Modo: Aprovação automática para < R$ 2.000 · 99.1% acurácia (90 dias) · 847 transações avaliadas';
+                    info.textContent = 'Modo: Aprovação automática para até R$ 2.000 · 99.1% acurácia (90 dias) · 847 transações avaliadas';
                     items[3].classList.add('active');
                     break;
             }
@@ -2533,11 +2584,22 @@
         }
 
         // Suggestions
+        function checkSuggestionsEmpty() {
+            var cards = document.querySelectorAll('.suggestion-card');
+            var allHidden = true;
+            cards.forEach(function(c) {
+                if (c.style.display !== 'none') allHidden = false;
+            });
+            if (allHidden) {
+                document.getElementById('suggestionsEmpty').style.display = 'block';
+            }
+        }
+
         function applySuggestion(id, policyName, event) {
             event.stopPropagation();
             var card = document.getElementById(id);
             card.classList.add('fade-out');
-            setTimeout(function() { card.style.display = 'none'; }, 400);
+            setTimeout(function() { card.style.display = 'none'; checkSuggestionsEmpty(); }, 400);
             showToast('✓ Regra adicionada à Política de ' + policyName);
         }
 
@@ -2545,7 +2607,7 @@
             event.stopPropagation();
             var card = document.getElementById(id);
             card.classList.add('fade-out');
-            setTimeout(function() { card.style.display = 'none'; }, 400);
+            setTimeout(function() { card.style.display = 'none'; checkSuggestionsEmpty(); }, 400);
         }
 
         // Modal
@@ -2566,9 +2628,10 @@
 
         function switchTab(tabName, event) {
             event.stopPropagation();
-            document.querySelectorAll('.tab').forEach(function(tab) { tab.classList.remove('active'); });
+            document.querySelectorAll('.tab').forEach(function(tab) { tab.classList.remove('active'); tab.setAttribute('aria-selected', 'false'); });
             document.querySelectorAll('.tab-content').forEach(function(content) { content.classList.remove('active'); });
             event.target.classList.add('active');
+            event.target.setAttribute('aria-selected', 'true');
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
