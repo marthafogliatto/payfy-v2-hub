@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payfy - Políticas de Gastos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-orange: #E55A20;
+            --primary-orange-dark: #C94D1A;
+            --primary-orange-light: #FFF5F0;
+            
+            --success-green: #059669;
+            --success-green-light: #D1FAE5;
+            
+            --warning-yellow: #F59E0B;
+            --warning-yellow-light: #FEF3C7;
+            
+            --info-blue: #3B82F6;
+            --info-blue-light: #DBEAFE;
+            
+            --purple: #8B5CF6;
+            --purple-light: #EDE9FE;
+            
+            --danger-red: #DC2626;
+            --danger-red-light: #FEE2E2;
+            
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+            
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+            --radius-2xl: 16px;
+            
+            --blue-50: #EFF6FF;
+            --blue-200: #BFDBFE;
+            --blue-700: #1E40AF;
+            --blue-800: #1E3A8A;
+            --amber-600: #D97706;
+            --amber-900: #92400E;
+            --green-800: #065F46;
+            --red-700: #DC2626;
+            --slate-100: #F1F5F9;
+            --yellow-300: #FDE68A;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl);
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: var(--spacing-lg) 0;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-orange);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .btn-primary {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-orange-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+        }
+
+        /* Policies Grid */
+        .policies-section {
+            margin-top: var(--spacing-xl);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .policies-grid {
+            display: grid;
+            gap: var(--spacing-lg);
+        }
+
+        .policy-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .policy-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .policy-header {
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .policy-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .policy-type {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .policy-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .policy-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .policy-badge {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-new {
+            background: var(--success-green-light);
+            color: var(--success-green);
+        }
+
+        .policy-description {
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+
+        .policy-body {
+            padding: var(--spacing-xl);
+            display: none;
+            background: var(--gray-50);
+        }
+
+        .policy-card.expanded .policy-body {
+            display: block;
+        }
+
+        /* Rule Builder Structure */
+        .rule-builder {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .trigger-block {
+            background: var(--white);
+            border: 2px solid var(--info-blue);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .trigger-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .trigger-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--info-blue-light);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--info-blue);
+            font-size: 20px;
+        }
+
+        .trigger-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+            flex: 1;
+        }
+
+        .trigger-badge {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .trigger-content {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding-left: 52px;
+        }
+
+        .trigger-label {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .trigger-value {
+            background: var(--success-green-light);
+            color: var(--success-green);
+            padding: 8px 12px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            border: 1.5px solid var(--success-green);
+        }
+
+        .connector {
+            width: 2px;
+            height: 24px;
+            background: var(--gray-300);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .connector::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid var(--gray-300);
+        }
+
+        .condition-block {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .condition-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .condition-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gray-100);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            font-size: 18px;
+        }
+
+        .condition-title {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .condition-row {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            padding-left: 48px;
+            flex-wrap: wrap;
+        }
+
+        .condition-keyword {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .condition-field {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .condition-value {
+            background: var(--gray-100);
+            padding: 8px 12px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            color: var(--gray-900);
+            font-weight: 500;
+        }
+
+        .nested-actions {
+            margin-left: 48px;
+            border-left: 2px solid var(--gray-200);
+            padding-left: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+        }
+
+        .action-block {
+            background: var(--gray-50);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .action-content {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .action-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .action-icon.approve {
+            background: var(--success-green-light);
+            color: var(--success-green);
+        }
+
+        .action-icon.require {
+            background: var(--warning-yellow-light);
+            color: var(--warning-yellow);
+        }
+
+        .action-icon.ai {
+            background: var(--purple-light);
+            color: var(--purple);
+        }
+
+        .action-keyword {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .action-agent {
+            background: var(--purple-light);
+            color: var(--purple);
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            border: 1.5px solid var(--purple);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-approver {
+            background: var(--warning-yellow-light);
+            color: var(--amber-600);
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .approver-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--amber-600);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .final-action {
+            background: var(--success-green-light);
+            border: 1.5px solid var(--success-green);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .final-action-icon {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--success-green);
+            font-size: 20px;
+        }
+
+        .final-action-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .expand-icon {
+            transition: transform 0.3s;
+            color: var(--gray-500);
+            margin-left: auto;
+        }
+
+        .policy-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .rules-preview {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .rules-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-sm);
+            border-left: 3px solid var(--rule-color);
+        }
+
+        .rule-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--rule-color);
+            flex-shrink: 0;
+        }
+
+        .rule-text {
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+
+        .policy-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: var(--spacing-xl);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal-close {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: var(--gray-100);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-200);
+            color: var(--gray-900);
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .modal-body {
+            padding: var(--spacing-xl);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab {
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: var(--gray-900);
+        }
+
+        .tab.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--primary-orange);
+            background: var(--primary-orange-light);
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--spacing-lg);
+            background: var(--gray-100);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .upload-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .upload-subtitle {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .upload-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: 12px 24px;
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-button:hover {
+            background: var(--primary-orange-dark);
+        }
+
+        .upload-info {
+            margin-top: var(--spacing-md);
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Processing */
+        .processing-container {
+            display: none;
+        }
+
+        .processing-container.active {
+            display: block;
+        }
+
+        .processing-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .processing-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--spacing-md);
+            background: linear-gradient(135deg, var(--purple-light), var(--info-blue-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .processing-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .processing-subtitle {
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+
+        .processing-steps {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .processing-step {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .processing-step.active {
+            background: var(--primary-orange-light);
+            border: 1px solid var(--primary-orange);
+        }
+
+        .processing-step.completed {
+            background: var(--success-green-light);
+        }
+
+        .processing-step-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .processing-step-text {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .processing-step-status {
+            font-size: 11px;
+            color: var(--gray-500);
+            font-weight: 600;
+        }
+
+        .processing-step.completed .processing-step-status {
+            color: var(--success-green);
+        }
+
+        /* Success State */
+        .success-container {
+            display: none;
+            text-align: center;
+        }
+
+        .success-container.active {
+            display: block;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--spacing-lg);
+            background: var(--success-green-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--success-green);
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .success-subtitle {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .success-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .success-stat {
+            padding: var(--spacing-lg);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .success-stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .success-stat-label {
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        .success-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+        }
+
+        /* Hidden State */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .policy-card {
+            animation: fadeIn 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        .policy-card:nth-child(1) { animation-delay: 0.1s; }
+        .policy-card:nth-child(2) { animation-delay: 0.2s; }
+        .policy-card:nth-child(3) { animation-delay: 0.3s; }
+        .policy-card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Agent Status Bar */
+        .agent-status-bar {
+            background: var(--blue-50);
+            border: 1px solid var(--blue-200);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        .agent-status-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+        .agent-status-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success-green);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .agent-status-label {
+            font-weight: 700;
+            color: var(--blue-700);
+            font-size: 14px;
+        }
+        .agent-status-info {
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+        .agent-status-right {
+            position: relative;
+        }
+        .btn-configure {
+            background: var(--blue-700);
+            color: white;
+            padding: 12px 20px;
+        }
+        .btn-configure:hover {
+            background: var(--blue-800);
+        }
+        .agent-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            min-width: 280px;
+            z-index: 100;
+            overflow: hidden;
+        }
+        .agent-dropdown.show {
+            display: block;
+        }
+        .agent-dropdown-item {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .agent-dropdown-item:hover {
+            background: var(--gray-50);
+        }
+        .agent-dropdown-item.active {
+            background: var(--blue-50);
+            color: var(--blue-700);
+            font-weight: 600;
+        }
+        .agent-status-bar.mode-off {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+        .agent-status-bar.mode-off .agent-status-dot {
+            background: var(--gray-400);
+        }
+        .agent-status-bar.mode-off .agent-status-label {
+            color: var(--gray-600);
+        }
+        .agent-status-bar.mode-test {
+            background: var(--warning-yellow-light);
+            border-color: var(--yellow-300);
+        }
+        .agent-status-bar.mode-test .agent-status-dot {
+            background: var(--warning-yellow);
+        }
+        .agent-status-bar.mode-test .agent-status-label {
+            color: var(--amber-900);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: var(--slate-100);
+            border-radius: 8px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            margin-bottom: var(--spacing-lg);
+        }
+        .nav-tab {
+            padding: 10px 20px;
+            min-height: 44px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nav-tab:hover {
+            color: var(--gray-700);
+        }
+        .nav-tab.active {
+            background: white;
+            color: var(--gray-900);
+            box-shadow: var(--shadow-sm);
+        }
+        /* Tab Placeholders */
+        .tab-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 40px;
+            text-align: center;
+        }
+        .placeholder-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-lg);
+        }
+        .placeholder-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-sm);
+        }
+        .placeholder-desc {
+            font-size: 14px;
+            color: var(--gray-500);
+            max-width: 480px;
+        }
+
+            
+        /* Rule Groups */
+        .rules-categorized { margin-bottom: var(--spacing-lg); }
+        .rules-categorized.collapsed .category-content { display: none; }
+        .category-toggle { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--gray-100); border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; color:var(--gray-700); margin-bottom:var(--spacing-sm); }
+        .rules-categorized.collapsed .category-toggle svg { transform: rotate(-90deg); }
+        .category-content { display:flex; flex-direction:column; gap:var(--spacing-md); }
+        .rule-group { border-radius:8px; padding:14px; border:1px solid; }
+        .rule-group-agent { background:#F0FDF4; border-color:#BBF7D0; }
+        .rule-group-flag { background:#FEF2F2; border-color:#FECACA; }
+        .rule-group-confidential { background:#FEF3C7; border-color:var(--yellow-300); }
+        .rule-group-header { margin-bottom:12px; }
+        .rule-group-badge { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:4px 12px; border-radius:16px; }
+        .badge-agent { background:#D1FAE5; color:var(--green-800); }
+        .badge-flag { background:#FEE2E2; color:#991B1B; }
+        .badge-confidential { background:var(--yellow-300); color:var(--amber-900); }
+        .rule-group-item { font-size:13px; color:var(--gray-700); padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.05); }
+        .rule-group-item:last-of-type { border-bottom:none; }
+        .flag-note { font-size:11px; color:var(--gray-500); margin-top:8px; font-style:italic; }
+        .confidential-access { font-size:12px; color:var(--gray-600); margin-top:8px; position:relative; }
+        .access-roles { text-decoration:underline dotted; cursor:pointer; color:var(--amber-900); font-weight:600; }
+        .role-dropdown { display:none; position:absolute; top:100%; left:0; background:white; border:1px solid var(--border); border-radius:8px; padding:8px; box-shadow:var(--shadow-lg); z-index:50; min-width:160px; }
+        .role-dropdown.show { display:block; }
+        .role-dropdown label { display:flex; align-items:center; gap:8px; padding:6px 8px; font-size:13px; color:var(--gray-700); cursor:pointer; border-radius:4px; }
+        .role-dropdown label:hover { background:var(--gray-50); }
+        .confidential-tooltip { font-size:11px; color:var(--gray-500); margin-top:6px; font-style:italic; }
+        /* Flags Override */
+        .flags-override-section { background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:16px; margin-bottom:var(--spacing-lg); }
+        .flags-override-header { font-weight:700; color:var(--red-700); font-size:14px; margin-bottom:12px; }
+        .flags-override-item { font-size:13px; color:var(--gray-700); padding:8px 0; border-bottom:1px solid rgba(220,38,38,0.1); }
+        .flags-override-item:last-child { border-bottom:none; }
+        .flags-override-note { font-size:11px; color:var(--gray-500); margin-top:10px; font-style:italic; }
+        /* Hierarchy */
+        .default-badge { display:inline-block; background:#D1FAE5; color:var(--green-800); font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; margin-left:8px; vertical-align:middle; cursor:help; }
+        .agent-precondition { font-size:12px; color:var(--gray-500); padding-left:48px; margin-bottom:4px; font-style:italic; }
+
+        /* Suggestions Panel */
+        .suggestions-panel {
+            background: #FFFBEB;
+            border: 1.5px solid var(--yellow-300);
+            border-radius: 12px;
+            padding: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+        }
+        .suggestions-header { margin-bottom: var(--spacing-lg); }
+        .suggestions-title { font-size: 16px; font-weight: 700; color: var(--gray-900); }
+        .suggestions-subtitle { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+        .suggestions-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+        .suggestion-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            transition: opacity 0.4s, transform 0.4s;
+        }
+        .suggestion-card.fade-out {
+            opacity: 0;
+            transform: translateX(20px);
+            pointer-events: none;
+        }
+        .suggestion-content { display: flex; align-items: flex-start; gap: 10px; flex: 1; }
+        .suggestion-icon { font-size: 18px; flex-shrink: 0; }
+        .suggestion-text { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
+        .suggestion-actions { display: flex; gap: 8px; flex-shrink: 0; }
+        .btn-apply {
+            background: var(--blue-700);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-apply:hover { background: var(--blue-800); }
+        .btn-ignore {
+            background: transparent;
+            color: var(--gray-500);
+            border: 1px solid var(--gray-300);
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-ignore:hover { background: var(--gray-50); color: var(--gray-700); }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--green-800);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: var(--shadow-xl);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* Focus-visible styles */
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        [tabindex]:focus-visible {
+            outline: 3px solid var(--info-blue);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
+        }
+        .modal-close:focus-visible {
+            outline: 2px solid var(--info-blue);
+            outline-offset: 1px;
+        }
+
+        /* Responsive media queries */
+        @media (max-width: 1280px) {
+            .container { padding: var(--spacing-lg); }
+        }
+        @media (max-width: 1024px) {
+            .container { padding: var(--spacing-md); }
+            .policies-grid { gap: var(--spacing-md); }
+        }
+        @media (max-width: 768px) {
+            .header-content { flex-wrap: wrap; gap: var(--spacing-md); }
+            .agent-status-bar { flex-direction: column; align-items: flex-start; gap: var(--spacing-sm); }
+            .nav-tabs { flex-wrap: wrap; }
+            .suggestion-card { flex-direction: column; }
+            .suggestion-actions { align-self: flex-end; }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">📊</div>
+                <span>Payfy</span>
+            </div>
+            <button class="btn btn-primary" onclick="openNewPolicyModal()">
+                <span>✨</span>
+                <span>Criar Nova Política</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+    <div class="container">
+        <div>
+            <h1 class="page-title">Políticas de Gastos</h1>
+            <p class="page-subtitle">Gerencie suas políticas de aprovação e configurações</p>
+        
+        <!-- Agent Status Bar -->
+        <div class="agent-status-bar" id="agentStatusBar">
+            <div class="agent-status-left">
+                <span class="agent-status-dot"></span>
+                <span class="agent-status-label">Policy Agent ativo</span>
+                <span class="agent-status-info">Modo: Aprovação automática para até R$ 2.000 · 99.1% acurácia (90 dias) · 847 transações avaliadas</span>
+            </div>
+            <div class="agent-status-right">
+                <button class="btn btn-configure" onclick="toggleAgentDropdown(event)">Alterar modo</button>
+                <div class="agent-dropdown" id="agentDropdown">
+                    <div class="agent-dropdown-item" onclick="setAgentMode('off', event)">Desativar Agent</div>
+                    <div class="agent-dropdown-item" onclick="setAgentMode('test', event)">Modo teste (admins only)</div>
+                    <div class="agent-dropdown-item" onclick="setAgentMode('recommend', event)">Modo recomendação (sugere mas não aprova)</div>
+                    <div class="agent-dropdown-item active" onclick="setAgentMode('auto', event)">Modo aprovação automática</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav aria-label="Navegação principal">
+        <div class="nav-tabs" id="navTabs" role="tablist" aria-label="Seções">
+            <button class="nav-tab active" role="tab" onclick="switchMainTab('regras', event)">Regras</button>
+            <button class="nav-tab" role="tab" onclick="switchMainTab('documento', event)">Documento</button>
+            <button class="nav-tab" role="tab" onclick="switchMainTab('compliance', event)">Compliance</button>
+            <button class="nav-tab" role="tab" onclick="switchMainTab('historico', event)">Histórico</button>
+        </div>
+        </nav>
+
+        <!-- Tab placeholders -->
+        <div class="tab-placeholder" id="placeholder-documento" style="display:none;">
+            <div class="placeholder-icon">📄</div>
+            <div class="placeholder-title">Documento de Política</div>
+            <div class="placeholder-desc">Documento de política gerado automaticamente a partir das suas regras. Editável a qualquer momento. Em breve.</div>
+        </div>
+        <div class="tab-placeholder" id="placeholder-compliance" style="display:none;">
+            <div class="placeholder-icon">📊</div>
+            <div class="placeholder-title">Dashboard de Compliance</div>
+            <div class="placeholder-desc">Dashboard de compliance com métricas de acurácia do Agent, análise por departamento, e categorias de risco. Em breve.</div>
+        </div>
+        <div class="tab-placeholder" id="placeholder-historico" style="display:none;">
+            <div class="placeholder-icon">🕐</div>
+            <div class="placeholder-title">Histórico de Versões</div>
+            <div class="placeholder-desc">Histórico de versões da política com diff visual entre versões. Em breve.</div>
+        </div>
+</div>
+
+        <!-- Políticas Grid -->
+        <div class="policies-section" id="policiesSection">
+            <div class="section-header">
+                <h2 class="section-title">Políticas Ativas (4)</h2>
+            </div>
+
+            <div class="policies-grid">
+                <!-- Política 1: Solicitações -->
+                <div class="policy-card" aria-expanded="false" style="--bg-start: #F0F9FF; --bg-end: #E0F2FE;" onclick="togglePolicy(this)">
+                    <div class="policy-header">
+                        <div class="policy-header-top">
+                            <div class="policy-type">
+                                <div class="policy-icon">📋</div>
+                                <div>
+                                    <h3 class="policy-name">Política de Solicitações</h3>
+                                </div>
+                            </div>
+                            <div class="policy-badge badge-new">Nova</div>
+                            <svg class="expand-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <p class="policy-description">Regras para aprovação de solicitações de compra de cartões corporativos</p>
+                    </div>
+                    <div class="policy-body">
+                        <!-- Regras Categorizadas - Colapsável -->
+                        <div class="rules-categorized collapsed" onclick="event.stopPropagation()">
+                            <div class="category-toggle" onclick="toggleCategory(this.parentElement)">
+                                <span>📑 Regras categorizadas (3 grupos)</span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                            <div class="category-content">
+                                <div class="rule-group rule-group-agent">
+                                    <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent interpreta</span></div>
+                                    <div class="rule-group-item">⚡ IA preenche: Centro de Custo, Projeto</div>
+                                    <div class="rule-group-item">🤖 Agent avalia compliance antes de aprovar</div>
+                                </div>
+                                <div class="rule-group rule-group-flag">
+                                    <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
+                                    <div class="rule-group-item">🚩 Valor divergente entre solicitação e histórico → Escalar</div>
+                                    <div class="rule-group-item">🚩 Solicitação duplicada → Bloquear</div>
+                                    <p class="flag-note">Flags sobrescrevem o Agent. Se ativadas, forçam revisão humana.</p>
+                                </div>
+                                <div class="rule-group rule-group-confidential">
+                                    <div class="rule-group-header"><span class="rule-group-badge badge-confidential">🔒 CONFIDENCIAL · Só admins</span></div>
+                                    <div class="rule-group-item">🔒 Diretoria: limite de auto-aprovação R$ 10.000 (não R$ 2.000)</div>
+                                    <div class="confidential-access" onclick="event.stopPropagation()">
+                                        Visível para: <span class="access-roles" onclick="toggleRoleDropdown(this, event)">Admins, CFO</span>
+                                        <div class="role-dropdown">
+                                            <label><input type="checkbox" checked> Admin</label>
+                                            <label><input type="checkbox" checked> CFO</label>
+                                            <label><input type="checkbox"> Diretor</label>
+                                            <label><input type="checkbox"> Gestor</label>
+                                            <label><input type="checkbox"> RH</label>
+                                        </div>
+                                    </div>
+                                    <div class="confidential-tooltip">Regras confidenciais são aplicadas pelo Agent mas não aparecem na versão da política visível para o colaborador</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="rule-builder">
+                            <!-- Trigger Block -->
+                            <div class="trigger-block">
+                                <div class="trigger-header">
+                                    <div class="trigger-icon">⚡</div>
+                                    <div class="trigger-title">Quando a solicitação ocorre</div>
+                                    <div class="trigger-badge">Gatilho</div>
+                                </div>
+                                <div class="trigger-content">
+                                    <span class="trigger-label">Quando</span>
+                                    <span class="trigger-value">Tipo é Solicitação de Cartão</span>
+                                </div>
+                            </div>
+
+                            <div class="connector"></div>
+
+                            <!-- Main Flow: Policy Agent -->
+                            <div class="condition-block">
+                                <div class="condition-header">
+                                    <div class="condition-icon">🤖</div>
+                                    <div class="condition-title">Agente de Política IA <span class="default-badge" title="O Agent avalia todas as transações por padrão. Flags e condições de valor complementam a decisão.">DEFAULT</span></div>
+                                </div>
+                                <div class="condition-row">
+                                    <span class="action-agent">
+                                        <span>✨</span>
+                                        <span>Agente de política</span>
+                                    </span>
+                                    <span class="action-keyword">irá aprovar ou escalar para</span>
+                                    <span class="action-approver">
+                                        <span class="approver-avatar">G</span>
+                                        <span>Gestor</span>
+                                    </span>
+                                </div>
+
+                                <!-- Nested Condition 1: Até R$ 500 -->
+                                <div class="nested-actions">
+                                    <div class="condition-block">
+                                        <div class="condition-header">
+                                            <div class="condition-icon">💰</div>
+                                            <div class="condition-title"></div>
+                                        </div>
+                                        <div class="condition-row">
+                            <div class="agent-precondition">Se o Agent aprova e...</div>
+                                            <span class="condition-keyword">Se</span>
+                                            <span class="condition-value">Valor</span>
+                                            <span class="condition-field">é menor ou igual a</span>
+                                            <span class="condition-value">R$ 500</span>
+                                        </div>
+
+                                        <!-- Action: Auto-aprovar -->
+                                        <div class="nested-actions">
+                                            <div class="action-block">
+                                                <div class="action-content">
+                                                    <div class="action-icon approve">✓</div>
+                                                    <span class="action-keyword">Auto-aprovar com IA</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Nested Condition 2: R$ 500 - R$ 2.000 -->
+                                    <div class="condition-block">
+                                        <div class="condition-header">
+                                            <div class="condition-icon">⚙️</div>
+                                            <div class="condition-title"></div>
+                                        </div>
+                                        <div class="condition-row">
+                            <div class="agent-precondition">Se o Agent aprova e...</div>
+                                            <span class="condition-keyword">Se</span>
+                                            <span class="condition-value">Valor</span>
+                                            <span class="condition-field">está entre</span>
+                                            <span class="condition-value">R$ 500</span>
+                                            <span class="condition-field">e</span>
+                                            <span class="condition-value">R$ 2.000</span>
+                                        </div>
+
+                                        <!-- Action: Gestor Direto -->
+                                        <div class="nested-actions">
+                                            <div class="action-block">
+                                                <div class="action-content">
+                                                    <div class="action-icon require">⚠️</div>
+                                                    <span class="action-keyword">Exigir aprovação de</span>
+                                                    <span class="action-approver">
+                                                        <span class="approver-avatar">G</span>
+                                                        <span>Gestor Direto</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Nested Condition 3: Acima de R$ 2.000 -->
+                                    <div class="condition-block">
+                                        <div class="condition-header">
+                                            <div class="condition-icon">🚨</div>
+                                            <div class="condition-title"></div>
+                                        </div>
+                                        <div class="condition-row">
+                            <div class="agent-precondition">Se o Agent aprova e...</div>
+                                            <span class="condition-keyword">Se</span>
+                                            <span class="condition-value">Valor</span>
+                                            <span class="condition-field">é maior que</span>
+                                            <span class="condition-value">R$ 2.000</span>
+                                        </div>
+
+                                        <!-- Action: Diretor + CFO -->
+                                        <div class="nested-actions">
+                                            <div class="action-block">
+                                                <div class="action-content">
+                                                    <div class="action-icon require">⚠️</div>
+                                                    <span class="action-keyword">Exigir aprovação de</span>
+                                                    <span class="action-approver">
+                                                        <span class="approver-avatar">D</span>
+                                                        <span>Diretor</span>
+                                                    </span>
+                                                    <span class="condition-field">e</span>
+                                                    <span class="action-approver">
+                                                        <span class="approver-avatar">CF</span>
+                                                        <span>CFO</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="connector"></div>
+
+                            <!-- Final Action -->
+                            <div class="final-action">
+                                <div class="final-action-icon">✓</div>
+                                <div class="final-action-text">Aprovar Solicitação</div>
+                            </div>
+                        </div>
+
+                        <!-- Flags de Override Ativas -->
+                        <div class="flags-override-section" onclick="event.stopPropagation()">
+                            <div class="flags-override-header">🚩 Flags de Override Ativas</div>
+                            <div class="flags-override-list">
+                                <div class="flags-override-item">Recibo duplicado detectado → Bloqueia auto-aprovação, escala para admin</div>
+                                <div class="flags-override-item">Valor divergente entre recibo e transação → Escala para revisão</div>
+                                <div class="flags-override-item">NF-e com CNPJ inativo na Receita Federal → Rejeita automaticamente</div>
+                            </div>
+                            <p class="flags-override-note">Flags são avaliadas em paralelo ao Agent. Se qualquer flag é ativada, ela sobrescreve a decisão do Agent e força revisão humana.</p>
+                        </div>
+
+                        <div class="policy-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation()">
+                                <span>✏️</span>
+                                <span>Editar Regras</span>
+                            </button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation()">
+                                <span>🔬</span>
+                                <span>Testar Regras</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Política 2: Despesas de Cartão -->
+                <div class="policy-card" aria-expanded="false" style="--bg-start: #FEF3C7; --bg-end: #FDE68A;" onclick="togglePolicy(this)">
+                    <div class="policy-header">
+                        <div class="policy-header-top">
+                            <div class="policy-type">
+                                <div class="policy-icon">💳</div>
+                                <div>
+                                    <h3 class="policy-name">Política de Despesas de Cartão</h3>
+                                </div>
+                            </div>
+                            <div class="policy-badge badge-new">Nova</div>
+                            <svg class="expand-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <p class="policy-description">Regras para transações com cartões corporativos</p>
+                    </div>
+                    <div class="policy-body">
+                        <div class="rules-categorized" onclick="event.stopPropagation()">
+                            <div class="rule-group rule-group-agent">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent interpreta</span></div>
+                                <div class="rule-group-item">⚡ IA preenche: Centro de Custo, Projeto</div>
+                                <div class="rule-group-item">✅ SaaS e Software → Auto-aprovar até R$ 1.000</div>
+                            </div>
+                            <div class="rule-group rule-group-flag">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
+                                <div class="rule-group-item">🚩 Recibo duplicado → Escalar</div>
+                                <div class="rule-group-item">🚩 NF-e inválida → Rejeitar</div>
+                                <div class="rule-group-item">🚩 Gasto pessoal detectado → Alertar</div>
+                                <p class="flag-note">Flags sobrescrevem o Agent. Se ativadas, forçam revisão humana.</p>
+                            </div>
+                            <div class="rule-group rule-group-confidential">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-confidential">🔒 CONFIDENCIAL · Só admins</span></div>
+                                <div class="rule-group-item">🔒 C-level: limite de auto-aprovação R$ 5.000</div>
+                                <div class="confidential-access" onclick="event.stopPropagation()">
+                                    Visível para: <span class="access-roles" onclick="toggleRoleDropdown(this, event)">Admins, CFO</span>
+                                    <div class="role-dropdown">
+                                        <label><input type="checkbox" checked> Admin</label>
+                                        <label><input type="checkbox" checked> CFO</label>
+                                        <label><input type="checkbox"> Diretor</label>
+                                        <label><input type="checkbox"> Gestor</label>
+                                        <label><input type="checkbox"> RH</label>
+                                    </div>
+                                </div>
+                                <div class="confidential-tooltip">Regras confidenciais são aplicadas pelo Agent mas não aparecem na versão da política visível para o colaborador</div>
+                            </div>
+                        </div>
+                        <div class="policy-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation()">
+                                <span>✏️</span>
+                                <span>Editar Regras</span>
+                            </button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation()">
+                                <span>👁️</span>
+                                <span>Ver Regras</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Política 3: Reembolsos -->
+                <div class="policy-card" aria-expanded="false" style="--bg-start: #F3E8FF; --bg-end: #E9D5FF;" onclick="togglePolicy(this)">
+                    <div class="policy-header">
+                        <div class="policy-header-top">
+                            <div class="policy-type">
+                                <div class="policy-icon">📄</div>
+                                <div>
+                                    <h3 class="policy-name">Política de Reembolsos</h3>
+                                </div>
+                            </div>
+                            <div class="policy-badge badge-new">Nova</div>
+                            <svg class="expand-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <p class="policy-description">Regras para solicitações de reembolso de despesas</p>
+                    </div>
+                    <div class="policy-body">
+                        <div class="rules-categorized" onclick="event.stopPropagation()">
+                            <div class="rule-group rule-group-agent">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent interpreta</span></div>
+                                <div class="rule-group-item">✅ Transporte (Uber/99) até R$ 100 → Auto-aprovar</div>
+                                <div class="rule-group-item">🤖 IA valida: qualidade do recibo, CNPJ, valor, data</div>
+                            </div>
+                            <div class="rule-group rule-group-flag">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
+                                <div class="rule-group-item">🚩 Sem nota fiscal → Rejeitar automaticamente</div>
+                                <div class="rule-group-item">🚩 CNPJ inativo → Bloquear</div>
+                                <div class="rule-group-item">🚩 VR/VA no mesmo dia → Alertar gestor</div>
+                                <p class="flag-note">Flags sobrescrevem o Agent. Se ativadas, forçam revisão humana.</p>
+                            </div>
+                            <div class="rule-group rule-group-confidential">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-confidential">🔒 CONFIDENCIAL · Só admins</span></div>
+                                <div class="rule-group-item">🔒 Reembolso mobile só para times Comercial e CS</div>
+                                <div class="confidential-access" onclick="event.stopPropagation()">
+                                    Visível para: <span class="access-roles" onclick="toggleRoleDropdown(this, event)">Admins, CFO</span>
+                                    <div class="role-dropdown">
+                                        <label><input type="checkbox" checked> Admin</label>
+                                        <label><input type="checkbox" checked> CFO</label>
+                                        <label><input type="checkbox"> Diretor</label>
+                                        <label><input type="checkbox"> Gestor</label>
+                                        <label><input type="checkbox"> RH</label>
+                                    </div>
+                                </div>
+                                <div class="confidential-tooltip">Regras confidenciais são aplicadas pelo Agent mas não aparecem na versão da política visível para o colaborador</div>
+                            </div>
+                        </div>
+                        <div class="policy-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation()">
+                                <span>✏️</span>
+                                <span>Editar Regras</span>
+                            </button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation()">
+                                <span>👁️</span>
+                                <span>Ver Regras</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Política 4: Viagens -->
+                <div class="policy-card" aria-expanded="false" style="--bg-start: #D1FAE5; --bg-end: #A7F3D0;" onclick="togglePolicy(this)">
+                    <div class="policy-header">
+                        <div class="policy-header-top">
+                            <div class="policy-type">
+                                <div class="policy-icon">✈️</div>
+                                <div>
+                                    <h3 class="policy-name">Política de Viagens</h3>
+                                </div>
+                            </div>
+                            <div class="policy-badge badge-new">Nova</div>
+                            <svg class="expand-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                        <p class="policy-description">Regras para despesas relacionadas a viagens corporativas</p>
+                    </div>
+                    <div class="policy-body">
+                        <div class="rules-categorized" onclick="event.stopPropagation()">
+                            <div class="rule-group rule-group-agent">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent interpreta</span></div>
+                                <div class="rule-group-item">✅ Hospedagem até R$ 500/noite → Auto-aprovar</div>
+                                <div class="rule-group-item">✈️ Voos com 14+ dias antecedência</div>
+                            </div>
+                            <div class="rule-group rule-group-flag">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
+                                <div class="rule-group-item">🚩 IA detecta álcool em nota → Escalar para gestor</div>
+                                <div class="rule-group-item">🚩 Reserva &lt; 7 dias → Requer justificativa</div>
+                                <p class="flag-note">Flags sobrescrevem o Agent. Se ativadas, forçam revisão humana.</p>
+                            </div>
+                            <div class="rule-group rule-group-confidential">
+                                <div class="rule-group-header"><span class="rule-group-badge badge-confidential">🔒 CONFIDENCIAL · Só admins</span></div>
+                                <div class="rule-group-item">🔒 Diretoria: Business class em voos &gt; 4h, custo absorvido pelo budget executivo</div>
+                                <div class="confidential-access" onclick="event.stopPropagation()">
+                                    Visível para: <span class="access-roles" onclick="toggleRoleDropdown(this, event)">Admins, CFO</span>
+                                    <div class="role-dropdown">
+                                        <label><input type="checkbox" checked> Admin</label>
+                                        <label><input type="checkbox" checked> CFO</label>
+                                        <label><input type="checkbox"> Diretor</label>
+                                        <label><input type="checkbox"> Gestor</label>
+                                        <label><input type="checkbox"> RH</label>
+                                    </div>
+                                </div>
+                                <div class="confidential-tooltip">Regras confidenciais são aplicadas pelo Agent mas não aparecem na versão da política visível para o colaborador</div>
+                            </div>
+                        </div>
+                        <div class="policy-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation()">
+                                <span>✏️</span>
+                                <span>Editar Regras</span>
+                            </button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation()">
+                                <span>👁️</span>
+                                <span>Ver Regras</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sugestões do Agent -->
+        <div class="suggestions-panel" id="suggestionsPanel">
+            <div class="suggestions-header">
+                <div>
+                    <div class="suggestions-title">🧠 Sugestões do Agent</div>
+                    <div class="suggestions-subtitle">Baseado em padrões dos últimos 30 dias</div>
+                </div>
+            </div>
+            <div class="suggestions-list">
+                <div class="suggestion-card" id="suggestion-1">
+                    <div class="suggestion-content">
+                        <span class="suggestion-icon">💡</span>
+                        <span class="suggestion-text">15 corridas de rideshare para off-sites foram aprovadas como exceção nos últimos 30 dias → Sugestão: adicionar regra "rideshare sem cap para eventos corporativos" à Política de Viagens</span>
+                    </div>
+                    <div class="suggestion-actions">
+                        <button class="btn-apply" onclick="applySuggestion('suggestion-1', 'Viagens', event)">Aplicar</button>
+                        <button class="btn-ignore" onclick="ignoreSuggestion('suggestion-1', event)">Ignorar</button>
+                    </div>
+                </div>
+                <div class="suggestion-card" id="suggestion-2">
+                    <div class="suggestion-content">
+                        <span class="suggestion-icon">💡</span>
+                        <span class="suggestion-text">Per diem jantar excedido 23x este mês (média R$ 82 vs limite R$ 70) → Sugestão: atualizar per diem jantar para R$ 85 na Política de Reembolsos</span>
+                    </div>
+                    <div class="suggestion-actions">
+                        <button class="btn-apply" onclick="applySuggestion('suggestion-2', 'Reembolsos', event)">Aplicar</button>
+                        <button class="btn-ignore" onclick="ignoreSuggestion('suggestion-2', event)">Ignorar</button>
+                    </div>
+                </div>
+                <div class="suggestion-card" id="suggestion-3">
+                    <div class="suggestion-content">
+                        <span class="suggestion-icon">💡</span>
+                        <span class="suggestion-text">12 transações de Uber nos fins de semana aprovadas com exceção → Sugestão: criar regra "transporte fim de semana permitido com justificativa" na Política de Despesas de Cartão</span>
+                    </div>
+                    <div class="suggestion-actions">
+                        <button class="btn-apply" onclick="applySuggestion('suggestion-3', 'Despesas de Cartão', event)">Aplicar</button>
+                        <button class="btn-ignore" onclick="ignoreSuggestion('suggestion-3', event)">Ignorar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="suggestions-empty" id="suggestionsEmpty" style="display:none; text-align:center; padding:24px; color:var(--gray-500); font-size:13px;">
+                Nenhuma sugestão pendente. O Agent analisará novos padrões em breve.
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Modal: Nova Política -->
+    <div class="modal-overlay" id="modalOverlay" role="presentation" onclick="closeModalIfOutside(event)">
+        <div class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-top">
+                    <h2 class="modal-title" id="modal-title">✨ Criar Nova Política</h2>
+                    <button class="modal-close" aria-label="Fechar modal" onclick="closeModal()">✕</button>
+                </div>
+                <p class="modal-subtitle">Escolha como deseja criar sua política</p>
+            </div>
+
+            <div class="modal-body">
+                <!-- Tabs -->
+                <div class="tabs" role="tablist" aria-label="Método de criação">
+                    <button class="tab active" role="tab" aria-selected="true" onclick="switchTab('upload', event)">📄 Upload de PDF</button>
+                    <button class="tab" role="tab" aria-selected="false" onclick="switchTab('prompt', event)">💬 Descrever com IA</button>
+                                        <button class="tab" role="tab" aria-selected="false" onclick="switchTab('template', event)">📋 Template Payfy</button>
+<button class="tab" role="tab" aria-selected="false" onclick="switchTab('manual', event)">✏️ Criar Manualmente</button>
+                </div>
+
+                <!-- Tab Content: Upload -->
+                <div class="tab-content active" id="tab-upload" role="tabpanel">
+                    <!-- Upload State -->
+                    <div class="upload-container" id="uploadContainer">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">📄</div>
+                            <h3 class="upload-title">Envie o manual de políticas da sua empresa</h3>
+                            <p class="upload-subtitle">Nossa IA irá ler e criar regras automaticamente</p>
+                            
+                            <input type="file" id="fileInput" accept=".pdf,.doc,.docx" onchange="handleFileSelect(event)">
+                            <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                                <span>📎</span>
+                                <span>Selecionar Arquivo</span>
+                            </button>
+                            
+                            <p class="upload-info">
+                                ou arraste e solte aqui<br>
+                                PDF, DOC, DOCX (máx. 10MB)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Processing State -->
+                    <div class="processing-container" id="processingContainer">
+                        <div class="processing-header">
+                            <div class="processing-icon">✨</div>
+                            <h3 class="processing-title">Processando documento...</h3>
+                            <p class="processing-subtitle">A IA está analisando suas políticas</p>
+                        </div>
+
+                        <div class="processing-steps">
+                            <div class="processing-step completed" id="proc-step-1">
+                                <div class="processing-step-icon">✓</div>
+                                <div class="processing-step-text">Leitura do PDF</div>
+                                <div class="processing-step-status">Concluído</div>
+                            </div>
+                            <div class="processing-step active" id="proc-step-2">
+                                <div class="processing-step-icon">🤖</div>
+                                <div class="processing-step-text">Análise semântica</div>
+                                <div class="processing-step-status">Processando...</div>
+                            </div>
+                            <div class="processing-step" id="proc-step-3">
+                                <div class="processing-step-icon">🏗️</div>
+                                <div class="processing-step-text">Estruturação de regras</div>
+                                <div class="processing-step-status">Aguardando</div>
+                            </div>
+                            <div class="processing-step" id="proc-step-4">
+                                <div class="processing-step-icon">🔍</div>
+                                <div class="processing-step-text">Identificação de aprovadores</div>
+                                <div class="processing-step-status">Aguardando</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Success State -->
+                    <div class="success-container" id="successContainer">
+                        <div class="success-icon">✅</div>
+                        <h3 class="success-title">4 Políticas Geradas com Sucesso!</h3>
+                        <p class="success-subtitle">Suas políticas foram criadas e estão prontas para uso</p>
+
+                        <div class="success-stats">
+                            <div class="success-stat">
+                                <div class="success-stat-value">4</div>
+                                <div class="success-stat-label">Políticas criadas</div>
+                            </div>
+                            <div class="success-stat">
+                                <div class="success-stat-value">18</div>
+                                <div class="success-stat-label">Regras identificadas</div>
+                            </div>
+                        </div>
+
+                        <div class="success-actions">
+                            <button class="btn btn-secondary" onclick="closeModal()">Ver Depois</button>
+                            <button class="btn btn-primary" onclick="goToPolicies()">
+                                <span>👁️</span>
+                                <span>Ver Políticas</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Prompt -->
+                <div class="tab-content" id="tab-prompt" role="tabpanel">
+                    <p style="color: var(--gray-600); margin-bottom: var(--spacing-md);">
+                        Em breve: Descreva suas regras em linguagem natural e deixe a IA criar automaticamente.
+                    </p>
+                </div>
+
+                <!-- Tab Content: Manual -->
+                                <div class="tab-content" id="tab-template" role="tabpanel">
+                    <div style="background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: 12px; padding: 32px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                        <h3 style="font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 8px;">Template Payfy — Melhores Práticas Brasil</h3>
+                        <p style="font-size: 14px; color: #4B5563; margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto;">Construído a partir das melhores práticas do mercado brasileiro. Inclui regras para NF-e, VR/VA, CLT, e mais. Ajuste a qualquer momento.</p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;">
+                            <span style="background: #D1FAE5; color: #065F46; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;">NF-e</span>
+                            <span style="background: #FEF3C7; color: #92400E; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;">VR/VA</span>
+                            <span style="background: #DBEAFE; color: #1E40AF; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;">CLT</span>
+                            <span style="background: #EDE9FE; color: #5B21B6; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;">Per diem</span>
+                            <span style="background: #FEE2E2; color: #991B1B; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;">CNPJ</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; max-width: 320px; justify-content: center;" onclick="event.stopPropagation()">
+                            <span>✨</span>
+                            <span>Usar Template Payfy</span>
+                        </button>
+                    </div>
+                </div>
+
+<div class="tab-content" id="tab-manual" role="tabpanel">
+                    <p style="color: var(--gray-600); margin-bottom: var(--spacing-lg);">
+                        Você será redirecionado para o configurador visual de regras.
+                    </p>
+                    <button class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        <span>✏️</span>
+                        <span>Abrir Configurador</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Functions
+        function openNewPolicyModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            resetUploadState();
+        }
+
+        function closeModalIfOutside(event) {
+            if (event.target === document.getElementById('modalOverlay')) {
+                closeModal();
+            }
+        }
+
+        // Tab Switching
+        function switchTab(tabName, event) {
+            event.stopPropagation();
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            event.target.setAttribute('aria-selected', 'true');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // Policy Toggle
+        function togglePolicy(card) {
+            card.classList.toggle('expanded');
+            var isExpanded = card.classList.contains('expanded');
+            card.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+        }
+
+        // Drag and Drop
+        const uploadArea = document.getElementById('uploadArea');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File Selection
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            if (file.size > 10 * 1024 * 1024) {
+                alert('❌ Arquivo muito grande! Máximo: 10MB');
+                return;
+            }
+
+            if (!file.name.match(/\.(pdf|doc|docx)$/i)) {
+                alert('❌ Formato inválido! Apenas PDF, DOC ou DOCX');
+                return;
+            }
+
+            startProcessing();
+        }
+
+        // Processing Simulation
+        function startProcessing() {
+            document.getElementById('uploadContainer').style.display = 'none';
+            document.getElementById('processingContainer').classList.add('active');
+
+            setTimeout(() => {
+                document.getElementById('proc-step-2').classList.add('completed');
+                document.getElementById('proc-step-2').classList.remove('active');
+                document.getElementById('proc-step-2').querySelector('.processing-step-status').textContent = 'Concluído';
+                
+                document.getElementById('proc-step-3').classList.add('active');
+                document.getElementById('proc-step-3').querySelector('.processing-step-status').textContent = 'Processando...';
+            }, 2000);
+
+            setTimeout(() => {
+                document.getElementById('proc-step-3').classList.add('completed');
+                document.getElementById('proc-step-3').classList.remove('active');
+                document.getElementById('proc-step-3').querySelector('.processing-step-status').textContent = 'Concluído';
+                
+                document.getElementById('proc-step-4').classList.add('active');
+                document.getElementById('proc-step-4').querySelector('.processing-step-status').textContent = 'Processando...';
+            }, 4000);
+
+            setTimeout(() => {
+                document.getElementById('proc-step-4').classList.add('completed');
+                document.getElementById('proc-step-4').classList.remove('active');
+                document.getElementById('proc-step-4').querySelector('.processing-step-status').textContent = 'Concluído';
+                
+                showSuccess();
+            }, 6000);
+        }
+
+        function showSuccess() {
+            document.getElementById('processingContainer').classList.remove('active');
+            document.getElementById('successContainer').classList.add('active');
+        }
+
+        function resetUploadState() {
+            document.getElementById('uploadContainer').style.display = 'block';
+            document.getElementById('processingContainer').classList.remove('active');
+            document.getElementById('successContainer').classList.remove('active');
+            
+            // Reset processing steps
+            document.getElementById('proc-step-2').classList.remove('completed', 'active');
+            document.getElementById('proc-step-3').classList.remove('completed', 'active');
+            document.getElementById('proc-step-4').classList.remove('completed', 'active');
+            document.getElementById('proc-step-2').classList.add('active');
+            document.getElementById('proc-step-2').querySelector('.processing-step-status').textContent = 'Processando...';
+            document.getElementById('proc-step-3').querySelector('.processing-step-status').textContent = 'Aguardando';
+            document.getElementById('proc-step-4').querySelector('.processing-step-status').textContent = 'Aguardando';
+        }
+
+        function goToPolicies() {
+            closeModal();
+            // Scroll para a seção de políticas
+            document.getElementById('policiesSection').scrollIntoView({ behavior: 'smooth' });
+            
+            // Toast de sucesso
+            setTimeout(() => {
+                alert('✅ 4 novas políticas foram adicionadas com sucesso!\n\n📋 Solicitações\n💳 Despesas de Cartão\n📄 Reembolsos\n✈️ Viagens');
+            }, 500);
+        }
+
+        function toggleAgentDropdown(event) {
+            event.stopPropagation();
+            document.getElementById('agentDropdown').classList.toggle('show');
+        }
+
+        function setAgentMode(mode, event) {
+            event.stopPropagation();
+            if (mode === 'off' && !confirm('Tem certeza que deseja desativar o Policy Agent? Transações não serão avaliadas automaticamente.')) {
+                return;
+            }
+            const bar = document.getElementById('agentStatusBar');
+            const label = bar.querySelector('.agent-status-label');
+            const info = bar.querySelector('.agent-status-info');
+            const items = document.querySelectorAll('.agent-dropdown-item');
+            
+            bar.className = 'agent-status-bar';
+            items.forEach(i => i.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            switch(mode) {
+                case 'off':
+                    bar.classList.add('mode-off');
+                    label.textContent = 'Policy Agent desativado';
+                    info.textContent = 'O Agent não está avaliando transações';
+                    break;
+                case 'test':
+                    bar.classList.add('mode-test');
+                    label.textContent = 'Policy Agent em teste';
+                    info.textContent = 'Modo: Teste (admins only) · Decisões visíveis apenas para admins';
+                    break;
+                case 'recommend':
+                    label.textContent = 'Policy Agent ativo';
+                    info.textContent = 'Modo: Recomendação · Sugere mas não aprova automaticamente · 99.1% acurácia';
+                    break;
+                case 'auto':
+                    label.textContent = 'Policy Agent ativo';
+                    info.textContent = 'Modo: Aprovação automática para até R$ 2.000 · 99.1% acurácia (90 dias) · 847 transações avaliadas';
+                    break;
+            }
+            document.getElementById('agentDropdown').classList.remove('show');
+        }
+
+        function switchMainTab(tab, event) {
+            event.stopPropagation();
+            // Update tab buttons
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all content
+            document.getElementById('policiesSection').style.display = 'none';
+            const suggestionsPanel = document.getElementById('suggestionsPanel');
+            if (suggestionsPanel) suggestionsPanel.style.display = 'none';
+            document.querySelectorAll('.tab-placeholder').forEach(p => p.style.display = 'none');
+            
+            // Show selected content
+            if (tab === 'regras') {
+                document.getElementById('policiesSection').style.display = 'block';
+                if (suggestionsPanel) suggestionsPanel.style.display = 'block';
+            } else {
+                document.getElementById('placeholder-' + tab).style.display = 'flex';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            document.getElementById('agentDropdown').classList.remove('show');
+        });
+
+            
+        function toggleCategory(element) { element.classList.toggle('collapsed'); }
+        function toggleRoleDropdown(element, event) {
+            event.stopPropagation();
+            var dropdown = element.nextElementSibling;
+            document.querySelectorAll('.role-dropdown.show').forEach(function(d) { if (d !== dropdown) d.classList.remove('show'); });
+            dropdown.classList.toggle('show');
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.confidential-access')) {
+                document.querySelectorAll('.role-dropdown.show').forEach(function(d) { d.classList.remove('show'); });
+            }
+        });
+
+        // Suggestions Panel
+        function showToast(message) {
+            var existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            var toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() {
+                toast.classList.remove('show');
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        function checkSuggestionsEmpty() {
+            var cards = document.querySelectorAll('.suggestion-card');
+            var allHidden = true;
+            cards.forEach(function(c) {
+                if (c.style.display !== 'none' && !c.classList.contains('fade-out')) {
+                    allHidden = false;
+                }
+            });
+            if (allHidden) {
+                document.getElementById('suggestionsEmpty').style.display = 'block';
+            }
+        }
+
+        function applySuggestion(id, policyName, event) {
+            event.stopPropagation();
+            var card = document.getElementById(id);
+            card.classList.add('fade-out');
+            setTimeout(function() { card.style.display = 'none'; checkSuggestionsEmpty(); }, 400);
+            showToast('✓ Regra adicionada à Política de ' + policyName);
+        }
+
+        function ignoreSuggestion(id, event) {
+            event.stopPropagation();
+            var card = document.getElementById(id);
+            card.classList.add('fade-out');
+            setTimeout(function() { card.style.display = 'none'; checkSuggestionsEmpty(); }, 400);
+        }
+
+    </script>
+    </body>
+</html>
