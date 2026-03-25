@@ -1,0 +1,3215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Políticas de Gastos — Payfy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS DESIGN TOKENS
+   ============================================ */
+:root {
+  --primary-orange: #E55A20;
+  --primary-orange-dark: #C94E1A;
+  --primary-orange-light: #FFF3ED;
+  --success-green: #059669;
+  --success-green-light: #D1FAE5;
+  --warning-yellow: #D97706;
+  --warning-yellow-light: #FEF3C7;
+  --info-blue: #3B82F6;
+  --info-blue-light: #EFF6FF;
+  --purple: #8B5CF6;
+  --purple-light: #EDE9FE;
+  --danger-red: #DC2626;
+  --danger-red-light: #FEE2E2;
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F5;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
+  --white: #FFFFFF;
+  --border: #E5E7EB;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+  --scope-empresa-bg: var(--gray-100);
+  --scope-empresa-text: var(--gray-700);
+  --scope-cc-bg: var(--info-blue-light);
+  --scope-cc-text: #1E40AF;
+  --scope-time-bg: var(--purple-light);
+  --scope-time-text: #6B21A8;
+  --badge-agent-bg: var(--info-blue-light);
+  --badge-agent-text: #1E40AF;
+  --badge-flag-bg: var(--danger-red-light);
+  --badge-flag-text: #991B1B;
+  --badge-confidential-bg: var(--warning-yellow-light);
+  --badge-confidential-text: #92400E;
+  --badge-brasil-bg: #D1FAE5;
+  --badge-brasil-text: #065F46;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-800);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; cursor: pointer; }
+a { color: var(--info-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Focus */
+:focus-visible {
+  outline: 3px solid var(--info-blue);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   APP LAYOUT
+   ============================================ */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================
+   MAIN SIDEBAR
+   ============================================ */
+.main-sidebar {
+  width: 212px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo svg { display: block; }
+
+.sidebar-logo-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-orange);
+  letter-spacing: -0.5px;
+}
+
+.sidebar-nav { flex: 1; padding: var(--spacing-sm) 0; }
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-600);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.sidebar-item:hover { background: var(--gray-50); color: var(--gray-800); text-decoration: none; }
+.sidebar-item.active {
+  border-left-color: var(--primary-orange);
+  color: var(--gray-900);
+  font-weight: 600;
+  background: var(--primary-orange-light);
+}
+
+.sidebar-item svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--gray-400); }
+.sidebar-item.active svg { color: var(--primary-orange); }
+
+.sidebar-separator { height: 1px; background: var(--border); margin: var(--spacing-sm) 0; }
+
+/* ============================================
+   SETTINGS SUB-SIDEBAR
+   ============================================ */
+.settings-sidebar {
+  width: 212px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: var(--spacing-lg) 0;
+}
+
+.settings-group-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-400);
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-xs);
+}
+
+.settings-item {
+  display: block;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-600);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.settings-item:hover { background: var(--gray-50); color: var(--gray-800); text-decoration: none; }
+.settings-item.active {
+  border-left-color: var(--primary-orange);
+  color: var(--primary-orange);
+  font-weight: 600;
+}
+
+.settings-separator { height: 1px; background: var(--border); margin: var(--spacing-sm) var(--spacing-lg); }
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  padding: var(--spacing-xl) var(--spacing-2xl);
+}
+
+/* Header */
+.page-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.page-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--gray-500);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  transition: all 0.2s;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary-orange);
+  color: var(--white);
+}
+.btn-primary:hover {
+  background: var(--primary-orange-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--gray-700);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--gray-50); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--gray-600);
+  padding: var(--spacing-sm);
+}
+.btn-ghost:hover { background: var(--gray-100); }
+
+.btn-sm {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 12px;
+  min-height: 32px;
+  border-radius: var(--radius-md);
+}
+
+.btn-danger {
+  background: var(--danger-red-light);
+  color: var(--danger-red);
+  border: 1px solid var(--danger-red);
+}
+.btn-danger:hover { background: var(--danger-red); color: var(--white); }
+
+/* ============================================
+   AGENT STATUS BANNER
+   ============================================ */
+.agent-banner {
+  background: var(--info-blue-light);
+  border: 1px solid #BFDBFE;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.agent-banner-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.agent-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--success-green);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.agent-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.agent-info {
+  font-size: 13px;
+  color: var(--gray-500);
+}
+
+.agent-info-divider {
+  color: var(--gray-300);
+  margin: 0 var(--spacing-xs);
+}
+
+.agent-banner-right {
+  position: relative;
+}
+
+.agent-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + var(--spacing-xs));
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  min-width: 320px;
+  z-index: 200;
+  padding: var(--spacing-sm);
+}
+
+.agent-dropdown.show { display: block; }
+
+.agent-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--gray-700);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  min-height: 44px;
+}
+.agent-dropdown-item:hover { background: var(--gray-50); }
+.agent-dropdown-item.active { background: var(--info-blue-light); color: var(--scope-cc-text); font-weight: 600; }
+
+.agent-dropdown-separator { height: 1px; background: var(--border); margin: var(--spacing-xs) 0; }
+
+.agent-hierarchy {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: var(--spacing-xs);
+}
+
+.hierarchy-badge {
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.hierarchy-badge.flags { background: var(--badge-flag-bg); color: var(--badge-flag-text); }
+.hierarchy-badge.agent { background: var(--badge-agent-bg); color: var(--badge-agent-text); }
+.hierarchy-badge.workflows { background: var(--gray-100); color: var(--gray-600); }
+
+/* Threshold slider */
+.threshold-section {
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.threshold-label {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-bottom: var(--spacing-xs);
+  display: flex;
+  justify-content: space-between;
+}
+
+.threshold-slider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--gray-200);
+  border-radius: 3px;
+  outline: none;
+}
+
+.threshold-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--info-blue);
+  cursor: pointer;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+.tabs-container {
+  margin-bottom: var(--spacing-lg);
+}
+
+.tabs-nav {
+  display: flex;
+  gap: var(--spacing-xs);
+  background: var(--gray-100);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xs);
+}
+
+.tab-btn {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-500);
+  min-height: 44px;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover { color: var(--gray-700); }
+.tab-btn.active {
+  background: var(--white);
+  color: var(--gray-900);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ============================================
+   VIEW TOGGLE
+   ============================================ */
+.view-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 2px;
+}
+
+.view-toggle-btn {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-500);
+  min-height: 36px;
+  transition: all 0.2s;
+}
+.view-toggle-btn.active {
+  background: var(--white);
+  color: var(--gray-800);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-filters {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.search-input {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  min-height: 36px;
+  min-width: 200px;
+  background: var(--white);
+  font-family: inherit;
+}
+.search-input:focus { border-color: var(--info-blue); outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+
+.filter-select {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  min-height: 36px;
+  background: var(--white);
+  font-family: inherit;
+  color: var(--gray-700);
+}
+
+/* ============================================
+   ACCORDION CARDS (Rules view)
+   ============================================ */
+.accordion-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+
+.accordion-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+}
+.accordion-card:hover { box-shadow: var(--shadow-md); }
+
+.accordion-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  border: none;
+  background: linear-gradient(135deg, var(--bg-start, var(--gray-50)), var(--bg-end, var(--white)));
+  width: 100%;
+  text-align: left;
+  min-height: 64px;
+}
+
+.accordion-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.policy-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.policy-name { font-size: 16px; font-weight: 600; color: var(--gray-900); }
+.policy-description { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+
+.summary-pills {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.pill {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-2xl);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.pill-agent { background: var(--badge-agent-bg); color: var(--badge-agent-text); }
+.pill-flag { background: var(--badge-flag-bg); color: var(--badge-flag-text); }
+.pill-conf { background: var(--badge-confidential-bg); color: var(--badge-confidential-text); }
+.pill-brasil { background: var(--badge-brasil-bg); color: var(--badge-brasil-text); }
+
+.expand-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--gray-400);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.accordion-card.expanded .expand-icon { transform: rotate(180deg); }
+
+.accordion-body {
+  display: none;
+  padding: var(--spacing-lg);
+  background: var(--gray-50);
+  border-top: 1px solid var(--border);
+}
+
+.accordion-card.expanded .accordion-body { display: block; }
+
+/* Rule groups inside accordion */
+.rule-group {
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  border: 1px solid;
+  margin-bottom: var(--spacing-md);
+}
+
+.rule-group-agent { background: #F0FDF4; border-color: #BBF7D0; }
+.rule-group-flag { background: #FEF2F2; border-color: #FECACA; }
+.rule-group-confidential { background: var(--warning-yellow-light); border-color: #FDE68A; }
+.rule-group-brasil { background: var(--badge-brasil-bg); border-color: #A7F3D0; }
+
+.rule-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+}
+
+.rule-group-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-2xl);
+}
+
+.badge-agent { background: var(--badge-agent-bg); color: var(--badge-agent-text); }
+.badge-flag { background: var(--badge-flag-bg); color: var(--badge-flag-text); }
+.badge-conf { background: var(--badge-confidential-bg); color: var(--badge-confidential-text); }
+.badge-brasil { background: var(--badge-brasil-bg); color: var(--badge-brasil-text); }
+
+.rule-item {
+  font-size: 13px;
+  color: var(--gray-700);
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.rule-item:last-child { border-bottom: none; }
+
+.accordion-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border);
+}
+
+/* Exceptions summary */
+.exceptions-summary {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--white);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.exceptions-summary-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: var(--spacing-sm);
+}
+
+.exception-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xs) 0;
+  font-size: 13px;
+}
+
+.exception-badge {
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.exception-badge-cc { background: var(--scope-cc-bg); color: var(--scope-cc-text); }
+.exception-badge-time { background: var(--scope-time-bg); color: var(--scope-time-text); }
+
+.exceptions-count {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: var(--spacing-sm);
+}
+
+/* ============================================
+   TABLE VIEW
+   ============================================ */
+.table-container {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.data-table th {
+  background: var(--gray-50);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.data-table td {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 13px;
+  color: var(--gray-700);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.data-table tbody tr { cursor: pointer; transition: background 0.15s; }
+.data-table tbody tr:hover td { background: var(--gray-50); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+.table-footer {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 12px;
+  color: var(--gray-500);
+  border-top: 1px solid var(--border);
+  background: var(--gray-50);
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-2xl);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-active { background: var(--success-green-light); color: var(--success-green); }
+.status-inactive { background: var(--gray-100); color: var(--gray-500); }
+.status-error { background: var(--primary-orange-light); color: var(--primary-orange); }
+
+/* Scope badges */
+.scope-badge {
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+.scope-geral { background: var(--scope-empresa-bg); color: var(--scope-empresa-text); }
+.scope-cc { background: var(--scope-cc-bg); color: var(--scope-cc-text); }
+.scope-time { background: var(--scope-time-bg); color: var(--scope-time-text); }
+
+/* Type badges in table */
+.type-badge {
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ============================================
+   SLIDE-OVER
+   ============================================ */
+.slideover-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 900;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.slideover-overlay.active { opacity: 1; pointer-events: auto; }
+
+.slideover {
+  position: fixed;
+  top: 0;
+  right: -520px;
+  width: 520px;
+  height: 100vh;
+  background: var(--white);
+  box-shadow: var(--shadow-xl);
+  z-index: 950;
+  transition: right 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border);
+}
+.slideover.open { right: 0; }
+
+.slideover-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.slideover-title { font-size: 20px; font-weight: 700; color: var(--gray-900); }
+.slideover-subtitle { font-size: 13px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+
+.slideover-close {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--gray-100);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-600);
+  font-size: 20px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.slideover-close:hover { background: var(--gray-200); }
+
+.slideover-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+}
+
+.slideover-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.slideover-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Workflow builder in slideover */
+.workflow-mini {
+  background: var(--gray-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+}
+
+.workflow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  font-size: 13px;
+  color: var(--gray-700);
+}
+
+.workflow-step-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.step-trigger { background: var(--info-blue-light); color: var(--info-blue); }
+.step-condition { background: var(--warning-yellow-light); color: var(--warning-yellow); }
+.step-action { background: var(--success-green-light); color: var(--success-green); }
+
+.workflow-connector {
+  width: 2px;
+  height: 16px;
+  background: var(--gray-300);
+  margin-left: 11px;
+}
+
+/* Flags section */
+.flag-list { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+
+.flag-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.flag-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 13px;
+}
+
+.flag-badge-inline {
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle input { opacity: 0; width: 0; height: 0; }
+
+.toggle-slider {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--gray-300);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: var(--white);
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.toggle input:checked + .toggle-slider { background: var(--success-green); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* ============================================
+   TAB: DOCUMENTO
+   ============================================ */
+.document-editor {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.document-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border);
+  background: var(--gray-50);
+  flex-wrap: wrap;
+}
+
+.toolbar-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.toolbar-btn:hover { background: var(--gray-200); }
+
+.toolbar-separator { width: 1px; height: 24px; background: var(--border); margin: 0 var(--spacing-xs); }
+
+.document-body {
+  padding: var(--spacing-xl);
+  min-height: 400px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--gray-800);
+}
+
+.document-body h2 { font-size: 20px; font-weight: 700; margin: var(--spacing-lg) 0 var(--spacing-sm); color: var(--gray-900); }
+.document-body h3 { font-size: 16px; font-weight: 600; margin: var(--spacing-md) 0 var(--spacing-sm); color: var(--gray-800); }
+.document-body ul { padding-left: var(--spacing-lg); margin: var(--spacing-sm) 0; }
+.document-body li { margin-bottom: var(--spacing-xs); }
+
+.document-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--info-blue-light);
+  border: 1px solid #BFDBFE;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--scope-cc-text);
+  margin-bottom: var(--spacing-md);
+}
+
+.document-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--border);
+  background: var(--gray-50);
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.team-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 13px;
+  color: var(--gray-600);
+}
+
+/* ============================================
+   TAB: COMPLIANCE
+   ============================================ */
+.compliance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+@media (max-width: 900px) { .compliance-grid { grid-template-columns: 1fr; } }
+
+.compliance-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.compliance-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: var(--spacing-md);
+}
+
+.flag-toggle-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.flag-toggle-item:last-child { border-bottom: none; }
+
+.flag-toggle-info { flex: 1; }
+.flag-toggle-name { font-size: 13px; font-weight: 500; color: var(--gray-700); }
+.flag-toggle-desc { font-size: 12px; color: var(--gray-500); }
+.flag-toggle-action {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  margin-left: var(--spacing-sm);
+}
+
+.suggested-flag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background: var(--gray-50);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.suggested-flag-info { flex: 1; }
+.suggested-flag-pattern { font-size: 13px; color: var(--gray-700); font-weight: 500; }
+.suggested-flag-detail { font-size: 12px; color: var(--gray-500); }
+
+.suggested-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+/* ============================================
+   TAB: HISTORICO
+   ============================================ */
+.timeline {
+  position: relative;
+  padding-left: var(--spacing-xl);
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: var(--spacing-lg);
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gray-300);
+  border: 2px solid var(--white);
+}
+
+.timeline-dot.active { background: var(--success-green); }
+
+.timeline-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.timeline-version { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+.timeline-date { font-size: 12px; color: var(--gray-500); }
+.timeline-author { font-size: 13px; color: var(--gray-600); }
+.timeline-desc { font-size: 13px; color: var(--gray-700); margin-top: var(--spacing-xs); }
+
+.timeline-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.diff-block {
+  font-size: 12px;
+  font-family: 'SF Mono', Monaco, monospace;
+  margin-top: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.diff-added { background: #D1FAE5; color: #065F46; padding: var(--spacing-xs) var(--spacing-sm); }
+.diff-removed { background: var(--danger-red-light); color: #991B1B; padding: var(--spacing-xs) var(--spacing-sm); }
+
+.version-compare {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  font-size: 13px;
+  color: var(--gray-600);
+}
+
+.version-select {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  background: var(--white);
+  font-family: inherit;
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  max-width: 720px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.modal-title { font-size: 24px; font-weight: 700; color: var(--gray-900); }
+.modal-subtitle { font-size: 14px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+
+.modal-close {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--gray-100);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--gray-600);
+}
+.modal-close:hover { background: var(--gray-200); }
+
+.modal-body { padding: var(--spacing-lg); }
+
+.modal-tabs {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--spacing-sm);
+}
+
+.modal-tab {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-500);
+  border-bottom: 2px solid transparent;
+  min-height: 44px;
+}
+.modal-tab:hover { color: var(--gray-700); }
+.modal-tab.active { color: var(--primary-orange); border-bottom-color: var(--primary-orange); font-weight: 600; }
+
+.modal-tab-panel { display: none; }
+.modal-tab-panel.active { display: block; }
+
+/* Upload area */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.upload-area:hover { border-color: var(--primary-orange); background: var(--primary-orange-light); }
+
+.upload-icon { font-size: 40px; margin-bottom: var(--spacing-md); }
+.upload-text { font-size: 14px; color: var(--gray-600); }
+
+.progress-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 13px;
+  color: var(--gray-500);
+}
+.progress-step.done { color: var(--success-green); }
+.progress-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gray-300);
+  flex-shrink: 0;
+}
+.progress-step.done .progress-step-dot { background: var(--success-green); }
+
+/* Template card */
+.template-card {
+  padding: var(--spacing-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.template-card:hover { border-color: var(--primary-orange); box-shadow: var(--shadow-md); }
+
+.template-title { font-size: 16px; font-weight: 600; color: var(--gray-800); }
+.template-desc { font-size: 13px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+
+.template-tags {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.template-tag {
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* AI describe */
+.ai-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+.ai-textarea:focus { border-color: var(--info-blue); outline: none; }
+
+/* ============================================
+   PREVIEW / SIMULATION
+   ============================================ */
+.simulation-panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.simulation-title { font-size: 16px; font-weight: 600; color: var(--gray-800); margin-bottom: var(--spacing-md); }
+
+.simulation-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group { display: flex; flex-direction: column; gap: var(--spacing-xs); }
+.form-label { font-size: 12px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.05em; }
+.form-input {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-family: inherit;
+  min-height: 40px;
+}
+.form-input:focus { border-color: var(--info-blue); outline: none; }
+
+.simulation-result {
+  background: var(--gray-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  display: none;
+}
+.simulation-result.show { display: block; }
+
+.simulation-result-title { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: var(--spacing-sm); }
+
+/* ============================================
+   FAB (Agent suggestions)
+   ============================================ */
+.fab {
+  position: fixed;
+  bottom: var(--spacing-xl);
+  right: var(--spacing-xl);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--info-blue);
+  color: var(--white);
+  border: none;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 800;
+  transition: all 0.2s;
+}
+.fab:hover { transform: scale(1.1); box-shadow: var(--shadow-xl); }
+
+.fab-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--danger-red);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-drawer {
+  position: fixed;
+  bottom: 100px;
+  right: var(--spacing-xl);
+  width: 360px;
+  max-height: 500px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  z-index: 800;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+.fab-drawer.open { display: flex; }
+
+.fab-drawer-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.fab-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-sm);
+}
+
+.suggestion-item {
+  padding: var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.suggestion-pattern { font-size: 13px; font-weight: 500; color: var(--gray-700); }
+.suggestion-detail { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+.suggestion-actions { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+
+/* ============================================
+   TOAST
+   ============================================ */
+.toast-container {
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.toast {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+  color: var(--gray-700);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  animation: toastIn 0.3s ease;
+  min-width: 300px;
+}
+
+.toast.success { border-left: 4px solid var(--success-green); }
+.toast.error { border-left: 4px solid var(--danger-red); }
+.toast.info { border-left: 4px solid var(--info-blue); }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ============================================
+   CONFIDENTIAL RULES
+   ============================================ */
+.confidential-block {
+  background: var(--warning-yellow-light);
+  border: 1px solid #FDE68A;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.confidential-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: #92400E;
+  margin-bottom: var(--spacing-sm);
+}
+
+.visibility-checkboxes {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-sm);
+}
+
+.visibility-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 12px;
+  color: var(--gray-600);
+}
+
+.visibility-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-orange);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+.hamburger-btn {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  font-size: 20px;
+  color: var(--gray-600);
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  z-index: 200;
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 1280px) {
+  .slideover { width: 480px; right: -480px; }
+  .content-wrapper { padding: var(--spacing-lg); }
+}
+
+@media (max-width: 1024px) {
+  .hamburger-btn { display: flex; }
+  .main-sidebar, .settings-sidebar {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .main-sidebar { left: 0; }
+  .settings-sidebar { left: 212px; }
+  .main-sidebar.open, .settings-sidebar.open { transform: translateX(0); }
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 250;
+  }
+  .sidebar-backdrop.active { display: block; }
+  .slideover { width: 100%; right: -100%; }
+  .compliance-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .content-wrapper { padding: var(--spacing-md); padding-top: 60px; }
+  .page-header-top { flex-direction: column; }
+  .view-controls { flex-direction: column; }
+  .search-filters { width: 100%; }
+  .simulation-form { grid-template-columns: 1fr; }
+  .agent-banner { flex-direction: column; align-items: flex-start; }
+  .data-table { display: none; }
+  .mobile-cards { display: block !important; }
+  .fab { bottom: var(--spacing-md); right: var(--spacing-md); }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  .page-title { font-size: 24px; }
+}
+
+.mobile-cards { display: none; }
+
+.mobile-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.mobile-card-title { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+.mobile-card-detail { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+
+/* ============================================
+   CUSTOM FIELDS & SUBMISSION REQUIREMENTS
+   ============================================ */
+.custom-fields-section {
+  margin-top: var(--spacing-lg);
+}
+
+.condition-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.condition-keyword {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--info-blue);
+  white-space: nowrap;
+}
+
+.condition-select {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--white);
+  font-family: inherit;
+}
+
+.custom-field-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+  background: var(--white);
+}
+
+.custom-field-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.custom-field-name { font-size: 13px; font-weight: 500; color: var(--gray-700); }
+.custom-field-type { font-size: 12px; color: var(--gray-500); }
+
+.rule-builder-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background: var(--info-blue-light);
+  color: var(--scope-cc-text);
+}
+
+/* Utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<!-- Sidebar backdrop (mobile) -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebars()"></div>
+
+<!-- Hamburger (mobile) -->
+<button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menu" onclick="toggleSidebars()">☰</button>
+
+<div class="app-layout">
+  <!-- ============================================
+       MAIN SIDEBAR
+       ============================================ -->
+  <nav class="main-sidebar" id="mainSidebar" aria-label="Navegação principal">
+    <div class="sidebar-logo">
+      <span class="sidebar-logo-text">payfy</span>
+    </div>
+    <div class="sidebar-nav">
+      <a href="#" class="sidebar-item" aria-label="Início">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+        Início
+      </a>
+      <a href="#" class="sidebar-item" aria-label="Solicitações">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
+        Solicitações
+      </a>
+      <a href="#" class="sidebar-item" aria-label="Cartões">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
+        Cartões
+      </a>
+      <a href="#" class="sidebar-item" aria-label="Usuários">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>
+        Usuários
+      </a>
+      <a href="index-v6-despesas.html" class="sidebar-item" aria-label="Despesas">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"/></svg>
+        Despesas
+      </a>
+      <a href="#" class="sidebar-item" aria-label="Passagens">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
+        Passagens
+      </a>
+      <a href="#" class="sidebar-item" aria-label="Benefícios">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm2 0a1 1 0 10-1-1v1h1z" clip-rule="evenodd"/><path d="M9 11H3v5a2 2 0 002 2h4v-7zM11 18h4a2 2 0 002-2v-5h-6v7z"/></svg>
+        Benefícios
+      </a>
+      <a href="#" class="sidebar-item" aria-label="Relatórios">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd"/></svg>
+        Relatórios
+      </a>
+      <div class="sidebar-separator"></div>
+      <a href="#" class="sidebar-item active" aria-label="Configurações">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+        Configurações
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============================================
+       SETTINGS SUB-SIDEBAR
+       ============================================ -->
+  <nav class="settings-sidebar" id="settingsSidebar" aria-label="Configurações">
+    <div class="settings-group-label">Organização</div>
+    <a href="#" class="settings-item">Geral</a>
+    <a href="index-v6-centros-custo.html" class="settings-item">Unidades</a>
+    <a href="index-v6-times.html" class="settings-item">Times</a>
+    <a href="#" class="settings-item">Categorias</a>
+    <a href="#" class="settings-item">Projetos</a>
+    <a href="#" class="settings-item">Permissões</a>
+
+    <div class="settings-separator"></div>
+    <div class="settings-group-label">Política de Gastos</div>
+    <a href="#" class="settings-item active">Políticas de Gastos</a>
+    <a href="#" class="settings-item">Despesas</a>
+    <a href="#" class="settings-item">Categorias</a>
+    <a href="#" class="settings-item">Reembolsos</a>
+    <a href="#" class="settings-item">Níveis de Aprovação</a>
+    <a href="#" class="settings-item">Regras de Gastos</a>
+    <a href="#" class="settings-item">Regras de Bloqueio</a>
+
+    <div class="settings-separator"></div>
+    <div class="settings-group-label">Integrações</div>
+    <a href="#" class="settings-item">ERP</a>
+
+    <div class="settings-separator"></div>
+    <div class="settings-group-label">Cartões</div>
+    <a href="#" class="settings-item">Recarga em Lote</a>
+    <a href="#" class="settings-item">Plástico</a>
+  </nav>
+
+  <!-- ============================================
+       MAIN CONTENT
+       ============================================ -->
+  <main class="main-content" id="mainContent">
+    <div class="content-wrapper">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div class="page-header-top">
+          <div>
+            <h1 class="page-title">Políticas de Gastos</h1>
+            <p class="page-subtitle">Hub de controle — gerencie spend controls e configure o Policy Agent</p>
+          </div>
+          <button class="btn btn-primary" onclick="openModal('createPolicyModal')">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 010-2h4V3a1 1 0 011-1z"/></svg>
+            Criar Nova Política
+          </button>
+        </div>
+      </div>
+
+      <!-- AGENT STATUS BANNER -->
+      <div class="agent-banner" id="agentBanner">
+        <div class="agent-banner-left">
+          <span class="agent-dot"></span>
+          <span class="agent-label">Policy Agent ativo</span>
+          <span class="agent-info">
+            Modo: Recomendação
+            <span class="agent-info-divider">·</span>
+            99.1% acurácia
+            <span class="agent-info-divider">·</span>
+            847 transações
+            <span class="agent-info-divider">·</span>
+            R$ 45k economia estimada
+          </span>
+          <div class="agent-hierarchy">
+            <span class="hierarchy-badge flags">Flags</span>
+            <span style="color: var(--gray-400);">›</span>
+            <span class="hierarchy-badge agent">Agent</span>
+            <span style="color: var(--gray-400);">›</span>
+            <span class="hierarchy-badge workflows">Workflows</span>
+          </div>
+        </div>
+        <div class="agent-banner-right">
+          <button class="btn btn-secondary btn-sm" onclick="toggleAgentDropdown()" aria-expanded="false" aria-controls="agentDropdown">
+            Configurar Agent ▾
+          </button>
+          <div class="agent-dropdown" id="agentDropdown" role="menu">
+            <button class="agent-dropdown-item" role="menuitem" onclick="setAgentMode('off')">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--gray-400);flex-shrink:0;"></span>
+              Desativar Agent
+            </button>
+            <button class="agent-dropdown-item" role="menuitem" onclick="setAgentMode('test')">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--warning-yellow);flex-shrink:0;"></span>
+              Modo Teste
+            </button>
+            <button class="agent-dropdown-item active" role="menuitem" onclick="setAgentMode('recommend')">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--info-blue);flex-shrink:0;"></span>
+              Recomendação
+            </button>
+            <button class="agent-dropdown-item" role="menuitem" onclick="setAgentMode('auto')">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--success-green);flex-shrink:0;"></span>
+              Aprovação Automática
+            </button>
+            <div class="agent-dropdown-separator"></div>
+            <div class="threshold-section">
+              <div class="threshold-label">
+                <span>Threshold de confiança</span>
+                <span id="thresholdValue">85%</span>
+              </div>
+              <input type="range" class="threshold-slider" min="50" max="99" value="85" oninput="document.getElementById('thresholdValue').textContent=this.value+'%'" aria-label="Threshold de confiança do Agent">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs-container">
+        <div class="tabs-nav" role="tablist" aria-label="Seções da política">
+          <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tabRegras" id="tabBtnRegras" onclick="switchTab('Regras')">Regras</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tabDocumento" id="tabBtnDocumento" onclick="switchTab('Documento')">Documento</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tabCompliance" id="tabBtnCompliance" onclick="switchTab('Compliance')">Compliance</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tabHistorico" id="tabBtnHistorico" onclick="switchTab('Histórico')">Histórico</button>
+        </div>
+      </div>
+
+      <!-- ============================================
+           TAB: REGRAS
+           ============================================ -->
+      <div class="tab-panel active" id="tabRegras" role="tabpanel" aria-labelledby="tabBtnRegras">
+
+        <!-- View controls -->
+        <div class="view-controls">
+          <div class="search-filters">
+            <input type="text" class="search-input" placeholder="Buscar regras..." aria-label="Buscar regras">
+            <select class="filter-select" aria-label="Filtrar por política">
+              <option>Todas as Políticas</option>
+              <option>Solicitações</option>
+              <option>Despesas de Cartão</option>
+              <option>Reembolsos</option>
+              <option>Viagens</option>
+            </select>
+            <select class="filter-select" aria-label="Filtrar por tipo">
+              <option>Todos os Tipos</option>
+              <option>Agent</option>
+              <option>Flag</option>
+              <option>Confidencial</option>
+              <option>Brasil</option>
+            </select>
+            <select class="filter-select" aria-label="Filtrar por escopo">
+              <option>Todos os Escopos</option>
+              <option>Geral</option>
+              <option>Centro de Custo</option>
+              <option>Time</option>
+            </select>
+          </div>
+          <div class="view-toggle" role="radiogroup" aria-label="Modo de visualização">
+            <button class="view-toggle-btn active" role="radio" aria-checked="true" onclick="switchView('cards')">Cards</button>
+            <button class="view-toggle-btn" role="radio" aria-checked="false" onclick="switchView('table')">Tabela</button>
+          </div>
+        </div>
+
+        <!-- CARDS VIEW -->
+        <div id="cardsView" class="accordion-list">
+
+          <!-- Policy: Solicitações -->
+          <div class="accordion-card" style="--bg-start: #F0F9FF; --bg-end: #E0F2FE;">
+            <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
+              <div class="accordion-header-left">
+                <div class="policy-icon" style="background: var(--info-blue-light); color: var(--info-blue);">📋</div>
+                <div>
+                  <div class="policy-name">Solicitações</div>
+                  <div class="policy-description">Fluxo de solicitação de compras e aprovações</div>
+                </div>
+              </div>
+              <div class="summary-pills">
+                <span class="pill pill-agent">3 Agent</span>
+                <span class="pill pill-flag">2 Flags</span>
+                <span class="pill pill-conf">1 Conf.</span>
+              </div>
+              <svg class="expand-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </button>
+            <div class="accordion-body">
+              <div class="rule-group rule-group-agent">
+                <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent interpreta</span></div>
+                <div class="rule-item">⚡ IA preenche automaticamente: Centro de Custo, Projeto, Categoria</div>
+                <div class="rule-item">🤖 Valor ≤ R$ 2.000 → Auto-aprovação (recomendação)</div>
+                <div class="rule-item">🤖 Valor &gt; R$ 2.000 → Escalar para gestor direto</div>
+              </div>
+              <div class="rule-group rule-group-flag">
+                <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
+                <div class="rule-item">🚩 Valor divergente do histórico (&gt;2x média) → Escalar para admin</div>
+                <div class="rule-item">🚩 Fornecedor novo (primeira compra) → Alertar gestor</div>
+              </div>
+              <div class="confidential-block">
+                <div class="confidential-header">🔒 CONFIDENCIAL</div>
+                <div class="rule-item">🔒 Diretoria: limite auto-aprovação R$ 10.000</div>
+                <div class="visibility-checkboxes">
+                  <label class="visibility-checkbox"><input type="checkbox" checked> Admin</label>
+                  <label class="visibility-checkbox"><input type="checkbox" checked> CFO</label>
+                  <label class="visibility-checkbox"><input type="checkbox"> Diretor</label>
+                  <label class="visibility-checkbox"><input type="checkbox"> Gestor</label>
+                </div>
+              </div>
+
+              <!-- Exceptions summary -->
+              <div class="exceptions-summary">
+                <div class="exceptions-summary-title">Exceções ativas</div>
+                <div class="exception-link">
+                  <a href="index-v6-centros-custo.html">CC Internacional: auto-aprovação R$ 10.000</a>
+                  <span class="exception-badge exception-badge-cc">Exceção CC</span>
+                </div>
+                <div class="exception-link">
+                  <a href="index-v6-times.html">Time Diretoria: CFO aprova &gt; R$ 5.000</a>
+                  <span class="exception-badge exception-badge-time">Exceção Time</span>
+                </div>
+                <div class="exceptions-count">2 exceções ativas · 6 CCs/times usando regra padrão</div>
+              </div>
+
+              <div class="accordion-actions">
+                <button class="btn btn-secondary btn-sm" onclick="openSlideover('solicitacoes')">Editar Regras</button>
+                <button class="btn btn-ghost btn-sm" onclick="showSimulation()">Testar Regras</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Policy: Despesas de Cartão -->
+          <div class="accordion-card" style="--bg-start: #FFF7ED; --bg-end: #FFEDD5;">
+            <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
+              <div class="accordion-header-left">
+                <div class="policy-icon" style="background: var(--primary-orange-light); color: var(--primary-orange);">💳</div>
+                <div>
+                  <div class="policy-name">Despesas de Cartão</div>
+                  <div class="policy-description">Gastos em cartão corporativo e virtual</div>
+                </div>
+              </div>
+              <div class="summary-pills">
+                <span class="pill pill-agent">2 Agent</span>
+                <span class="pill pill-flag">3 Flags</span>
+                <span class="pill pill-brasil">2 Brasil</span>
+              </div>
+              <svg class="expand-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </button>
+            <div class="accordion-body">
+              <div class="rule-group rule-group-agent">
+                <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent interpreta</span></div>
+                <div class="rule-item">🤖 Comprovante obrigatório acima de R$ 50</div>
+                <div class="rule-item">🤖 Categorização automática por MCC (Merchant Category Code)</div>
+              </div>
+              <div class="rule-group rule-group-flag">
+                <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
+                <div class="rule-item">🚩 Gasto fora do horário comercial → Alertar gestor</div>
+                <div class="rule-item">🚩 Recibo duplicado detectado → Bloquear</div>
+                <div class="rule-item">🚩 Merchant proibido (lista negra) → Bloquear</div>
+              </div>
+              <div class="rule-group rule-group-brasil">
+                <div class="rule-group-header"><span class="rule-group-badge badge-brasil">🇧🇷 FLAGS BRASIL</span></div>
+                <div class="rule-item">📄 NF-e obrigatória acima de R$ 200</div>
+                <div class="rule-item">🏢 Validação CNPJ ativo na Receita Federal</div>
+              </div>
+
+              <div class="exceptions-summary">
+                <div class="exceptions-summary-title">Exceções ativas</div>
+                <div class="exception-link">
+                  <a href="index-v6-centros-custo.html">CC Marketing: sem comprovante até R$ 200</a>
+                  <span class="exception-badge exception-badge-cc">Exceção CC</span>
+                </div>
+                <div class="exception-link">
+                  <a href="index-v6-times.html">Time Marketing Digital: sem comprovante até R$ 200</a>
+                  <span class="exception-badge exception-badge-time">Exceção Time</span>
+                </div>
+                <div class="exceptions-count">2 exceções ativas · 6 CCs/times usando regra padrão</div>
+              </div>
+
+              <div class="accordion-actions">
+                <button class="btn btn-secondary btn-sm" onclick="openSlideover('cartao')">Editar Regras</button>
+                <button class="btn btn-ghost btn-sm" onclick="showSimulation()">Testar Regras</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Policy: Reembolsos -->
+          <div class="accordion-card" style="--bg-start: #F0FDF4; --bg-end: #DCFCE7;">
+            <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
+              <div class="accordion-header-left">
+                <div class="policy-icon" style="background: var(--success-green-light); color: var(--success-green);">💰</div>
+                <div>
+                  <div class="policy-name">Reembolsos</div>
+                  <div class="policy-description">Solicitações de reembolso e devolução</div>
+                </div>
+              </div>
+              <div class="summary-pills">
+                <span class="pill pill-agent">2 Agent</span>
+                <span class="pill pill-flag">2 Flags</span>
+                <span class="pill pill-brasil">1 Brasil</span>
+              </div>
+              <svg class="expand-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </button>
+            <div class="accordion-body">
+              <div class="rule-group rule-group-agent">
+                <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent interpreta</span></div>
+                <div class="rule-item">🤖 Limite mensal por colaborador: R$ 3.000</div>
+                <div class="rule-item">🤖 Prazo de submissão: 30 dias após gasto</div>
+              </div>
+              <div class="rule-group rule-group-flag">
+                <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
+                <div class="rule-item">🚩 Comprovante AI-generated detectado → Escalar para admin</div>
+                <div class="rule-item">🚩 Reembolso acima de R$ 1.000 → Aprovação dupla (gestor + financeiro)</div>
+              </div>
+              <div class="rule-group rule-group-brasil">
+                <div class="rule-group-header"><span class="rule-group-badge badge-brasil">🇧🇷 FLAGS BRASIL</span></div>
+                <div class="rule-item">🍽️ VR/VA: limite per diem CLT R$ 44,60</div>
+              </div>
+
+              <div class="exceptions-summary">
+                <div class="exceptions-summary-title">Exceções ativas</div>
+                <div class="exception-link">
+                  <a href="index-v6-times.html">Time Comercial: sem limite de reembolso viagem</a>
+                  <span class="exception-badge exception-badge-time">Exceção Time</span>
+                </div>
+                <div class="exception-link">
+                  <a href="index-v6-times.html">Time Diretoria: sem limite mensal</a>
+                  <span class="exception-badge exception-badge-time">Exceção Time</span>
+                </div>
+                <div class="exceptions-count">2 exceções ativas · 6 CCs/times usando regra padrão</div>
+              </div>
+
+              <div class="accordion-actions">
+                <button class="btn btn-secondary btn-sm" onclick="openSlideover('reembolsos')">Editar Regras</button>
+                <button class="btn btn-ghost btn-sm" onclick="showSimulation()">Testar Regras</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Policy: Viagens -->
+          <div class="accordion-card" style="--bg-start: #EDE9FE; --bg-end: #DDD6FE;">
+            <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
+              <div class="accordion-header-left">
+                <div class="policy-icon" style="background: var(--purple-light); color: var(--purple);">✈️</div>
+                <div>
+                  <div class="policy-name">Viagens</div>
+                  <div class="policy-description">Passagens, hospedagem e despesas de viagem</div>
+                </div>
+              </div>
+              <div class="summary-pills">
+                <span class="pill pill-agent">3 Agent</span>
+                <span class="pill pill-flag">2 Flags</span>
+                <span class="pill pill-conf">1 Conf.</span>
+              </div>
+              <svg class="expand-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </button>
+            <div class="accordion-body">
+              <div class="rule-group rule-group-agent">
+                <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent interpreta</span></div>
+                <div class="rule-item">🤖 Classe econômica obrigatória para voos nacionais</div>
+                <div class="rule-item">🤖 Hospedagem: até R$ 500/noite (nacionais), R$ 1.200/noite (internacionais)</div>
+                <div class="rule-item">🤖 Antecedência mínima de 7 dias para aprovação</div>
+              </div>
+              <div class="rule-group rule-group-flag">
+                <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
+                <div class="rule-item">🚩 Viagem sem aprovação prévia → Bloquear reembolso</div>
+                <div class="rule-item">🚩 Destino de alto risco → Escalar para RH + admin</div>
+              </div>
+              <div class="confidential-block">
+                <div class="confidential-header">🔒 CONFIDENCIAL</div>
+                <div class="rule-item">🔒 Diretoria: classe executiva permitida em voos &gt;4h</div>
+                <div class="visibility-checkboxes">
+                  <label class="visibility-checkbox"><input type="checkbox" checked> Admin</label>
+                  <label class="visibility-checkbox"><input type="checkbox" checked> CFO</label>
+                  <label class="visibility-checkbox"><input type="checkbox" checked> Diretor</label>
+                  <label class="visibility-checkbox"><input type="checkbox"> Gestor</label>
+                </div>
+              </div>
+
+              <div class="exceptions-summary">
+                <div class="exceptions-summary-title">Exceções ativas</div>
+                <div class="exception-link">
+                  <a href="index-v6-centros-custo.html">CC Internacional: hospedagem até R$ 2.000/noite</a>
+                  <span class="exception-badge exception-badge-cc">Exceção CC</span>
+                </div>
+                <div class="exceptions-count">1 exceção ativa · 7 CCs/times usando regra padrão</div>
+              </div>
+
+              <div class="accordion-actions">
+                <button class="btn btn-secondary btn-sm" onclick="openSlideover('viagens')">Editar Regras</button>
+                <button class="btn btn-ghost btn-sm" onclick="showSimulation()">Testar Regras</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE VIEW -->
+        <div id="tableView" style="display:none;">
+          <div class="table-container">
+            <table class="data-table" aria-label="Regras de políticas">
+              <thead>
+                <tr>
+                  <th>Política</th>
+                  <th>Regra</th>
+                  <th>Tipo</th>
+                  <th>Escopo</th>
+                  <th>Trigger</th>
+                  <th>Ação</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="openSlideover('solicitacoes')">
+                  <td><strong>Solicitações</strong></td>
+                  <td>Auto-aprovação ≤ R$ 2.000</td>
+                  <td><span class="type-badge badge-agent">Agent</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Valor ≤ R$ 2.000</td>
+                  <td>Auto-aprovar</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('solicitacoes')">
+                  <td><strong>Solicitações</strong></td>
+                  <td>Escalar &gt; R$ 2.000</td>
+                  <td><span class="type-badge badge-agent">Agent</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Valor &gt; R$ 2.000</td>
+                  <td>Escalar gestor</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('solicitacoes')">
+                  <td><strong>Solicitações</strong></td>
+                  <td>Preenchimento automático IA</td>
+                  <td><span class="type-badge badge-agent">Agent</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Sempre</td>
+                  <td>Preencher campos</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('solicitacoes')">
+                  <td><strong>Solicitações</strong></td>
+                  <td>Valor divergente do histórico</td>
+                  <td><span class="type-badge badge-flag">Flag</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>&gt;2x média</td>
+                  <td>Escalar admin</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('solicitacoes')">
+                  <td><strong>Solicitações</strong></td>
+                  <td>Fornecedor novo</td>
+                  <td><span class="type-badge badge-flag">Flag</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>1ª compra</td>
+                  <td>Alertar gestor</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('solicitacoes')">
+                  <td><strong>Solicitações</strong></td>
+                  <td>Limite diretoria R$ 10.000</td>
+                  <td><span class="type-badge badge-conf">🔒 Conf.</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Cargo = Diretor</td>
+                  <td>Auto-aprovar</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('cartao')">
+                  <td><strong>Despesas Cartão</strong></td>
+                  <td>Comprovante obrigatório &gt; R$ 50</td>
+                  <td><span class="type-badge badge-agent">Agent</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Valor &gt; R$ 50</td>
+                  <td>Exigir comprovante</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('cartao')">
+                  <td><strong>Despesas Cartão</strong></td>
+                  <td>Categorização por MCC</td>
+                  <td><span class="type-badge badge-agent">Agent</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Sempre</td>
+                  <td>Categorizar</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('cartao')">
+                  <td><strong>Despesas Cartão</strong></td>
+                  <td>Gasto fora do horário</td>
+                  <td><span class="type-badge badge-flag">Flag</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Fora horário</td>
+                  <td>Alertar gestor</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('cartao')">
+                  <td><strong>Despesas Cartão</strong></td>
+                  <td>Recibo duplicado</td>
+                  <td><span class="type-badge badge-flag">Flag</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Duplicata</td>
+                  <td>Bloquear</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr onclick="openSlideover('cartao')">
+                  <td><strong>Despesas Cartão</strong></td>
+                  <td>NF-e obrigatória &gt; R$ 200</td>
+                  <td><span class="type-badge badge-brasil">🇧🇷 Brasil</span></td>
+                  <td><span class="scope-badge scope-geral">Geral</span></td>
+                  <td>Valor &gt; R$ 200</td>
+                  <td>Exigir NF-e</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Solicitações</strong></td>
+                  <td>Auto-aprovação R$ 10.000</td>
+                  <td><span class="type-badge badge-agent">Agent</span></td>
+                  <td><span class="scope-badge scope-cc">CC Internacional</span></td>
+                  <td>Valor ≤ R$ 10.000</td>
+                  <td>Auto-aprovar</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Solicitações</strong></td>
+                  <td>CFO aprova &gt; R$ 5.000</td>
+                  <td><span class="type-badge badge-agent">Agent</span></td>
+                  <td><span class="scope-badge scope-time">Time Diretoria</span></td>
+                  <td>Valor &gt; R$ 5.000</td>
+                  <td>Escalar CFO</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="table-footer">22 regras totais · 8 Agent · 10 Flags · 4 Confidencial · 3 exceções de time</div>
+          </div>
+
+          <!-- Mobile cards -->
+          <div class="mobile-cards" aria-label="Regras de políticas (visualização mobile)">
+            <div class="mobile-card">
+              <div class="mobile-card-title">Solicitações — Auto-aprovação ≤ R$ 2.000</div>
+              <div class="mobile-card-detail"><span class="type-badge badge-agent">Agent</span> · <span class="scope-badge scope-geral">Geral</span> · <span class="status-badge status-active">Ativo</span></div>
+            </div>
+            <div class="mobile-card">
+              <div class="mobile-card-title">Despesas Cartão — Recibo duplicado</div>
+              <div class="mobile-card-detail"><span class="type-badge badge-flag">Flag</span> · <span class="scope-badge scope-geral">Geral</span> · <span class="status-badge status-active">Ativo</span></div>
+            </div>
+            <div class="mobile-card">
+              <div class="mobile-card-title">Reembolsos — Limite mensal R$ 3.000</div>
+              <div class="mobile-card-detail"><span class="type-badge badge-agent">Agent</span> · <span class="scope-badge scope-geral">Geral</span> · <span class="status-badge status-active">Ativo</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulation panel -->
+        <div class="simulation-panel" id="simulationPanel" style="display:none;">
+          <div class="simulation-title">Testar Política</div>
+          <div class="simulation-form">
+            <div class="form-group">
+              <label class="form-label" for="simCategoria">Categoria</label>
+              <select class="form-input" id="simCategoria">
+                <option>Alimentação</option>
+                <option>Transporte</option>
+                <option>Hospedagem</option>
+                <option>Material de escritório</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="simValor">Valor (R$)</label>
+              <input type="text" class="form-input" id="simValor" placeholder="1.500,00">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="simTime">Time</label>
+              <select class="form-input" id="simTime">
+                <option>Engenharia</option>
+                <option>Marketing Digital</option>
+                <option>Comercial</option>
+                <option>Diretoria</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="simTipo">Tipo</label>
+              <select class="form-input" id="simTipo">
+                <option>Cartão</option>
+                <option>Reembolso</option>
+                <option>Pix</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="runSimulation()">Simular</button>
+          <div class="simulation-result" id="simulationResult">
+            <div class="simulation-result-title">Resultado da simulação</div>
+            <div style="display:flex;align-items:center;gap:var(--spacing-sm);margin-bottom:var(--spacing-sm);">
+              <span class="status-badge status-active" style="font-size:14px;">✓ Aprovação recomendada (95%)</span>
+            </div>
+            <p style="font-size:13px;color:var(--gray-600);margin-bottom:var(--spacing-sm);">Regra aplicada: <strong>Auto-aprovação ≤ R$ 2.000</strong></p>
+            <p style="font-size:13px;color:var(--gray-600);">Flags ativadas: <strong>Nenhuma</strong></p>
+          </div>
+        </div>
+
+        <!-- Submission Requirements -->
+        <div class="custom-fields-section" style="margin-top:var(--spacing-lg);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-md);">
+            <h3 style="font-size:16px;font-weight:600;color:var(--gray-800);">Requisitos de Submissão</h3>
+          </div>
+          <div class="condition-row">
+            <span class="condition-keyword">SE</span>
+            <select class="condition-select"><option>categoria = Viagem</option></select>
+            <span class="condition-keyword">ENTÃO exigir</span>
+            <select class="condition-select"><option>Destino e Motivo</option></select>
+          </div>
+          <div class="condition-row">
+            <span class="condition-keyword">SE</span>
+            <select class="condition-select"><option>valor &gt; R$ 5.000</option></select>
+            <span class="condition-keyword">ENTÃO exigir</span>
+            <select class="condition-select"><option>Justificativa detalhada</option></select>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:var(--spacing-sm);">+ Adicionar condição</button>
+        </div>
+
+        <!-- Custom User Fields -->
+        <div class="custom-fields-section" style="margin-top:var(--spacing-lg);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-md);">
+            <h3 style="font-size:16px;font-weight:600;color:var(--gray-800);">Campos Personalizados</h3>
+            <button class="btn btn-ghost btn-sm">+ Novo Campo</button>
+          </div>
+          <div class="custom-field-item">
+            <div class="custom-field-info">
+              <div class="custom-field-name">Projeto Interno</div>
+              <div class="custom-field-type">Dropdown · Obrigatório</div>
+            </div>
+            <span class="rule-builder-badge">Disponível no Rule Builder</span>
+          </div>
+          <div class="custom-field-item">
+            <div class="custom-field-info">
+              <div class="custom-field-name">Código do Pedido</div>
+              <div class="custom-field-type">Texto · Opcional</div>
+            </div>
+            <span class="rule-builder-badge">Disponível no Rule Builder</span>
+          </div>
+          <div class="custom-field-item">
+            <div class="custom-field-info">
+              <div class="custom-field-name">Data do Evento</div>
+              <div class="custom-field-type">Data · Opcional</div>
+            </div>
+            <span class="rule-builder-badge">Disponível no Rule Builder</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================
+           TAB: DOCUMENTO
+           ============================================ -->
+      <div class="tab-panel" id="tabDocumento" role="tabpanel" aria-labelledby="tabBtnDocumento">
+        <div class="document-banner">
+          <span>ℹ️</span>
+          Este documento é sincronizado com suas regras. Alterações aqui podem atualizar regras automaticamente.
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-md);flex-wrap:wrap;gap:var(--spacing-sm);">
+          <div class="team-filter">
+            <span>Visualizar como time:</span>
+            <select class="filter-select" aria-label="Filtrar documento por time">
+              <option>Todos (Admin)</option>
+              <option>Engenharia</option>
+              <option>Marketing Digital</option>
+              <option>Comercial</option>
+              <option>Financeiro</option>
+              <option>RH</option>
+              <option>Diretoria</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--spacing-sm);">
+            <span style="font-size:12px;color:var(--gray-500);">Versão atual: v3</span>
+            <button class="btn btn-ghost btn-sm" onclick="switchTab('Histórico')">Ver histórico</button>
+          </div>
+        </div>
+
+        <div class="document-editor">
+          <div class="document-toolbar">
+            <button class="toolbar-btn" aria-label="Negrito"><strong>B</strong></button>
+            <button class="toolbar-btn" aria-label="Itálico"><em>I</em></button>
+            <button class="toolbar-btn" aria-label="Sublinhado"><u>U</u></button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn" aria-label="Título H1">H1</button>
+            <button class="toolbar-btn" aria-label="Título H2">H2</button>
+            <button class="toolbar-btn" aria-label="Título H3">H3</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn" aria-label="Lista não ordenada">☰</button>
+            <button class="toolbar-btn" aria-label="Lista ordenada">1.</button>
+          </div>
+          <div class="document-body" contenteditable="true">
+            <h2>Política de Gastos — Payfy</h2>
+            <p><em>Versão 3.0 — Atualizada em 20/03/2026</em></p>
+
+            <h3>1. Solicitações de Compras</h3>
+            <ul>
+              <li>Valores até <strong>R$ 2.000,00</strong> são auto-aprovados pelo Policy Agent quando em conformidade com as regras vigentes.</li>
+              <li>Valores acima de R$ 2.000,00 exigem aprovação do gestor direto.</li>
+              <li>A IA preenche automaticamente Centro de Custo, Projeto e Categoria com base no histórico.</li>
+            </ul>
+
+            <h3>2. Despesas de Cartão Corporativo</h3>
+            <ul>
+              <li>Comprovante fiscal obrigatório para gastos acima de <strong>R$ 50,00</strong>.</li>
+              <li>Categorização automática pelo Merchant Category Code (MCC).</li>
+              <li>Gastos fora do horário comercial geram alerta automático ao gestor.</li>
+              <li>Nota Fiscal Eletrônica (NF-e) obrigatória para valores acima de R$ 200,00.</li>
+            </ul>
+
+            <h3>3. Reembolsos</h3>
+            <ul>
+              <li>Limite mensal por colaborador: <strong>R$ 3.000,00</strong>.</li>
+              <li>Prazo máximo de submissão: 30 dias após a data do gasto.</li>
+              <li>Reembolsos acima de R$ 1.000,00 exigem aprovação dupla (gestor + financeiro).</li>
+              <li>Vale-refeição/alimentação: limite per diem CLT de R$ 44,60.</li>
+            </ul>
+
+            <h3>4. Viagens Corporativas</h3>
+            <ul>
+              <li>Classe econômica obrigatória para voos nacionais.</li>
+              <li>Hospedagem: até R$ 500,00/noite (nacional) e R$ 1.200,00/noite (internacional).</li>
+              <li>Antecedência mínima de 7 dias para aprovação de viagens.</li>
+              <li>Viagens sem aprovação prévia não serão reembolsadas.</li>
+            </ul>
+          </div>
+          <div class="document-footer">
+            <div style="display:flex;align-items:center;gap:var(--spacing-sm);">
+              <button class="btn btn-primary btn-sm" onclick="showToast('Nova versão publicada com sucesso.','success')">Publicar nova versão</button>
+              <input type="text" class="search-input" placeholder="O que mudou?" style="min-width:250px;" aria-label="Descrição da mudança">
+            </div>
+            <span style="font-size:12px;color:var(--gray-500);">Última publicação: 20/03/2026 por Carlos M.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================
+           TAB: COMPLIANCE
+           ============================================ -->
+      <div class="tab-panel" id="tabCompliance" role="tabpanel" aria-labelledby="tabBtnCompliance">
+        <div class="compliance-grid">
+          <!-- Active Flags -->
+          <div class="compliance-card">
+            <div class="compliance-card-title">Flags Configuradas</div>
+            <div class="flag-toggle-item">
+              <div class="flag-toggle-info">
+                <div class="flag-toggle-name">Recibo duplicado</div>
+                <div class="flag-toggle-desc">Detecta comprovantes enviados mais de uma vez</div>
+              </div>
+              <span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="flag-toggle-item">
+              <div class="flag-toggle-info">
+                <div class="flag-toggle-name">Valor divergente</div>
+                <div class="flag-toggle-desc">Gasto &gt;2x a média histórica do usuário</div>
+              </div>
+              <span class="flag-toggle-action" style="background:var(--warning-yellow-light);color:var(--warning-yellow);">Escalar</span>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="flag-toggle-item">
+              <div class="flag-toggle-info">
+                <div class="flag-toggle-name">Gasto fora de horário</div>
+                <div class="flag-toggle-desc">Transação em horário não-comercial</div>
+              </div>
+              <span class="flag-toggle-action" style="background:var(--info-blue-light);color:var(--info-blue);">Alertar</span>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="flag-toggle-item">
+              <div class="flag-toggle-info">
+                <div class="flag-toggle-name">Comprovante AI-generated</div>
+                <div class="flag-toggle-desc">Detecta comprovantes gerados por IA</div>
+              </div>
+              <span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Escalar</span>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="flag-toggle-item">
+              <div class="flag-toggle-info">
+                <div class="flag-toggle-name">CNPJ inativo</div>
+                <div class="flag-toggle-desc">CNPJ do fornecedor com situação irregular</div>
+              </div>
+              <span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="flag-toggle-item">
+              <div class="flag-toggle-info">
+                <div class="flag-toggle-name">Merchant proibido</div>
+                <div class="flag-toggle-desc">Fornecedor na lista negra da empresa</div>
+              </div>
+              <span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="flag-toggle-item">
+              <div class="flag-toggle-info">
+                <div class="flag-toggle-name">Gasto acima de R$ 5.000</div>
+                <div class="flag-toggle-desc">Qualquer transação única acima deste valor</div>
+              </div>
+              <span class="flag-toggle-action" style="background:var(--warning-yellow-light);color:var(--warning-yellow);">Escalar</span>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+
+          <!-- Suggested Flags -->
+          <div class="compliance-card">
+            <div class="compliance-card-title">Sugestões do Agent</div>
+            <p style="font-size:13px;color:var(--gray-500);margin-bottom:var(--spacing-md);">Baseadas em padrões detectados nos últimos 30 dias</p>
+
+            <div class="suggested-flag">
+              <div class="suggested-flag-info">
+                <div class="suggested-flag-pattern">Gastos recorrentes no mesmo merchant</div>
+                <div class="suggested-flag-detail">12 transações no iFood acima de R$ 100 por usuários diferentes em 7 dias</div>
+              </div>
+              <div class="suggested-actions">
+                <button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button>
+                <button class="btn btn-ghost btn-sm">Ignorar</button>
+              </div>
+            </div>
+
+            <div class="suggested-flag">
+              <div class="suggested-flag-info">
+                <div class="suggested-flag-pattern">Gastos de fim de semana</div>
+                <div class="suggested-flag-detail">8 despesas em sábados/domingos nos últimos 30 dias sem justificativa</div>
+              </div>
+              <div class="suggested-actions">
+                <button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button>
+                <button class="btn btn-ghost btn-sm">Ignorar</button>
+              </div>
+            </div>
+
+            <div class="suggested-flag">
+              <div class="suggested-flag-info">
+                <div class="suggested-flag-pattern">Split de despesas</div>
+                <div class="suggested-flag-detail">3 pares de transações próximas ao limite que somadas excedem o teto</div>
+              </div>
+              <div class="suggested-actions">
+                <button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button>
+                <button class="btn btn-ghost btn-sm">Ignorar</button>
+              </div>
+            </div>
+
+            <div style="margin-top:var(--spacing-md);">
+              <div style="display:flex;align-items:center;gap:var(--spacing-sm);font-size:13px;color:var(--gray-500);">
+                Filtrar por tipo:
+                <select class="filter-select" aria-label="Filtrar por tipo de despesa">
+                  <option>Todas</option>
+                  <option>Solicitações</option>
+                  <option>Cartão</option>
+                  <option>Reembolso</option>
+                  <option>Viagem</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================
+           TAB: HISTORICO
+           ============================================ -->
+      <div class="tab-panel" id="tabHistorico" role="tabpanel" aria-labelledby="tabBtnHistorico">
+        <div class="version-compare">
+          Comparar
+          <select class="version-select" aria-label="Versão de origem">
+            <option>v3</option>
+            <option>v2</option>
+            <option>v1</option>
+          </select>
+          com
+          <select class="version-select" aria-label="Versão de destino">
+            <option>v2</option>
+            <option>v1</option>
+          </select>
+          <button class="btn btn-secondary btn-sm">Comparar</button>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <div>
+                  <span class="timeline-version">v3</span>
+                  <span class="status-badge status-active" style="margin-left:var(--spacing-sm);">Ativa</span>
+                </div>
+                <span class="timeline-date">20/03/2026 · 14:32</span>
+              </div>
+              <div class="timeline-author">Por Carlos M. (CPO)</div>
+              <div class="timeline-desc">Adicionadas flags Brasil (NF-e, CNPJ) e regras de VR/VA per diem CLT. Ajuste nos limites de auto-aprovação.</div>
+              <div class="diff-block">
+                <div class="diff-added">+ NF-e obrigatória acima de R$ 200</div>
+                <div class="diff-added">+ Validação CNPJ ativo na Receita Federal</div>
+                <div class="diff-added">+ VR/VA: limite per diem CLT R$ 44,60</div>
+                <div class="diff-removed">- Limite auto-aprovação: R$ 1.500 → R$ 2.000</div>
+              </div>
+              <div class="timeline-actions">
+                <button class="btn btn-secondary btn-sm">Ver esta versão</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <span class="timeline-version">v2</span>
+                <span class="timeline-date">10/03/2026 · 09:15</span>
+              </div>
+              <div class="timeline-author">Por André C. (CEO)</div>
+              <div class="timeline-desc">Configuração do Policy Agent em modo Recomendação. Adicionadas regras de viagem e exceções para Diretoria.</div>
+              <div class="diff-block">
+                <div class="diff-added">+ Policy Agent: modo Recomendação ativado</div>
+                <div class="diff-added">+ Regras de viagem: classe econômica obrigatória</div>
+                <div class="diff-added">+ Exceção Diretoria: classe executiva voos &gt;4h</div>
+              </div>
+              <div class="timeline-actions">
+                <button class="btn btn-secondary btn-sm">Ver esta versão</button>
+                <button class="btn btn-ghost btn-sm" onclick="showToast('Versão v2 restaurada com sucesso.','success')">Restaurar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <span class="timeline-version">v1</span>
+                <span class="timeline-date">01/03/2026 · 16:45</span>
+              </div>
+              <div class="timeline-author">Por Matheus R. (Tech Lead)</div>
+              <div class="timeline-desc">Versão inicial da política. Regras básicas de solicitação e reembolso. Sem Policy Agent.</div>
+              <div class="timeline-actions">
+                <button class="btn btn-secondary btn-sm">Ver esta versão</button>
+                <button class="btn btn-ghost btn-sm" onclick="showToast('Versão v1 restaurada com sucesso.','success')">Restaurar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-wrapper -->
+  </main>
+
+</div><!-- /app-layout -->
+
+<!-- ============================================
+     SLIDE-OVER
+     ============================================ -->
+<div class="slideover-overlay" id="slideoverOverlay" onclick="closeSlideover()"></div>
+<div class="slideover" id="slideover" role="dialog" aria-modal="true" aria-label="Detalhes da política">
+  <div class="slideover-header">
+    <div>
+      <div class="slideover-title" id="slideoverTitle">Solicitações</div>
+      <div class="slideover-subtitle">Detalhes e workflow da política</div>
+    </div>
+    <button class="slideover-close" onclick="closeSlideover()" aria-label="Fechar painel">✕</button>
+  </div>
+  <div class="slideover-body" id="slideoverBody">
+
+    <!-- Workflow Builder -->
+    <div class="slideover-section">
+      <div class="slideover-section-title">Workflow Builder</div>
+      <div class="workflow-mini">
+        <div class="workflow-step">
+          <div class="workflow-step-icon step-trigger">⚡</div>
+          <div><strong>Trigger:</strong> Quando solicitação é criada</div>
+        </div>
+        <div class="workflow-connector"></div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon step-condition">🤖</div>
+          <div><strong>Se</strong> valor ≤ R$ 2.000 <strong>→</strong> Auto-aprovar (Agent)</div>
+        </div>
+        <div class="workflow-connector"></div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon step-condition">🤖</div>
+          <div><strong>Se</strong> valor &gt; R$ 2.000 <strong>→</strong> Escalar para gestor direto</div>
+        </div>
+        <div class="workflow-connector"></div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon step-action">✓</div>
+          <div><strong>Final:</strong> Registrar decisão + notificar solicitante</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flags de Override -->
+    <div class="slideover-section">
+      <div class="slideover-section-title">Flags de Override</div>
+      <div class="flag-list">
+        <div class="flag-item">
+          <div class="flag-info">
+            <span class="flag-badge-inline" style="background:var(--badge-flag-bg);color:var(--badge-flag-text);">Flag</span>
+            <span>Valor divergente (&gt;2x média)</span>
+          </div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="flag-item">
+          <div class="flag-info">
+            <span class="flag-badge-inline" style="background:var(--badge-flag-bg);color:var(--badge-flag-text);">Flag</span>
+            <span>Fornecedor novo (1ª compra)</span>
+          </div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flags Brasil -->
+    <div class="slideover-section">
+      <div class="slideover-section-title">Flags Brasil 🇧🇷</div>
+      <div style="display:flex;gap:var(--spacing-sm);flex-wrap:wrap;">
+        <span class="pill pill-brasil">NF-e</span>
+        <span class="pill pill-brasil">CNPJ</span>
+        <span class="pill" style="background:var(--gray-100);color:var(--gray-500);">VR/VA (não aplicável)</span>
+        <span class="pill" style="background:var(--gray-100);color:var(--gray-500);">Per diem CLT (não aplicável)</span>
+      </div>
+    </div>
+
+    <!-- Exceções ativas -->
+    <div class="slideover-section">
+      <div class="slideover-section-title">Exceções ativas</div>
+      <div class="exceptions-summary" style="margin-top:0;">
+        <div class="exception-link">
+          <a href="index-v6-centros-custo.html">CC Internacional: auto-aprovação R$ 10.000</a>
+          <span class="exception-badge exception-badge-cc">Exceção CC</span>
+        </div>
+        <div class="exception-link">
+          <a href="index-v6-times.html">Time Diretoria: CFO aprova &gt; R$ 5.000</a>
+          <span class="exception-badge exception-badge-time">Exceção Time</span>
+        </div>
+        <div class="exceptions-count">2 exceções ativas · 6 CCs/times usando regra padrão</div>
+      </div>
+    </div>
+
+    <!-- Confidential -->
+    <div class="slideover-section">
+      <div class="slideover-section-title">🔒 Regras Confidenciais</div>
+      <div class="confidential-block" style="margin-top:0;">
+        <div class="rule-item">🔒 Diretoria: limite auto-aprovação R$ 10.000</div>
+        <div class="visibility-checkboxes">
+          <label class="visibility-checkbox"><input type="checkbox" checked> Admin</label>
+          <label class="visibility-checkbox"><input type="checkbox" checked> CFO</label>
+          <label class="visibility-checkbox"><input type="checkbox"> Diretor</label>
+          <label class="visibility-checkbox"><input type="checkbox"> Gestor</label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================
+     MODAL: CRIAR NOVA POLÍTICA
+     ============================================ -->
+<div class="modal-overlay" id="createPolicyModal" onclick="closeModalIfOutside(event, 'createPolicyModal')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Criar nova política" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Criar Nova Política</div>
+        <div class="modal-subtitle">Escolha como deseja criar sua política de gastos</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('createPolicyModal')" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tabs" role="tablist">
+        <button class="modal-tab active" role="tab" onclick="switchModalTab(this, 'uploadTab')">Upload de PDF</button>
+        <button class="modal-tab" role="tab" onclick="switchModalTab(this, 'aiTab')">Descrever com IA</button>
+        <button class="modal-tab" role="tab" onclick="switchModalTab(this, 'templateTab')">Template Payfy</button>
+        <button class="modal-tab" role="tab" onclick="switchModalTab(this, 'manualTab')">Criar Manualmente</button>
+      </div>
+
+      <!-- Upload -->
+      <div class="modal-tab-panel active" id="uploadTab">
+        <div class="upload-area" onclick="simulateUpload()">
+          <div class="upload-icon">📄</div>
+          <div class="upload-text">Arraste e solte seu PDF aqui ou clique para selecionar</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:var(--spacing-sm);">Suporta PDF, DOCX, TXT</div>
+        </div>
+        <div class="progress-steps" id="uploadProgress" style="display:none;">
+          <div class="progress-step" id="step1"><div class="progress-step-dot"></div> Leitura do PDF</div>
+          <div class="progress-step" id="step2"><div class="progress-step-dot"></div> Análise semântica</div>
+          <div class="progress-step" id="step3"><div class="progress-step-dot"></div> Estruturação de regras</div>
+          <div class="progress-step" id="step4"><div class="progress-step-dot"></div> Identificação de aprovadores</div>
+        </div>
+        <div id="uploadResult" style="display:none;margin-top:var(--spacing-md);padding:var(--spacing-md);background:var(--success-green-light);border-radius:var(--radius-md);text-align:center;">
+          <strong style="color:var(--success-green);">4 Políticas Geradas</strong>
+          <p style="font-size:13px;color:var(--gray-600);margin-top:var(--spacing-xs);">Solicitações, Despesas de Cartão, Reembolsos, Viagens</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:var(--spacing-sm);" onclick="closeModal('createPolicyModal');showToast('Políticas importadas com sucesso!','success')">Aplicar Políticas</button>
+        </div>
+      </div>
+
+      <!-- AI -->
+      <div class="modal-tab-panel" id="aiTab">
+        <p style="font-size:14px;color:var(--gray-600);margin-bottom:var(--spacing-md);">Descreva suas regras em linguagem natural e a IA estruturará a política automaticamente.</p>
+        <textarea class="ai-textarea" placeholder="Ex: Queremos que gastos abaixo de R$ 500 sejam auto-aprovados. Viagens precisam de aprovação do gestor com 7 dias de antecedência. Reembolsos acima de R$ 1.000 precisam de duas aprovações..." aria-label="Descreva sua política"></textarea>
+        <button class="btn btn-primary btn-sm" style="margin-top:var(--spacing-md);" onclick="showToast('Política gerada pela IA com sucesso!','success');closeModal('createPolicyModal')">Gerar Política com IA</button>
+      </div>
+
+      <!-- Template -->
+      <div class="modal-tab-panel" id="templateTab">
+        <div class="template-card" onclick="showToast('Template aplicado com sucesso!','success');closeModal('createPolicyModal')">
+          <div class="template-title">Template Payfy — Melhores Práticas Brasil</div>
+          <div class="template-desc">Template pré-configurado com regras otimizadas para empresas brasileiras, incluindo compliance fiscal e trabalhista.</div>
+          <div class="template-tags">
+            <span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">NF-e</span>
+            <span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">VR/VA</span>
+            <span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">CLT</span>
+            <span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">Per diem</span>
+            <span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">CNPJ</span>
+          </div>
+        </div>
+        <div class="template-card" style="margin-top:var(--spacing-md);">
+          <div class="template-title">Template Startup — Lean</div>
+          <div class="template-desc">Regras simplificadas para startups com poucos níveis de aprovação e limites flexíveis.</div>
+          <div class="template-tags">
+            <span class="template-tag" style="background:var(--info-blue-light);color:var(--scope-cc-text);">Auto-aprovação</span>
+            <span class="template-tag" style="background:var(--info-blue-light);color:var(--scope-cc-text);">Flexível</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual -->
+      <div class="modal-tab-panel" id="manualTab">
+        <div class="form-group" style="margin-bottom:var(--spacing-md);">
+          <label class="form-label" for="policyName">Nome da Política</label>
+          <input type="text" class="form-input" id="policyName" placeholder="Ex: Política de Viagens Internacionais">
+        </div>
+        <div class="form-group" style="margin-bottom:var(--spacing-md);">
+          <label class="form-label" for="policyDesc">Descrição</label>
+          <textarea class="ai-textarea" id="policyDesc" placeholder="Descreva o objetivo desta política..." style="min-height:80px;"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:var(--spacing-md);">
+          <label class="form-label">Tipo de Fluxo</label>
+          <select class="form-input">
+            <option>Solicitações</option>
+            <option>Despesas de Cartão</option>
+            <option>Reembolsos</option>
+            <option>Viagens</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="showToast('Política criada com sucesso!','success');closeModal('createPolicyModal')">Criar Política</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     FAB: Agent Suggestions
+     ============================================ -->
+<button class="fab" id="fabBtn" onclick="toggleFabDrawer()" aria-label="Sugestões do Agent">
+  🤖
+  <span class="fab-badge">3</span>
+</button>
+
+<div class="fab-drawer" id="fabDrawer" role="dialog" aria-label="Sugestões do Agent">
+  <div class="fab-drawer-header">
+    Sugestões do Agent
+    <span style="font-size:12px;color:var(--gray-500);margin-left:var(--spacing-sm);">3 pendentes</span>
+  </div>
+  <div class="fab-drawer-body">
+    <div class="suggestion-item">
+      <div class="suggestion-pattern">Ajustar limite de auto-aprovação</div>
+      <div class="suggestion-detail">62% das aprovações manuais em Solicitações são &lt; R$ 3.000. Sugerimos aumentar o limite de R$ 2.000 para R$ 3.000.</div>
+      <div class="suggestion-actions">
+        <button class="btn btn-primary btn-sm" onclick="showToast('Sugestão aplicada. Limite atualizado para R$ 3.000.','success')">Aplicar</button>
+        <button class="btn btn-ghost btn-sm">Ignorar</button>
+      </div>
+    </div>
+    <div class="suggestion-item">
+      <div class="suggestion-pattern">Nova flag: gasto recorrente alto</div>
+      <div class="suggestion-detail">5 usuários com gastos mensais &gt; R$ 2.500 em alimentação. Padrão incomum detectado.</div>
+      <div class="suggestion-actions">
+        <button class="btn btn-primary btn-sm" onclick="showToast('Flag criada com sucesso.','success')">Aplicar</button>
+        <button class="btn btn-ghost btn-sm">Ignorar</button>
+      </div>
+    </div>
+    <div class="suggestion-item">
+      <div class="suggestion-pattern">Regra de antecedência para viagens</div>
+      <div class="suggestion-detail">40% das viagens são solicitadas com &lt;3 dias de antecedência, custando 35% a mais que reservas antecipadas.</div>
+      <div class="suggestion-actions">
+        <button class="btn btn-primary btn-sm" onclick="showToast('Sugestão aplicada.','success')">Aplicar</button>
+        <button class="btn btn-ghost btn-sm">Ignorar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script>
+// Tabs
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-selected', 'false');
+  });
+  document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+  const btn = document.getElementById('tabBtn' + tabName);
+  const panel = document.getElementById('tab' + tabName);
+  if (btn) { btn.classList.add('active'); btn.setAttribute('aria-selected', 'true'); }
+  if (panel) panel.classList.add('active');
+}
+
+// Accordion
+function toggleAccordion(card) {
+  const wasExpanded = card.classList.contains('expanded');
+  // Close others
+  document.querySelectorAll('.accordion-card.expanded').forEach(c => {
+    c.classList.remove('expanded');
+    c.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+  });
+  if (!wasExpanded) {
+    card.classList.add('expanded');
+    card.querySelector('.accordion-header').setAttribute('aria-expanded', 'true');
+  }
+}
+
+// View toggle
+function switchView(view) {
+  document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-checked', 'false');
+  });
+  if (view === 'cards') {
+    document.getElementById('cardsView').style.display = '';
+    document.getElementById('tableView').style.display = 'none';
+    document.querySelectorAll('.view-toggle-btn')[0].classList.add('active');
+    document.querySelectorAll('.view-toggle-btn')[0].setAttribute('aria-checked', 'true');
+  } else {
+    document.getElementById('cardsView').style.display = 'none';
+    document.getElementById('tableView').style.display = '';
+    document.querySelectorAll('.view-toggle-btn')[1].classList.add('active');
+    document.querySelectorAll('.view-toggle-btn')[1].setAttribute('aria-checked', 'true');
+  }
+}
+
+// Agent dropdown
+function toggleAgentDropdown() {
+  const dd = document.getElementById('agentDropdown');
+  const btn = dd.previousElementSibling;
+  dd.classList.toggle('show');
+  btn.setAttribute('aria-expanded', dd.classList.contains('show'));
+}
+
+function setAgentMode(mode) {
+  const banner = document.getElementById('agentBanner');
+  const label = banner.querySelector('.agent-label');
+  const info = banner.querySelector('.agent-info');
+  const dot = banner.querySelector('.agent-dot');
+  const items = document.querySelectorAll('.agent-dropdown-item');
+
+  items.forEach(i => i.classList.remove('active'));
+
+  const modes = {
+    off: { label: 'Policy Agent desativado', bg: 'var(--gray-100)', border: 'var(--gray-300)', dotColor: 'var(--gray-400)', idx: 0 },
+    test: { label: 'Policy Agent em teste', bg: 'var(--warning-yellow-light)', border: '#FDE68A', dotColor: 'var(--warning-yellow)', idx: 1 },
+    recommend: { label: 'Policy Agent ativo', bg: 'var(--info-blue-light)', border: '#BFDBFE', dotColor: 'var(--success-green)', idx: 2 },
+    auto: { label: 'Policy Agent — Aprovação automática', bg: 'var(--success-green-light)', border: '#BBF7D0', dotColor: 'var(--success-green)', idx: 3 }
+  };
+
+  const m = modes[mode];
+  label.textContent = m.label;
+  banner.style.background = m.bg;
+  banner.style.borderColor = m.border;
+  dot.style.background = m.dotColor;
+  items[m.idx].classList.add('active');
+  document.getElementById('agentDropdown').classList.remove('show');
+  showToast('Modo do Agent atualizado.', 'success');
+}
+
+// Slide-over
+function openSlideover(policy) {
+  const titles = {
+    solicitacoes: 'Solicitações',
+    cartao: 'Despesas de Cartão',
+    reembolsos: 'Reembolsos',
+    viagens: 'Viagens'
+  };
+  document.getElementById('slideoverTitle').textContent = titles[policy] || policy;
+  document.getElementById('slideoverOverlay').classList.add('active');
+  document.getElementById('slideover').classList.add('open');
+  document.getElementById('slideover').focus();
+  trapFocus(document.getElementById('slideover'));
+}
+
+function closeSlideover() {
+  document.getElementById('slideoverOverlay').classList.remove('active');
+  document.getElementById('slideover').classList.remove('open');
+}
+
+// Modal
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  trapFocus(document.getElementById(id).querySelector('.modal'));
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function closeModalIfOutside(e, id) {
+  if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+function switchModalTab(btn, panelId) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// Upload simulation
+function simulateUpload() {
+  const progress = document.getElementById('uploadProgress');
+  const result = document.getElementById('uploadResult');
+  progress.style.display = '';
+  result.style.display = 'none';
+
+  const steps = ['step1', 'step2', 'step3', 'step4'];
+  steps.forEach((s, i) => {
+    setTimeout(() => {
+      document.getElementById(s).classList.add('done');
+      if (i === steps.length - 1) {
+        setTimeout(() => { result.style.display = ''; }, 500);
+      }
+    }, (i + 1) * 800);
+  });
+}
+
+// Simulation
+function showSimulation() {
+  const panel = document.getElementById('simulationPanel');
+  panel.style.display = panel.style.display === 'none' ? '' : 'none';
+  if (panel.style.display !== 'none') panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function runSimulation() {
+  document.getElementById('simulationResult').classList.add('show');
+}
+
+// FAB drawer
+function toggleFabDrawer() {
+  document.getElementById('fabDrawer').classList.toggle('open');
+}
+
+// Toast
+function showToast(message, type) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + (type || 'info');
+  toast.setAttribute('role', 'alert');
+  toast.innerHTML = '<span>' + (type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ') + '</span> ' + message;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 4000);
+}
+
+// Sidebar toggle (mobile)
+function toggleSidebars() {
+  document.getElementById('mainSidebar').classList.toggle('open');
+  document.getElementById('settingsSidebar').classList.toggle('open');
+  document.getElementById('sidebarBackdrop').classList.toggle('active');
+}
+
+function closeSidebars() {
+  document.getElementById('mainSidebar').classList.remove('open');
+  document.getElementById('settingsSidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('active');
+}
+
+// Focus trap
+function trapFocus(element) {
+  const focusable = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  if (focusable.length === 0) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  element.addEventListener('keydown', function handler(e) {
+    if (e.key === 'Escape') {
+      closeSlideover();
+      document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+      element.removeEventListener('keydown', handler);
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  first.focus();
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', function(e) {
+  const dd = document.getElementById('agentDropdown');
+  const bannerRight = document.querySelector('.agent-banner-right');
+  if (dd && dd.classList.contains('show') && !bannerRight.contains(e.target)) {
+    dd.classList.remove('show');
+  }
+
+  const fabDrawer = document.getElementById('fabDrawer');
+  const fabBtn = document.getElementById('fabBtn');
+  if (fabDrawer && fabDrawer.classList.contains('open') && !fabDrawer.contains(e.target) && !fabBtn.contains(e.target)) {
+    fabDrawer.classList.remove('open');
+  }
+});
+
+// Keyboard nav
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeSlideover();
+    closeSidebars();
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+    document.getElementById('agentDropdown').classList.remove('show');
+    document.getElementById('fabDrawer').classList.remove('open');
+  }
+});
+</script>
+
+</body>
+</html>
