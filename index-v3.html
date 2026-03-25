@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payfy - Políticas de Gastos (V3)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary-orange: #E55A20;
+            --primary-orange-dark: #C94D1A;
+            --primary-orange-light: #FFF5F0;
+            --success-green: #059669;
+            --success-green-light: #D1FAE5;
+            --warning-yellow: #F59E0B;
+            --warning-yellow-light: #FEF3C7;
+            --info-blue: #3B82F6;
+            --info-blue-light: #DBEAFE;
+            --purple: #8B5CF6;
+            --purple-light: #EDE9FE;
+            --danger-red: #DC2626;
+            --danger-red-light: #FEE2E2;
+            --blue-50: #EFF6FF;
+            --blue-200: #BFDBFE;
+            --blue-700: #1E40AF;
+            --blue-800: #1E3A8A;
+            --amber-600: #D97706;
+            --amber-900: #92400E;
+            --green-800: #065F46;
+            --red-700: #DC2626;
+            --slate-100: #F1F5F9;
+            --yellow-300: #FDE68A;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+            --radius-2xl: 16px;
+            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: var(--spacing-xl); }
+
+        /* ─── Header ─── */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: var(--spacing-lg) 0;
+        }
+        .header-content {
+            max-width: 1400px; margin: 0 auto; padding: 0 var(--spacing-xl);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-left { display: flex; align-items: center; gap: var(--spacing-lg); }
+        .logo { display: flex; align-items: center; gap: var(--spacing-sm); font-size: 20px; font-weight: 700; color: var(--gray-900); }
+        .logo-icon {
+            width: 36px; height: 36px; background: var(--primary-orange); border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;
+        }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-500); }
+        .breadcrumb a { color: var(--gray-500); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--gray-700); }
+        .breadcrumb .current { color: var(--gray-900); font-weight: 600; }
+        .header-right { display: flex; align-items: center; gap: var(--spacing-md); }
+        .notification-btn {
+            position: relative; width: 44px; height: 44px; border-radius: var(--radius-lg);
+            background: var(--white); border: 1px solid var(--border); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+            transition: all 0.2s;
+        }
+        .notification-btn:hover { background: var(--gray-50); border-color: var(--gray-300); }
+        .notification-badge {
+            position: absolute; top: -4px; right: -4px; width: 18px; height: 18px;
+            background: var(--primary-orange); color: white; border-radius: 50%;
+            font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ─── Buttons ─── */
+        .btn {
+            padding: 12px 24px; border-radius: var(--radius-lg); font-size: 14px; font-weight: 600;
+            cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: var(--spacing-sm);
+        }
+        .btn-primary { background: var(--primary-orange); color: white; }
+        .btn-primary:hover { background: var(--primary-orange-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .btn-secondary { background: var(--white); color: var(--gray-700); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--gray-50); }
+        .btn-configure {
+            background: var(--blue-700); color: white; border: none; padding: 12px 20px;
+            border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-configure:hover { background: var(--blue-800); }
+
+        /* ─── Hero: Agent Dashboard ─── */
+        .hero-section {
+            margin-top: var(--spacing-xl);
+            animation: fadeIn 0.3s ease forwards;
+        }
+        .hero-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: var(--spacing-lg);
+        }
+        .hero-title-group {}
+        .hero-title { font-size: 28px; font-weight: 700; color: var(--gray-900); margin-bottom: var(--spacing-xs); }
+        .hero-subtitle { font-size: 14px; color: var(--gray-600); }
+
+        /* Agent Status Pill */
+        .agent-status-pill {
+            display: inline-flex; align-items: center; gap: var(--spacing-sm);
+            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; position: relative;
+        }
+        .agent-status-pill.mode-auto { background: var(--blue-50); border: 1px solid var(--blue-200); color: var(--blue-700); }
+        .agent-status-pill.mode-recommend { background: var(--blue-50); border: 1px solid var(--blue-200); color: var(--blue-700); }
+        .agent-status-pill.mode-test { background: #FEF3C7; border: 1px solid var(--yellow-300); color: var(--amber-900); }
+        .agent-status-pill.mode-off { background: var(--gray-100); border: 1px solid var(--gray-300); color: var(--gray-600); }
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+        }
+        .status-dot.auto { background: var(--success-green); }
+        .status-dot.recommend { background: var(--info-blue); }
+        .status-dot.test { background: var(--warning-yellow); }
+        .status-dot.off { background: var(--gray-400); }
+
+        .agent-mode-dropdown {
+            display: none; position: absolute; top: calc(100% + 4px); right: 0;
+            background: white; border: 1px solid var(--border); border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg); min-width: 280px; z-index: 100; overflow: hidden;
+        }
+        .agent-mode-dropdown.show { display: block; }
+        .agent-mode-dropdown-item {
+            padding: 12px 16px; font-size: 13px; color: var(--gray-700); cursor: pointer; transition: background 0.15s;
+        }
+        .agent-mode-dropdown-item:hover { background: var(--gray-50); }
+        .agent-mode-dropdown-item.active { background: var(--blue-50); color: var(--blue-700); font-weight: 600; }
+
+        /* ─── KPI Grid ─── */
+        .kpi-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        .kpi-card {
+            background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-2xl);
+            overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s;
+            animation: fadeIn 0.3s ease forwards; opacity: 0;
+        }
+        .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+        .kpi-card:nth-child(2) { animation-delay: 0.15s; }
+        .kpi-card:nth-child(3) { animation-delay: 0.2s; }
+        .kpi-card:nth-child(4) { animation-delay: 0.25s; }
+        .kpi-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+        .kpi-card-header {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: linear-gradient(135deg, var(--kpi-start), var(--kpi-end));
+        }
+        .kpi-card-header-label {
+            font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            color: var(--kpi-label-color);
+        }
+        .kpi-card-body { padding: var(--spacing-md); }
+        .kpi-value { font-size: 32px; font-weight: 700; color: var(--gray-900); line-height: 1.1; }
+        .kpi-label { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+        .kpi-trend { font-size: 11px; font-weight: 600; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+        .kpi-trend.up { color: var(--success-green); }
+        .kpi-trend.down { color: var(--danger-red); }
+        .kpi-trend.neutral { color: var(--gray-500); }
+
+        /* ─── Section Titles ─── */
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        .section-title { font-size: 20px; font-weight: 600; color: var(--gray-900); }
+        .section-badge {
+            background: var(--gray-100); color: var(--gray-600); padding: 4px 12px;
+            border-radius: 20px; font-size: 12px; font-weight: 600;
+        }
+
+        /* ─── Decision Feed ─── */
+        .decision-feed {
+            margin-bottom: var(--spacing-xl);
+        }
+        .decision-list {
+            display: flex; flex-direction: column; gap: var(--spacing-sm);
+        }
+        .decision-card {
+            background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-xl);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-left: 4px solid var(--decision-color);
+            display: grid; grid-template-columns: 1fr auto auto auto;
+            align-items: center; gap: var(--spacing-lg);
+            transition: all 0.2s; cursor: default;
+            animation: fadeIn 0.3s ease forwards; opacity: 0;
+        }
+        .decision-card:nth-child(1) { animation-delay: 0.1s; }
+        .decision-card:nth-child(2) { animation-delay: 0.15s; }
+        .decision-card:nth-child(3) { animation-delay: 0.2s; }
+        .decision-card:nth-child(4) { animation-delay: 0.25s; }
+        .decision-card:nth-child(5) { animation-delay: 0.3s; }
+        .decision-card:nth-child(6) { animation-delay: 0.35s; }
+        .decision-card:nth-child(7) { animation-delay: 0.4s; }
+        .decision-card:nth-child(8) { animation-delay: 0.45s; }
+        .decision-card:hover { box-shadow: var(--shadow-md); }
+
+        .decision-info {}
+        .decision-transaction { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+        .decision-rule { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+        .decision-amount { font-size: 14px; font-weight: 600; color: var(--gray-800); text-align: right; white-space: nowrap; }
+
+        .decision-badge {
+            padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+        }
+        .decision-badge.approved { background: var(--success-green-light); color: var(--green-800); }
+        .decision-badge.escalated { background: var(--warning-yellow-light); color: var(--amber-900); }
+        .decision-badge.rejected { background: var(--danger-red-light); color: #991B1B; }
+
+        .decision-confidence {
+            display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 48px;
+        }
+        .confidence-value { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+        .confidence-label { font-size: 10px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; }
+        .confidence-bar {
+            width: 48px; height: 4px; background: var(--gray-200); border-radius: 2px; overflow: hidden;
+        }
+        .confidence-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+        .confidence-fill.high { background: var(--success-green); }
+        .confidence-fill.medium { background: var(--warning-yellow); }
+        .confidence-fill.low { background: var(--danger-red); }
+
+        /* ─── Knowledge Base ─── */
+        .knowledge-section { margin-bottom: var(--spacing-xl); }
+        .knowledge-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md);
+        }
+        .knowledge-card {
+            background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-2xl);
+            overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s; cursor: pointer;
+            animation: fadeIn 0.3s ease forwards; opacity: 0;
+        }
+        .knowledge-card:nth-child(1) { animation-delay: 0.1s; }
+        .knowledge-card:nth-child(2) { animation-delay: 0.2s; }
+        .knowledge-card:nth-child(3) { animation-delay: 0.3s; }
+        .knowledge-card:nth-child(4) { animation-delay: 0.4s; }
+        .knowledge-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+        .knowledge-card-header {
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            padding: var(--spacing-md) var(--spacing-lg);
+            display: flex; align-items: center; gap: var(--spacing-sm);
+        }
+        .knowledge-icon { font-size: 20px; }
+        .knowledge-name { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+        .knowledge-card-body { padding: var(--spacing-md) var(--spacing-lg); }
+        .knowledge-pills {
+            display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: var(--spacing-sm);
+        }
+        .knowledge-pill {
+            padding: 4px 8px; border-radius: 16px; font-size: 10px; font-weight: 700; letter-spacing: 0.03em;
+        }
+        .pill-agent { background: #D1FAE5; color: var(--green-800); }
+        .pill-flag { background: #FEE2E2; color: #991B1B; }
+        .pill-confidential { background: var(--yellow-300); color: var(--amber-900); }
+        .knowledge-expand {
+            font-size: 12px; color: var(--primary-orange); font-weight: 600; cursor: pointer;
+            transition: color 0.2s;
+        }
+        .knowledge-expand:hover { color: var(--primary-orange-dark); }
+
+        /* Knowledge Card Expanded Body */
+        .knowledge-expanded {
+            display: none; padding: 0 var(--spacing-lg) var(--spacing-lg);
+        }
+        .knowledge-card.expanded .knowledge-expanded { display: block; }
+        .knowledge-card.expanded .knowledge-expand { display: none; }
+
+        .rule-group { border-radius: var(--radius-lg); padding: 12px; border: 1px solid; margin-bottom: var(--spacing-sm); }
+        .rule-group-agent { background: #F0FDF4; border-color: #BBF7D0; }
+        .rule-group-flag { background: #FEF2F2; border-color: #FECACA; }
+        .rule-group-confidential { background: #FEF3C7; border-color: var(--yellow-300); }
+        .rule-group-header { margin-bottom: 8px; }
+        .rule-group-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; border-radius: 16px; }
+        .badge-agent { background: #D1FAE5; color: var(--green-800); }
+        .badge-flag { background: #FEE2E2; color: #991B1B; }
+        .badge-confidential { background: var(--yellow-300); color: var(--amber-900); }
+        .rule-group-item { font-size: 12px; color: var(--gray-700); padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .rule-group-item:last-of-type { border-bottom: none; }
+        .flag-note { font-size: 10px; color: var(--gray-500); margin-top: 8px; font-style: italic; }
+
+        /* ─── Drawer ─── */
+        .drawer-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4); z-index: 900; opacity: 0;
+            pointer-events: none; transition: opacity 0.3s;
+        }
+        .drawer-overlay.active { opacity: 1; pointer-events: auto; }
+        .drawer {
+            position: fixed; top: 0; right: -480px; width: 480px; height: 100vh;
+            background: var(--white); box-shadow: var(--shadow-xl); z-index: 950;
+            transition: right 0.3s ease; display: flex; flex-direction: column;
+        }
+        .drawer.open { right: 0; }
+        .drawer-header {
+            padding: var(--spacing-lg); border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .drawer-title { font-size: 18px; font-weight: 700; color: var(--gray-900); }
+        .drawer-close {
+            width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--gray-100);
+            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: var(--gray-600); font-size: 20px; transition: all 0.2s;
+        }
+        .drawer-close:hover { background: var(--gray-200); color: var(--gray-900); }
+        .drawer-body { padding: var(--spacing-lg); flex: 1; overflow-y: auto; }
+
+        .suggestion-card {
+            background: #FFFBEB; border: 1px solid var(--yellow-300); border-radius: var(--radius-lg);
+            padding: var(--spacing-md); margin-bottom: var(--spacing-md);
+            transition: opacity 0.4s, transform 0.4s;
+        }
+        .suggestion-card.fade-out { opacity: 0; transform: translateX(20px); pointer-events: none; }
+        .suggestion-text { font-size: 13px; color: var(--gray-700); line-height: 1.5; margin-bottom: var(--spacing-sm); }
+        .suggestion-actions { display: flex; gap: 8px; }
+        .btn-apply {
+            background: var(--blue-700); color: white; border: none; padding: 10px 16px;
+            border-radius: var(--radius-md); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-apply:hover { background: var(--blue-800); }
+        .btn-ignore {
+            background: transparent; color: var(--gray-500); border: 1px solid var(--gray-300);
+            padding: 10px 16px; border-radius: var(--radius-md); font-size: 12px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-ignore:hover { background: var(--gray-50); color: var(--gray-700); }
+
+        /* ─── FAB ─── */
+        .fab {
+            position: fixed; bottom: 28px; right: 28px; width: 56px; height: 56px;
+            background: var(--primary-orange); color: white; border: none; border-radius: 50%;
+            font-size: 24px; cursor: pointer; box-shadow: var(--shadow-lg);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; z-index: 800;
+        }
+        .fab:hover { background: var(--primary-orange-dark); transform: scale(1.05); box-shadow: var(--shadow-xl); }
+        .fab-badge {
+            position: absolute; top: -2px; right: -2px; width: 20px; height: 20px;
+            background: var(--blue-700); color: white; border-radius: 50%;
+            font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ─── Agent Status Bar (for mode-off/test visibility) ─── */
+        .agent-status-bar {
+            background: var(--blue-50); border: 1px solid var(--blue-200); border-radius: var(--radius-lg);
+            padding: 12px var(--spacing-md); display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: var(--spacing-lg); display: none;
+        }
+
+        /* ─── Modal ─── */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center;
+            z-index: 1000; backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--white); border-radius: var(--radius-2xl); max-width: 800px;
+            width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-xl);
+            animation: modalSlideIn 0.3s ease;
+        }
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header { padding: var(--spacing-xl); border-bottom: 1px solid var(--border); }
+        .modal-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm); }
+        .modal-title { font-size: 24px; font-weight: 700; color: var(--gray-900); }
+        .modal-close {
+            width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--gray-100);
+            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: var(--gray-600); font-size: 20px; transition: all 0.2s;
+        }
+        .modal-close:hover { background: var(--gray-200); color: var(--gray-900); }
+        .modal-subtitle { font-size: 14px; color: var(--gray-600); }
+        .modal-body { padding: var(--spacing-xl); }
+
+        .tabs { display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-xl); border-bottom: 2px solid var(--border); }
+        .tab {
+            padding: var(--spacing-md) var(--spacing-lg); background: none; border: none;
+            border-bottom: 2px solid transparent; color: var(--gray-600); font-size: 14px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s; margin-bottom: -2px;
+        }
+        .tab:hover { color: var(--gray-900); }
+        .tab.active { color: var(--primary-orange); border-bottom-color: var(--primary-orange); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .upload-area {
+            border: 2px dashed var(--border); border-radius: var(--radius-xl); padding: var(--spacing-2xl);
+            text-align: center; transition: all 0.3s; cursor: pointer;
+        }
+        .upload-area:hover, .upload-area.dragover { border-color: var(--primary-orange); background: var(--primary-orange-light); }
+        .upload-icon {
+            width: 64px; height: 64px; margin: 0 auto var(--spacing-lg); background: var(--gray-100);
+            border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; font-size: 32px;
+        }
+        .upload-title { font-size: 16px; font-weight: 600; color: var(--gray-900); margin-bottom: var(--spacing-sm); }
+        .upload-subtitle { font-size: 13px; color: var(--gray-600); margin-bottom: var(--spacing-lg); }
+        .upload-button {
+            display: inline-flex; align-items: center; gap: var(--spacing-sm);
+            padding: 10px 20px; background: var(--primary-orange); color: white; border: none;
+            border-radius: var(--radius-lg); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .upload-button:hover { background: var(--primary-orange-dark); }
+        .upload-info { margin-top: var(--spacing-md); font-size: 12px; color: var(--gray-500); }
+        #fileInput { display: none; }
+
+        .processing-container { display: none; }
+        .processing-container.active { display: block; }
+        .processing-header { text-align: center; margin-bottom: var(--spacing-xl); }
+        .processing-icon {
+            width: 64px; height: 64px; margin: 0 auto var(--spacing-md);
+            background: linear-gradient(135deg, var(--purple-light), var(--info-blue-light));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 32px; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .processing-title { font-size: 18px; font-weight: 600; color: var(--gray-900); margin-bottom: var(--spacing-xs); }
+        .processing-subtitle { font-size: 13px; color: var(--gray-600); }
+        .processing-steps { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+        .processing-step {
+            display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-md);
+            background: var(--gray-50); border-radius: var(--radius-lg);
+        }
+        .processing-step.active { background: var(--primary-orange-light); border: 1px solid var(--primary-orange); }
+        .processing-step.completed { background: var(--success-green-light); }
+        .processing-step-icon {
+            width: 28px; height: 28px; border-radius: 50%; background: var(--white);
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
+        .processing-step-text { flex: 1; font-size: 13px; font-weight: 500; color: var(--gray-700); }
+        .processing-step-status { font-size: 11px; color: var(--gray-500); font-weight: 600; }
+        .processing-step.completed .processing-step-status { color: var(--success-green); }
+
+        .success-container { display: none; text-align: center; }
+        .success-container.active { display: block; }
+        .success-icon {
+            width: 80px; height: 80px; margin: 0 auto var(--spacing-lg);
+            background: var(--success-green-light); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--success-green);
+        }
+        .success-title { font-size: 24px; font-weight: 700; color: var(--gray-900); margin-bottom: var(--spacing-sm); }
+        .success-subtitle { font-size: 14px; color: var(--gray-600); margin-bottom: var(--spacing-xl); }
+        .success-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: var(--spacing-md); margin-bottom: var(--spacing-xl); }
+        .success-stat { padding: var(--spacing-lg); background: var(--gray-50); border-radius: var(--radius-lg); }
+        .success-stat-value { font-size: 32px; font-weight: 700; color: var(--gray-900); margin-bottom: 4px; }
+        .success-stat-label { font-size: 12px; color: var(--gray-600); }
+        .success-actions { display: flex; gap: var(--spacing-md); justify-content: center; }
+
+        /* ─── Toast ─── */
+        .toast {
+            position: fixed; bottom: 24px; right: 96px; background: var(--green-800); color: white;
+            padding: 12px 20px; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500;
+            box-shadow: var(--shadow-xl); z-index: 2000; opacity: 0; transform: translateY(10px); transition: all 0.3s;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* ─── Animations ─── */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Focus Visible ─── */
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        [tabindex]:focus-visible {
+            outline: 3px solid var(--info-blue);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
+        }
+        .modal-close:focus-visible,
+        .drawer-close:focus-visible {
+            outline: 2px solid var(--info-blue);
+            outline-offset: 1px;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1280px) {
+            .container { padding: var(--spacing-lg); }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 1024px) {
+            .container { padding: var(--spacing-md); }
+            .knowledge-grid { grid-template-columns: repeat(2, 1fr); }
+            .decision-card { grid-template-columns: 1fr auto auto; }
+            .decision-confidence { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header-content { flex-wrap: wrap; gap: var(--spacing-md); }
+            .hero-header { flex-direction: column; gap: var(--spacing-md); }
+            .kpi-grid { grid-template-columns: 1fr; }
+            .knowledge-grid { grid-template-columns: 1fr; }
+            .decision-card { grid-template-columns: 1fr; gap: var(--spacing-sm); }
+            .decision-amount { text-align: left; }
+            .drawer { width: 100%; right: -100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon">📊</div>
+                    <span>Payfy</span>
+                </div>
+                <nav aria-label="Breadcrumb">
+                    <div class="breadcrumb">
+                        <a href="#">Configurações</a>
+                        <span>›</span>
+                        <span class="current">Políticas de Gastos</span>
+                    </div>
+                </nav>
+            </div>
+            <div class="header-right">
+                <button class="notification-btn" onclick="openDrawer()">
+                    🧠
+                    <span class="notification-badge" id="suggestionCount">3</span>
+                </button>
+                <button class="btn btn-primary" onclick="openNewPolicyModal()">
+                    <span>✨</span>
+                    <span>Criar Nova Política</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+    <div class="container">
+        <!-- Hero: Agent Dashboard -->
+        <section class="hero-section" aria-label="Painel do Policy Agent">
+            <div class="hero-header">
+                <div class="hero-title-group">
+                    <h1 class="hero-title">Policy Agent</h1>
+                    <p class="hero-subtitle">Seu assistente inteligente de gestão de gastos corporativos</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div class="agent-status-pill mode-auto" id="agentPill" onclick="toggleModeDropdown(event)">
+                        <span class="status-dot auto" id="statusDot"></span>
+                        <span id="pillLabel">Aprovação automática</span>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        <div class="agent-mode-dropdown" id="modeDropdown" role="listbox">
+                            <div class="agent-mode-dropdown-item" role="option" onclick="setAgentMode('off', event)">Desativar Agent</div>
+                            <div class="agent-mode-dropdown-item" role="option" onclick="setAgentMode('test', event)">Modo teste (admins only)</div>
+                            <div class="agent-mode-dropdown-item" role="option" onclick="setAgentMode('recommend', event)">Modo recomendação</div>
+                            <div class="agent-mode-dropdown-item active" role="option" onclick="setAgentMode('auto', event)">Aprovação automática</div>
+                        </div>
+                    </div>
+                    <button class="btn-configure" onclick="openDrawer()">Configurar</button>
+                </div>
+            </div>
+
+            <!-- KPI Grid -->
+            <div class="kpi-grid">
+                <div class="kpi-card" style="--kpi-start: #D1FAE5; --kpi-end: #A7F3D0; --kpi-label-color: #065F46;">
+                    <div class="kpi-card-header"><span class="kpi-card-header-label">Acurácia</span></div>
+                    <div class="kpi-card-body">
+                        <div class="kpi-value">99.1%</div>
+                        <div class="kpi-label">Últimos 90 dias</div>
+                        <div class="kpi-trend up">↑ +0.3% vs fev/2026</div>
+                    </div>
+                </div>
+                <div class="kpi-card" style="--kpi-start: #DBEAFE; --kpi-end: #BFDBFE; --kpi-label-color: #1E40AF;">
+                    <div class="kpi-card-header"><span class="kpi-card-header-label">Transações Avaliadas</span></div>
+                    <div class="kpi-card-body">
+                        <div class="kpi-value">847</div>
+                        <div class="kpi-label">Últimos 90 dias</div>
+                        <div class="kpi-trend up">↑ +12% vs fev/2026</div>
+                    </div>
+                </div>
+                <div class="kpi-card" style="--kpi-start: #EDE9FE; --kpi-end: #DDD6FE; --kpi-label-color: #5B21B6;">
+                    <div class="kpi-card-header"><span class="kpi-card-header-label">Economia Estimada</span></div>
+                    <div class="kpi-card-body">
+                        <div class="kpi-value">R$ 45.200</div>
+                        <div class="kpi-label">Gastos evitados pelo Agent</div>
+                        <div class="kpi-trend up">↑ R$ 8.400 vs fev/2026</div>
+                    </div>
+                </div>
+                <div class="kpi-card" style="--kpi-start: #FEF3C7; --kpi-end: #FDE68A; --kpi-label-color: #92400E;">
+                    <div class="kpi-card-header"><span class="kpi-card-header-label">Tempo Médio de Decisão</span></div>
+                    <div class="kpi-card-body">
+                        <div class="kpi-value">1.2s</div>
+                        <div class="kpi-label">Por transação</div>
+                        <div class="kpi-trend neutral">— Estável</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Decision Feed -->
+        <div class="decision-feed">
+            <div class="section-header">
+                <h2 class="section-title">Decisões Recentes</h2>
+                <span class="section-badge">Últimas 8 transações</span>
+            </div>
+            <div class="decision-list">
+                <div class="decision-card" style="--decision-color: var(--success-green);">
+                    <div class="decision-info">
+                        <div class="decision-transaction">Uber — Corrida centro</div>
+                        <div class="decision-rule">Regra: Auto-aprovar até R$ 100</div>
+                    </div>
+                    <div class="decision-amount">R$ 42</div>
+                    <span class="decision-badge approved">Aprovado</span>
+                    <div class="decision-confidence">
+                        <span class="confidence-value">98%</span>
+                        <div class="confidence-bar"><div class="confidence-fill high" style="width: 98%"></div></div>
+                    </div>
+                </div>
+                <div class="decision-card" style="--decision-color: var(--success-green);">
+                    <div class="decision-info">
+                        <div class="decision-transaction">AWS Services</div>
+                        <div class="decision-rule">Regra: SaaS até R$ 2.000</div>
+                    </div>
+                    <div class="decision-amount">R$ 1.850</div>
+                    <span class="decision-badge approved">Aprovado</span>
+                    <div class="decision-confidence">
+                        <span class="confidence-value">95%</span>
+                        <div class="confidence-bar"><div class="confidence-fill high" style="width: 95%"></div></div>
+                    </div>
+                </div>
+                <div class="decision-card" style="--decision-color: var(--warning-yellow);">
+                    <div class="decision-info">
+                        <div class="decision-transaction">Restaurante XYZ</div>
+                        <div class="decision-rule">Regra: Per diem excedido</div>
+                    </div>
+                    <div class="decision-amount">R$ 320</div>
+                    <span class="decision-badge escalated">Escalado</span>
+                    <div class="decision-confidence">
+                        <span class="confidence-value">72%</span>
+                        <div class="confidence-bar"><div class="confidence-fill medium" style="width: 72%"></div></div>
+                    </div>
+                </div>
+                <div class="decision-card" style="--decision-color: var(--danger-red);">
+                    <div class="decision-info">
+                        <div class="decision-transaction">Gift card iFood</div>
+                        <div class="decision-rule">Regra: Gift card proibido</div>
+                    </div>
+                    <div class="decision-amount">R$ 200</div>
+                    <span class="decision-badge rejected">Rejeitado</span>
+                    <div class="decision-confidence">
+                        <span class="confidence-value">99%</span>
+                        <div class="confidence-bar"><div class="confidence-fill high" style="width: 99%"></div></div>
+                    </div>
+                </div>
+                <div class="decision-card" style="--decision-color: var(--success-green);">
+                    <div class="decision-info">
+                        <div class="decision-transaction">Hotel SP — 3 noites</div>
+                        <div class="decision-rule">Regra: Hospedagem até R$ 500/noite</div>
+                    </div>
+                    <div class="decision-amount">R$ 1.500</div>
+                    <span class="decision-badge approved">Aprovado</span>
+                    <div class="decision-confidence">
+                        <span class="confidence-value">96%</span>
+                        <div class="confidence-bar"><div class="confidence-fill high" style="width: 96%"></div></div>
+                    </div>
+                </div>
+                <div class="decision-card" style="--decision-color: var(--warning-yellow);">
+                    <div class="decision-info">
+                        <div class="decision-transaction">Uber Eats — Sábado</div>
+                        <div class="decision-rule">Regra: Gasto fim de semana</div>
+                    </div>
+                    <div class="decision-amount">R$ 85</div>
+                    <span class="decision-badge escalated">Escalado</span>
+                    <div class="decision-confidence">
+                        <span class="confidence-value">65%</span>
+                        <div class="confidence-bar"><div class="confidence-fill medium" style="width: 65%"></div></div>
+                    </div>
+                </div>
+                <div class="decision-card" style="--decision-color: var(--success-green);">
+                    <div class="decision-info">
+                        <div class="decision-transaction">Google Ads</div>
+                        <div class="decision-rule">Regra: Marketing até R$ 1.000</div>
+                    </div>
+                    <div class="decision-amount">R$ 890</div>
+                    <span class="decision-badge approved">Aprovado</span>
+                    <div class="decision-confidence">
+                        <span class="confidence-value">97%</span>
+                        <div class="confidence-bar"><div class="confidence-fill high" style="width: 97%"></div></div>
+                    </div>
+                </div>
+                <div class="decision-card" style="--decision-color: var(--warning-yellow);">
+                    <div class="decision-info">
+                        <div class="decision-transaction">Voo GRU-GIG (1 dia antes)</div>
+                        <div class="decision-rule">Regra: Reserva &lt; 7 dias + acima de R$ 2.000</div>
+                    </div>
+                    <div class="decision-amount">R$ 2.100</div>
+                    <span class="decision-badge escalated">Escalado</span>
+                    <div class="decision-confidence">
+                        <span class="confidence-value">58%</span>
+                        <div class="confidence-bar"><div class="confidence-fill low" style="width: 58%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Base -->
+        <div class="knowledge-section">
+            <div class="section-header">
+                <h2 class="section-title">Políticas e Regras</h2>
+                <span class="section-badge">4 políticas ativas</span>
+            </div>
+            <div class="knowledge-grid">
+                <!-- Solicitações -->
+                <div class="knowledge-card" style="--bg-start: #F0F9FF; --bg-end: #E0F2FE;" aria-expanded="false" onclick="toggleKnowledge(this)">
+                    <div class="knowledge-card-header">
+                        <span class="knowledge-icon">📋</span>
+                        <h3 class="knowledge-name">Solicitações</h3>
+                    </div>
+                    <div class="knowledge-card-body">
+                        <div class="knowledge-pills">
+                            <span class="knowledge-pill pill-agent">2 Agent</span>
+                            <span class="knowledge-pill pill-flag">2 Flags</span>
+                            <span class="knowledge-pill pill-confidential">1 Conf.</span>
+                        </div>
+                        <span class="knowledge-expand">Ver regras →</span>
+                    </div>
+                    <div class="knowledge-expanded" onclick="event.stopPropagation()">
+                        <div class="rule-group rule-group-agent">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent</span></div>
+                            <div class="rule-group-item">⚡ IA preenche: Centro de Custo, Projeto</div>
+                            <div class="rule-group-item">🤖 Agent avalia compliance antes de aprovar</div>
+                        </div>
+                        <div class="rule-group rule-group-flag">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override</span></div>
+                            <div class="rule-group-item">🚩 Valor divergente → Escalar</div>
+                            <div class="rule-group-item">🚩 Solicitação duplicada → Bloquear</div>
+                            <p class="flag-note">Flags sobrescrevem o Agent.</p>
+                        </div>
+                        <div class="rule-group rule-group-confidential">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-confidential">🔒 CONFIDENCIAL</span></div>
+                            <div class="rule-group-item">🔒 Diretoria: limite R$ 10.000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Despesas de Cartão -->
+                <div class="knowledge-card" style="--bg-start: #FEF3C7; --bg-end: #FDE68A;" aria-expanded="false" onclick="toggleKnowledge(this)">
+                    <div class="knowledge-card-header">
+                        <span class="knowledge-icon">💳</span>
+                        <h3 class="knowledge-name">Despesas de Cartão</h3>
+                    </div>
+                    <div class="knowledge-card-body">
+                        <div class="knowledge-pills">
+                            <span class="knowledge-pill pill-agent">2 Agent</span>
+                            <span class="knowledge-pill pill-flag">3 Flags</span>
+                            <span class="knowledge-pill pill-confidential">1 Conf.</span>
+                        </div>
+                        <span class="knowledge-expand">Ver regras →</span>
+                    </div>
+                    <div class="knowledge-expanded" onclick="event.stopPropagation()">
+                        <div class="rule-group rule-group-agent">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent</span></div>
+                            <div class="rule-group-item">⚡ IA preenche: Centro de Custo, Projeto</div>
+                            <div class="rule-group-item">✅ SaaS e Software → Auto-aprovar até R$ 1.000</div>
+                        </div>
+                        <div class="rule-group rule-group-flag">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override</span></div>
+                            <div class="rule-group-item">🚩 Recibo duplicado → Escalar</div>
+                            <div class="rule-group-item">🚩 NF-e inválida → Rejeitar</div>
+                            <div class="rule-group-item">🚩 Gasto pessoal → Alertar</div>
+                            <p class="flag-note">Flags sobrescrevem o Agent.</p>
+                        </div>
+                        <div class="rule-group rule-group-confidential">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-confidential">🔒 CONFIDENCIAL</span></div>
+                            <div class="rule-group-item">🔒 C-level: limite R$ 5.000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reembolsos -->
+                <div class="knowledge-card" style="--bg-start: #F3E8FF; --bg-end: #E9D5FF;" aria-expanded="false" onclick="toggleKnowledge(this)">
+                    <div class="knowledge-card-header">
+                        <span class="knowledge-icon">📄</span>
+                        <h3 class="knowledge-name">Reembolsos</h3>
+                    </div>
+                    <div class="knowledge-card-body">
+                        <div class="knowledge-pills">
+                            <span class="knowledge-pill pill-agent">2 Agent</span>
+                            <span class="knowledge-pill pill-flag">3 Flags</span>
+                            <span class="knowledge-pill pill-confidential">1 Conf.</span>
+                        </div>
+                        <span class="knowledge-expand">Ver regras →</span>
+                    </div>
+                    <div class="knowledge-expanded" onclick="event.stopPropagation()">
+                        <div class="rule-group rule-group-agent">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent</span></div>
+                            <div class="rule-group-item">✅ Transporte (Uber/99) até R$ 100 → Auto-aprovar</div>
+                            <div class="rule-group-item">🤖 IA valida: recibo, CNPJ, valor, data</div>
+                        </div>
+                        <div class="rule-group rule-group-flag">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override</span></div>
+                            <div class="rule-group-item">🚩 Sem nota fiscal → Rejeitar</div>
+                            <div class="rule-group-item">🚩 CNPJ inativo → Bloquear</div>
+                            <div class="rule-group-item">🚩 VR/VA no mesmo dia → Alertar</div>
+                            <p class="flag-note">Flags sobrescrevem o Agent.</p>
+                        </div>
+                        <div class="rule-group rule-group-confidential">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-confidential">🔒 CONFIDENCIAL</span></div>
+                            <div class="rule-group-item">🔒 Reembolso mobile só Comercial e CS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Viagens -->
+                <div class="knowledge-card" style="--bg-start: #D1FAE5; --bg-end: #A7F3D0;" aria-expanded="false" onclick="toggleKnowledge(this)">
+                    <div class="knowledge-card-header">
+                        <span class="knowledge-icon">✈️</span>
+                        <h3 class="knowledge-name">Viagens</h3>
+                    </div>
+                    <div class="knowledge-card-body">
+                        <div class="knowledge-pills">
+                            <span class="knowledge-pill pill-agent">2 Agent</span>
+                            <span class="knowledge-pill pill-flag">2 Flags</span>
+                            <span class="knowledge-pill pill-confidential">1 Conf.</span>
+                        </div>
+                        <span class="knowledge-expand">Ver regras →</span>
+                    </div>
+                    <div class="knowledge-expanded" onclick="event.stopPropagation()">
+                        <div class="rule-group rule-group-agent">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-agent">REGRA · Agent</span></div>
+                            <div class="rule-group-item">✅ Hospedagem até R$ 500/noite → Auto-aprovar</div>
+                            <div class="rule-group-item">✈️ Voos com 14+ dias antecedência</div>
+                        </div>
+                        <div class="rule-group rule-group-flag">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override</span></div>
+                            <div class="rule-group-item">🚩 Álcool em nota → Escalar</div>
+                            <div class="rule-group-item">🚩 Reserva &lt; 7 dias → Justificativa</div>
+                            <p class="flag-note">Flags sobrescrevem o Agent.</p>
+                        </div>
+                        <div class="rule-group rule-group-confidential">
+                            <div class="rule-group-header"><span class="rule-group-badge badge-confidential">🔒 CONFIDENCIAL</span></div>
+                            <div class="rule-group-item">🔒 Diretoria: Business class voos &gt; 4h</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- FAB -->
+    <button class="fab" aria-label="Abrir sugestões do Agent" onclick="openDrawer()" id="fabBtn">
+        🧠
+        <span class="fab-badge" id="fabBadge">3</span>
+    </button>
+
+    <!-- Drawer: Sugestões -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="drawer" id="drawer" role="dialog" aria-labelledby="drawer-title" aria-modal="true">
+        <div class="drawer-header">
+            <div class="drawer-title" id="drawer-title">🧠 Sugestões do Agent</div>
+            <button class="drawer-close" aria-label="Fechar painel" onclick="closeDrawer()">✕</button>
+        </div>
+        <div class="drawer-body">
+            <p style="font-size: 12px; color: var(--gray-500); margin-bottom: var(--spacing-lg);">Baseado em padrões dos últimos 30 dias</p>
+
+            <div class="suggestion-card" id="suggestion-1">
+                <div class="suggestion-text">💡 15 corridas de rideshare para off-sites foram aprovadas como exceção nos últimos 30 dias → Sugestão: adicionar regra "rideshare sem cap para eventos corporativos" à Política de Viagens</div>
+                <div class="suggestion-actions">
+                    <button class="btn-apply" onclick="applySuggestion('suggestion-1', 'Viagens')">Aplicar</button>
+                    <button class="btn-ignore" onclick="ignoreSuggestion('suggestion-1')">Ignorar</button>
+                </div>
+            </div>
+            <div class="suggestion-card" id="suggestion-2">
+                <div class="suggestion-text">💡 Per diem jantar excedido 23x este mês (média R$ 82 vs limite R$ 70) → Sugestão: atualizar per diem jantar para R$ 85 na Política de Reembolsos</div>
+                <div class="suggestion-actions">
+                    <button class="btn-apply" onclick="applySuggestion('suggestion-2', 'Reembolsos')">Aplicar</button>
+                    <button class="btn-ignore" onclick="ignoreSuggestion('suggestion-2')">Ignorar</button>
+                </div>
+            </div>
+            <div class="suggestion-card" id="suggestion-3">
+                <div class="suggestion-text">💡 12 transações de Uber nos fins de semana aprovadas com exceção → Sugestão: criar regra "transporte fim de semana permitido com justificativa" na Política de Despesas de Cartão</div>
+                <div class="suggestion-actions">
+                    <button class="btn-apply" onclick="applySuggestion('suggestion-3', 'Despesas de Cartão')">Aplicar</button>
+                    <button class="btn-ignore" onclick="ignoreSuggestion('suggestion-3')">Ignorar</button>
+                </div>
+            </div>
+            <div class="suggestions-empty" id="suggestionsEmpty" style="display:none; text-align:center; padding:24px; color:var(--gray-500); font-size:13px;">
+                Nenhuma sugestão pendente. O Agent analisará novos padrões em breve.
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Nova Política -->
+    <div class="modal-overlay" id="modalOverlay" role="presentation" onclick="closeModalIfOutside(event)">
+        <div class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-top">
+                    <h2 class="modal-title" id="modal-title">✨ Criar Nova Política</h2>
+                    <button class="modal-close" aria-label="Fechar modal" onclick="closeModal()">✕</button>
+                </div>
+                <p class="modal-subtitle">Escolha como deseja criar sua política</p>
+            </div>
+            <div class="modal-body">
+                <div class="tabs" role="tablist" aria-label="Método de criação">
+                    <button class="tab active" role="tab" aria-selected="true" onclick="switchTab('upload', event)">📄 Upload de PDF</button>
+                    <button class="tab" role="tab" aria-selected="false" onclick="switchTab('prompt', event)">💬 Descrever com IA</button>
+                    <button class="tab" role="tab" aria-selected="false" onclick="switchTab('template', event)">📋 Template Payfy</button>
+                    <button class="tab" role="tab" aria-selected="false" onclick="switchTab('manual', event)">✏️ Criar Manualmente</button>
+                </div>
+
+                <div class="tab-content active" id="tab-upload" role="tabpanel">
+                    <div class="upload-container" id="uploadContainer">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">📄</div>
+                            <h3 class="upload-title">Envie o manual de políticas da sua empresa</h3>
+                            <p class="upload-subtitle">Nossa IA irá ler e criar regras automaticamente</p>
+                            <input type="file" id="fileInput" accept=".pdf,.doc,.docx" onchange="handleFileSelect(event)">
+                            <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                                <span>📎</span> <span>Selecionar Arquivo</span>
+                            </button>
+                            <p class="upload-info">ou arraste e solte aqui<br>PDF, DOC, DOCX (máx. 10MB)</p>
+                        </div>
+                    </div>
+                    <div class="processing-container" id="processingContainer">
+                        <div class="processing-header">
+                            <div class="processing-icon">✨</div>
+                            <h3 class="processing-title">Processando documento...</h3>
+                            <p class="processing-subtitle">A IA está analisando suas políticas</p>
+                        </div>
+                        <div class="processing-steps">
+                            <div class="processing-step completed" id="proc-step-1">
+                                <div class="processing-step-icon">✓</div>
+                                <div class="processing-step-text">Leitura do PDF</div>
+                                <div class="processing-step-status">Concluído</div>
+                            </div>
+                            <div class="processing-step active" id="proc-step-2">
+                                <div class="processing-step-icon">🤖</div>
+                                <div class="processing-step-text">Análise semântica</div>
+                                <div class="processing-step-status">Processando...</div>
+                            </div>
+                            <div class="processing-step" id="proc-step-3">
+                                <div class="processing-step-icon">🏗️</div>
+                                <div class="processing-step-text">Estruturação de regras</div>
+                                <div class="processing-step-status">Aguardando</div>
+                            </div>
+                            <div class="processing-step" id="proc-step-4">
+                                <div class="processing-step-icon">🔍</div>
+                                <div class="processing-step-text">Identificação de aprovadores</div>
+                                <div class="processing-step-status">Aguardando</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="success-container" id="successContainer">
+                        <div class="success-icon">✅</div>
+                        <h3 class="success-title">4 Políticas Geradas com Sucesso!</h3>
+                        <p class="success-subtitle">Suas políticas foram criadas e estão prontas para uso</p>
+                        <div class="success-stats">
+                            <div class="success-stat"><div class="success-stat-value">4</div><div class="success-stat-label">Políticas criadas</div></div>
+                            <div class="success-stat"><div class="success-stat-value">18</div><div class="success-stat-label">Regras identificadas</div></div>
+                        </div>
+                        <div class="success-actions">
+                            <button class="btn btn-secondary" onclick="closeModal()">Ver Depois</button>
+                            <button class="btn btn-primary" onclick="goToPolicies()"><span>👁️</span> <span>Ver Políticas</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-prompt" role="tabpanel">
+                    <p style="color: var(--gray-600); margin-bottom: var(--spacing-md);">Em breve: Descreva suas regras em linguagem natural e deixe a IA criar automaticamente.</p>
+                </div>
+                <div class="tab-content" id="tab-template" role="tabpanel">
+                    <div style="background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: 12px; padding: 32px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px;">Template Payfy — Melhores Práticas Brasil</h3>
+                        <p style="font-size: 14px; color: var(--gray-600); margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto;">Construído a partir das melhores práticas do mercado brasileiro. Inclui regras para NF-e, VR/VA, CLT, e mais.</p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;">
+                            <span style="background: #D1FAE5; color: #065F46; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">NF-e</span>
+                            <span style="background: #FEF3C7; color: #92400E; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">VR/VA</span>
+                            <span style="background: #DBEAFE; color: #1E40AF; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">CLT</span>
+                            <span style="background: #EDE9FE; color: #5B21B6; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Per diem</span>
+                            <span style="background: #FEE2E2; color: #991B1B; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">CNPJ</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; max-width: 320px; justify-content: center;">
+                            <span>✨</span> <span>Usar Template Payfy</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-manual" role="tabpanel">
+                    <p style="color: var(--gray-600); margin-bottom: var(--spacing-lg);">Você será redirecionado para o configurador visual de regras.</p>
+                    <button class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        <span>✏️</span> <span>Abrir Configurador</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var suggestionsRemaining = 3;
+
+        // ─── Drawer ───
+        function openDrawer() {
+            document.getElementById('drawerOverlay').classList.add('active');
+            document.getElementById('drawer').classList.add('open');
+        }
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').classList.remove('active');
+            document.getElementById('drawer').classList.remove('open');
+        }
+
+        // ─── Agent Mode ───
+        function toggleModeDropdown(event) {
+            event.stopPropagation();
+            document.getElementById('modeDropdown').classList.toggle('show');
+        }
+
+        function setAgentMode(mode, event) {
+            event.stopPropagation();
+            if (mode === 'off' && !confirm('Tem certeza que deseja desativar o Policy Agent?')) { return; }
+            var pill = document.getElementById('agentPill');
+            var dot = document.getElementById('statusDot');
+            var label = document.getElementById('pillLabel');
+            var items = document.querySelectorAll('.agent-mode-dropdown-item');
+
+            pill.className = 'agent-status-pill';
+            dot.className = 'status-dot';
+            items.forEach(function(i) { i.classList.remove('active'); });
+            event.target.classList.add('active');
+
+            switch(mode) {
+                case 'off':
+                    pill.classList.add('mode-off'); dot.classList.add('off');
+                    label.textContent = 'Desativado';
+                    break;
+                case 'test':
+                    pill.classList.add('mode-test'); dot.classList.add('test');
+                    label.textContent = 'Modo teste';
+                    break;
+                case 'recommend':
+                    pill.classList.add('mode-recommend'); dot.classList.add('recommend');
+                    label.textContent = 'Recomendação';
+                    break;
+                case 'auto':
+                    pill.classList.add('mode-auto'); dot.classList.add('auto');
+                    label.textContent = 'Aprovação automática';
+                    break;
+            }
+            document.getElementById('modeDropdown').classList.remove('show');
+            showToast('Modo do Agent alterado');
+        }
+
+        document.addEventListener('click', function() {
+            document.getElementById('modeDropdown').classList.remove('show');
+        });
+
+        // ─── Knowledge Cards ───
+        function toggleKnowledge(card) {
+            card.classList.toggle('expanded');
+            var isExpanded = card.classList.contains('expanded');
+            card.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+        }
+
+        // ─── Toast ───
+        function showToast(message) {
+            var existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            var toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() {
+                toast.classList.remove('show');
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        // ─── Suggestions ───
+        function updateBadges() {
+            suggestionsRemaining--;
+            document.getElementById('suggestionCount').textContent = suggestionsRemaining;
+            document.getElementById('fabBadge').textContent = suggestionsRemaining;
+            if (suggestionsRemaining <= 0) {
+                document.getElementById('suggestionCount').style.display = 'none';
+                document.getElementById('fabBadge').style.display = 'none';
+                document.getElementById('suggestionsEmpty').style.display = 'block';
+            }
+        }
+
+        function applySuggestion(id, policyName) {
+            var card = document.getElementById(id);
+            card.classList.add('fade-out');
+            setTimeout(function() { card.style.display = 'none'; }, 400);
+            updateBadges();
+            showToast('✓ Regra adicionada à Política de ' + policyName);
+        }
+
+        function ignoreSuggestion(id) {
+            var card = document.getElementById(id);
+            card.classList.add('fade-out');
+            setTimeout(function() { card.style.display = 'none'; }, 400);
+            updateBadges();
+        }
+
+        // ─── Modal ───
+        function openNewPolicyModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            resetUploadState();
+        }
+        function closeModalIfOutside(event) {
+            if (event.target === document.getElementById('modalOverlay')) closeModal();
+        }
+        function switchTab(tabName, event) {
+            event.stopPropagation();
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            event.target.classList.add('active');
+            event.target.setAttribute('aria-selected', 'true');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        // ─── File Upload ───
+        var uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', function(e) { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', function() { uploadArea.classList.remove('dragover'); });
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault(); uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+
+        function handleFileSelect(event) { if (event.target.files[0]) handleFile(event.target.files[0]); }
+
+        function handleFile(file) {
+            if (file.size > 10*1024*1024) { alert('Arquivo muito grande! Máximo: 10MB'); return; }
+            if (!file.name.match(/\.(pdf|doc|docx)$/i)) { alert('Formato inválido! Apenas PDF, DOC ou DOCX'); return; }
+            startProcessing();
+        }
+
+        function startProcessing() {
+            document.getElementById('uploadContainer').style.display = 'none';
+            document.getElementById('processingContainer').classList.add('active');
+            setTimeout(function() {
+                document.getElementById('proc-step-2').classList.add('completed');
+                document.getElementById('proc-step-2').classList.remove('active');
+                document.getElementById('proc-step-2').querySelector('.processing-step-status').textContent = 'Concluído';
+                document.getElementById('proc-step-3').classList.add('active');
+                document.getElementById('proc-step-3').querySelector('.processing-step-status').textContent = 'Processando...';
+            }, 2000);
+            setTimeout(function() {
+                document.getElementById('proc-step-3').classList.add('completed');
+                document.getElementById('proc-step-3').classList.remove('active');
+                document.getElementById('proc-step-3').querySelector('.processing-step-status').textContent = 'Concluído';
+                document.getElementById('proc-step-4').classList.add('active');
+                document.getElementById('proc-step-4').querySelector('.processing-step-status').textContent = 'Processando...';
+            }, 4000);
+            setTimeout(function() {
+                document.getElementById('proc-step-4').classList.add('completed');
+                document.getElementById('proc-step-4').classList.remove('active');
+                document.getElementById('proc-step-4').querySelector('.processing-step-status').textContent = 'Concluído';
+                showSuccess();
+            }, 6000);
+        }
+
+        function showSuccess() {
+            document.getElementById('processingContainer').classList.remove('active');
+            document.getElementById('successContainer').classList.add('active');
+        }
+
+        function resetUploadState() {
+            document.getElementById('uploadContainer').style.display = 'block';
+            document.getElementById('processingContainer').classList.remove('active');
+            document.getElementById('successContainer').classList.remove('active');
+            document.getElementById('proc-step-2').classList.remove('completed','active');
+            document.getElementById('proc-step-3').classList.remove('completed','active');
+            document.getElementById('proc-step-4').classList.remove('completed','active');
+            document.getElementById('proc-step-2').classList.add('active');
+            document.getElementById('proc-step-2').querySelector('.processing-step-status').textContent = 'Processando...';
+            document.getElementById('proc-step-3').querySelector('.processing-step-status').textContent = 'Aguardando';
+            document.getElementById('proc-step-4').querySelector('.processing-step-status').textContent = 'Aguardando';
+        }
+
+        function goToPolicies() {
+            closeModal();
+            showToast('✓ 4 novas políticas adicionadas com sucesso!');
+        }
+    </script>
+</body>
+</html>
