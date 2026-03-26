@@ -247,6 +247,58 @@ a:hover { text-decoration: underline; }
 }
 @media (max-width: 768px) { .content-wrapper { padding: var(--spacing-md); padding-top: 60px; } .page-header-top { flex-direction: column; } .data-table { display: none; } .mobile-cards { display: block !important; } }
 @media (max-width: 480px) { body { font-size: 16px; } .page-title { font-size: 24px; } }
+
+/* Workflow Builder */
+.wb-container { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: var(--spacing-md); }
+.wb-header { padding: var(--spacing-sm) var(--spacing-md); background: var(--gray-50); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.wb-header-title { font-size: 12px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; }
+.wb-body { padding: var(--spacing-md); }
+.wb-trigger { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); background: var(--info-blue-light); border: 1px solid #BFDBFE; border-radius: var(--radius-md); font-size: 13px; color: var(--scope-cc-text); margin-bottom: var(--spacing-sm); }
+.wb-condition { display: flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-sm); background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: var(--spacing-sm); flex-wrap: wrap; border-left: 3px solid var(--purple); }
+.wb-condition.scope-cc { border-left-color: var(--info-blue); }
+.wb-condition select, .wb-condition input { padding: var(--spacing-xs) var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; font-family: inherit; min-height: 32px; background: var(--white); }
+.wb-condition-keyword { font-size: 12px; font-weight: 600; color: var(--info-blue); white-space: nowrap; }
+.wb-connector { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm); }
+.wb-connector-line { width: 2px; height: 16px; background: var(--gray-300); margin-left: var(--spacing-lg); }
+.wb-connector-label { font-size: 11px; font-weight: 600; padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); background: var(--gray-100); color: var(--gray-500); }
+.wb-action { display: flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-sm); background: var(--success-green-light); border: 1px solid #BBF7D0; border-radius: var(--radius-md); margin-bottom: var(--spacing-sm); border-left: 3px solid var(--success-green); flex-wrap: wrap; }
+.wb-action select, .wb-action input { padding: var(--spacing-xs) var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; font-family: inherit; min-height: 32px; background: var(--white); }
+.wb-action-keyword { font-size: 12px; font-weight: 600; color: var(--success-green); white-space: nowrap; }
+.wb-remove-btn { width: 28px; height: 28px; border: none; background: transparent; border-radius: var(--radius-sm); color: var(--gray-400); font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: auto; }
+.wb-remove-btn:hover { background: var(--danger-red-light); color: var(--danger-red); }
+.wb-add-btn { display: inline-flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-sm); border: 1px dashed var(--border); border-radius: var(--radius-md); background: transparent; font-size: 12px; color: var(--gray-500); min-height: 32px; }
+.wb-add-btn:hover { border-color: var(--primary-orange); color: var(--primary-orange); background: var(--primary-orange-light); }
+.wb-alert { display: flex; align-items: flex-start; gap: var(--spacing-sm); padding: var(--spacing-md); background: var(--warning-yellow-light); border: 1px solid #FDE68A; border-radius: var(--radius-md); font-size: 12px; color: #92400E; margin-bottom: var(--spacing-md); }
+
+/* Flow selector (Step 1) */
+.flow-selector { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.flow-option { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 13px; color: var(--gray-700); cursor: pointer; min-height: 44px; transition: all 0.2s; }
+.flow-option:hover { border-color: var(--primary-orange); background: var(--primary-orange-light); }
+.flow-option.disabled { opacity: 0.5; cursor: not-allowed; background: var(--gray-50); }
+.flow-option.disabled:hover { border-color: var(--border); background: var(--gray-50); }
+.flow-option input[type="radio"] { accent-color: var(--primary-orange); width: 18px; height: 18px; }
+.flow-option-disabled-text { font-size: 11px; color: var(--gray-400); margin-left: auto; }
+
+/* Vacation expanded */
+.vacation-banner { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-md); background: var(--warning-yellow-light); border: 1px solid #FDE68A; border-radius: var(--radius-md); font-size: 13px; color: #92400E; margin-bottom: var(--spacing-lg); }
+.vacation-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-sm); }
+.vacation-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--spacing-sm); }
+.vacation-card-name { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+.vacation-card-period { font-size: 12px; color: var(--gray-500); }
+.vacation-delegation { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-xs) 0; font-size: 13px; color: var(--gray-700); border-bottom: 1px solid var(--gray-100); }
+.vacation-delegation:last-child { border-bottom: none; }
+.vacation-delegation-arrow { color: var(--gray-400); }
+.vacation-form-section { margin-bottom: var(--spacing-md); }
+.vacation-form-label { font-size: 12px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--spacing-xs); }
+.vacation-resp-list { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.vacation-resp-item { display: flex; align-items: center; gap: var(--spacing-sm); font-size: 13px; }
+.vacation-resp-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-orange); }
+.vacation-resp-item .form-input { flex: 1; min-width: 120px; }
+.vacation-summary { background: var(--warning-yellow-light); border: 1px solid #FDE68A; border-radius: var(--radius-md); padding: var(--spacing-md); font-size: 13px; color: #92400E; margin-bottom: var(--spacing-md); }
+
+/* Inline form transition */
+.inline-form { animation: fadeSlideIn 0.3s ease; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
@@ -327,12 +379,12 @@ a:hover { text-decoration: underline; }
         <table class="data-table" aria-label="Times">
           <thead><tr><th>Nome</th><th>Centro de Custo</th><th>Responsável</th><th>Membros</th><th>Política</th><th>Status</th></tr></thead>
           <tbody>
-            <tr onclick="openSlideover('comercial')"><td><strong>Comercial</strong></td><td>Vendas</td><td>Maria O.</td><td>12</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
+            <tr onclick="openSlideover('comercial')"><td><strong>Comercial</strong></td><td>Vendas</td><td>Maria O.</td><td>12</td><td><span class="policy-badge policy-exception">1 exceção</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
             <tr onclick="openSlideover('mkt_digital')"><td><strong>Marketing Digital</strong></td><td>Marketing</td><td>Francisco D.</td><td>8</td><td><span class="policy-badge policy-exception">1 exceção</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
             <tr onclick="openSlideover('engenharia')"><td><strong>Engenharia</strong></td><td>Produto</td><td>João M.</td><td>15</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
             <tr onclick="openSlideover('financeiro')"><td><strong>Financeiro</strong></td><td>Administrativo</td><td>Camila V.</td><td>6</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
             <tr onclick="openSlideover('rh')"><td><strong>RH</strong></td><td>Administrativo</td><td>Sandra F.</td><td>4</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-            <tr onclick="openSlideover('operacoes')"><td><strong>Operações</strong></td><td>Operações</td><td>Ricardo L.</td><td>10</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
+            <tr onclick="openSlideover('operacoes_t')"><td><strong>Operações</strong></td><td>Operações</td><td>Ricardo L.</td><td>10</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
             <tr onclick="openSlideover('juridico')"><td><strong>Jurídico</strong></td><td>Administrativo</td><td>Ana P.</td><td>3</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
             <tr onclick="openSlideover('diretoria')"><td><strong>Diretoria</strong></td><td>Administrativo</td><td>André C.</td><td>5</td><td><span class="policy-badge policy-exception">2 exceções</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
           </tbody>
@@ -340,7 +392,7 @@ a:hover { text-decoration: underline; }
       </div>
 
       <div class="mobile-cards">
-        <div class="mobile-card" onclick="openSlideover('comercial')"><div class="mobile-card-title">Comercial</div><div class="mobile-card-detail">Vendas · Maria O. · 12 · <span class="policy-badge policy-default">Padrão</span></div></div>
+        <div class="mobile-card" onclick="openSlideover('comercial')"><div class="mobile-card-title">Comercial</div><div class="mobile-card-detail">Vendas · Maria O. · 12 · <span class="policy-badge policy-exception">1 exceção</span></div></div>
         <div class="mobile-card" onclick="openSlideover('mkt_digital')"><div class="mobile-card-title">Marketing Digital</div><div class="mobile-card-detail">Marketing · Francisco D. · 8 · <span class="policy-badge policy-exception">1 exceção</span></div></div>
         <div class="mobile-card" onclick="openSlideover('diretoria')"><div class="mobile-card-title">Diretoria</div><div class="mobile-card-detail">Administrativo · André C. · 5 · <span class="policy-badge policy-exception">2 exceções</span></div></div>
       </div>
@@ -420,52 +472,68 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
+<!-- MODAL: Remove Confirm -->
+<div class="modal-overlay" id="removeConfirmModal" onclick="if(event.target===this)closeModal('removeConfirmModal')">
+  <div class="modal" style="max-width:440px;" role="dialog" aria-modal="true" aria-label="Confirmação">
+    <div class="modal-header"><div><div class="modal-title" style="font-size:18px;">Confirmar</div></div><button class="modal-close" onclick="closeModal('removeConfirmModal')">✕</button></div>
+    <div class="modal-body">
+      <div id="removeConfirmText" style="font-size:14px;color:var(--gray-600);margin-bottom:var(--spacing-lg);"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('removeConfirmModal')">Cancelar</button>
+        <button class="btn btn-danger btn-sm" id="removeConfirmBtn">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 const teamsData = {
   comercial: { name: 'Comercial', cc: 'Vendas', responsible: 'Maria Oliveira', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
     approvals: [{level:1,name:'Maria Oliveira',min:'R$ 0',color:'#F97316'},{level:2,name:'Carlos Santos',min:'R$ 2.000',color:'#EA580C'},{level:3,name:'André Costa',min:'R$ 10.000',color:'#C2410C'}],
     members: [{name:'Ana Silva',email:'ana.silva@payfy.com'},{name:'Bruno Costa',email:'bruno.costa@payfy.com'},{name:'Carla Dias',email:'carla.dias@payfy.com'},{name:'Daniel Lima',email:'daniel.lima@payfy.com'}],
-    exceptions: [], ruleSource: 'geral'
+    exceptions: [{flow:'Reembolsos',detail:'Sem limite de reembolso viagem (geral: R$ 3.000)',id:'com-reemb',conditions:[{field:'Categoria',op:'igual a',value:'Viagem'}],actions:['Aprovar automaticamente']}],
+    ruleSource: 'geral', vacation: []
   },
   mkt_digital: { name: 'Marketing Digital', cc: 'Marketing', responsible: 'Francisco Duarte', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
     approvals: [{level:1,name:'Francisco Duarte',min:'R$ 0',color:'#F97316'},{level:2,name:'Ana Paula',min:'R$ 3.000',color:'#EA580C'}],
     members: [{name:'Fernanda Rocha',email:'fernanda.r@payfy.com'},{name:'Gabriel Santos',email:'gabriel.s@payfy.com'},{name:'Helena Vieira',email:'helena.v@payfy.com'}],
-    exceptions: [{flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp'}],
-    ruleSource: 'cc', ccName: 'Marketing'
+    exceptions: [{flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente']}],
+    ruleSource: 'cc', ccName: 'Marketing', vacation: []
   },
   engenharia: { name: 'Engenharia', cc: 'Produto', responsible: 'João Mendes', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
     approvals: [{level:1,name:'João Mendes',min:'R$ 0',color:'#F97316'},{level:2,name:'André Costa',min:'R$ 5.000',color:'#EA580C'}],
     members: [{name:'Igor Pereira',email:'igor.p@payfy.com'},{name:'Julia Martins',email:'julia.m@payfy.com'},{name:'Kevin Alves',email:'kevin.a@payfy.com'},{name:'Laura Ribeiro',email:'laura.r@payfy.com'},{name:'Matheus Ferreira',email:'matheus.f@payfy.com'}],
-    exceptions: [], ruleSource: 'geral'
+    exceptions: [], ruleSource: 'geral', vacation: []
   },
   financeiro: { name: 'Financeiro', cc: 'Administrativo', responsible: 'Camila Vieira', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
     approvals: [{level:1,name:'Camila Vieira',min:'R$ 0',color:'#F97316'}],
     members: [{name:'Natália Souza',email:'natalia.s@payfy.com'},{name:'Otávio Lima',email:'otavio.l@payfy.com'}],
-    exceptions: [], ruleSource: 'geral'
+    exceptions: [], ruleSource: 'geral', vacation: []
   },
   rh: { name: 'RH', cc: 'Administrativo', responsible: 'Sandra Ferreira', payments: ['Reembolso','Pix'], paymentOff: ['Cartão','Boleto'],
     approvals: [{level:1,name:'Sandra Ferreira',min:'R$ 0',color:'#F97316'}],
     members: [{name:'Paula Ramos',email:'paula.r@payfy.com'},{name:'Renato Gomes',email:'renato.g@payfy.com'}],
-    exceptions: [], ruleSource: 'geral'
+    exceptions: [], ruleSource: 'geral', vacation: []
   },
-  operacoes: { name: 'Operações', cc: 'Operações', responsible: 'Ricardo Lopes', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
+  operacoes_t: { name: 'Operações', cc: 'Operações', responsible: 'Ricardo Lopes', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
     approvals: [{level:1,name:'Ricardo Lopes',min:'R$ 0',color:'#F97316'},{level:2,name:'Sandra Ferreira',min:'R$ 3.000',color:'#EA580C'}],
     members: [{name:'Simone Torres',email:'simone.t@payfy.com'},{name:'Thiago Nunes',email:'thiago.n@payfy.com'}],
-    exceptions: [], ruleSource: 'geral'
+    exceptions: [], ruleSource: 'geral', vacation: []
   },
   juridico: { name: 'Jurídico', cc: 'Administrativo', responsible: 'Ana Pereira', payments: ['Reembolso'], paymentOff: ['Cartão','Pix','Boleto'],
     approvals: [{level:1,name:'Ana Pereira',min:'R$ 0',color:'#F97316'}],
     members: [{name:'Ulisses Barros',email:'ulisses.b@payfy.com'},{name:'Vanessa Cruz',email:'vanessa.c@payfy.com'}],
-    exceptions: [], ruleSource: 'geral'
+    exceptions: [], ruleSource: 'geral', vacation: []
   },
   diretoria: { name: 'Diretoria', cc: 'Administrativo', responsible: 'André Costa', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
     approvals: [{level:1,name:'André Costa (CEO)',min:'R$ 0',color:'#F97316'},{level:2,name:'Camila Vieira (CFO)',min:'R$ 5.000',color:'#EA580C'},{level:3,name:'Conselho',min:'R$ 50.000',color:'#C2410C'}],
     members: [{name:'André Costa',email:'andre.c@payfy.com'},{name:'Carlos Mendes',email:'carlos.m@payfy.com'},{name:'Camila Vieira',email:'camila.v@payfy.com'},{name:'Marcos Miranda',email:'marcos.m@payfy.com'}],
     exceptions: [
-      {flow:'Solicitações',detail:'CFO aprova acima de R$ 5.000 (geral: gestor aprova acima de R$ 500)',id:'dir-sol'},
-      {flow:'Reembolsos',detail:'Sem limite mensal (geral: R$ 3.000)',id:'dir-reemb'}
+      {flow:'Solicitações',detail:'CFO aprova acima de R$ 5.000 (geral: gestor aprova acima de R$ 500)',id:'dir-sol',conditions:[{field:'Valor',op:'maior que',value:'R$ 5.000'}],actions:['Escalar para Camila Vieira (CFO)']},
+      {flow:'Reembolsos',detail:'Sem limite mensal (geral: R$ 3.000)',id:'dir-reemb',conditions:[{field:'Valor',op:'maior que',value:'R$ 0'}],actions:['Aprovar automaticamente']}
     ],
-    ruleSource: 'geral'
+    ruleSource: 'geral',
+    vacation: [{person:'André Costa',start:'01/04/2026',end:'15/04/2026',sameSubstitute:true,substitute:'Camila Vieira',responsibilities:['Aprovar despesas (Nível 1)','Aprovar reembolsos','Aprovar solicitações de cartão']}]
   }
 };
 
@@ -486,24 +554,33 @@ const ccRules = {
 };
 
 function openSlideover(teamKey) {
+  currentTeamKey = teamKey;
   const t = teamsData[teamKey];
   document.getElementById('soTitle').textContent = t.name;
   document.getElementById('soSubtitle').textContent = 'Centro de Custo: ' + t.cc;
 
   let h = '';
 
+  // Vacation banner at TOP
+  if (t.vacation && t.vacation.length > 0) {
+    t.vacation.forEach(function(v) {
+      var totalResps = v.responsibilities ? v.responsibilities.length : 0;
+      h += '<div class="vacation-banner">⚠️ ' + v.person + ' em férias até ' + v.end + '. ' + totalResps + ' responsabilidade(s) delegada(s) para ' + v.substitute + '.</div>';
+    });
+  }
+
   // Responsável
   h += '<div class="so-section"><div class="so-field"><div class="so-label">Responsável</div><div class="so-value">' + t.responsible + '</div></div></div>';
 
   // Formas de Pagamento
   h += '<div class="so-section"><div class="so-section-title">Formas de Pagamento</div><div class="payment-badges">';
-  t.payments.forEach(p => h += '<span class="payment-badge payment-active">✓ ' + p + '</span>');
-  t.paymentOff.forEach(p => h += '<span class="payment-badge payment-inactive">✗ ' + p + '</span>');
+  t.payments.forEach(function(p) { h += '<span class="payment-badge payment-active">✓ ' + p + '</span>'; });
+  t.paymentOff.forEach(function(p) { h += '<span class="payment-badge payment-inactive">✗ ' + p + '</span>'; });
   h += '</div></div>';
 
   // Níveis de Aprovação
   h += '<div class="so-section"><div class="so-section-title">Níveis de Aprovação <button class="btn btn-ghost btn-sm" onclick="openModal(\'impactModal\')" style="margin-left:auto;">Editar</button></div><div class="approval-cards">';
-  t.approvals.forEach(a => {
+  t.approvals.forEach(function(a) {
     h += '<div class="approval-card" style="background:' + a.color + '"><div><div class="approval-level">Nível ' + a.level + '</div><div class="approval-name">' + a.name + '</div></div><div class="approval-value">A partir de ' + a.min + '</div></div>';
   });
   h += '</div></div>';
@@ -512,10 +589,10 @@ function openSlideover(teamKey) {
   h += '<div class="so-section"><div class="so-section-title">📋 Política de Gastos</div>';
 
   // Rules applicable
-  const rules = (t.ruleSource === 'cc' && ccRules[t.ccName]) ? ccRules[t.ccName] : generalRules;
+  var rules = (t.ruleSource === 'cc' && ccRules[t.ccName]) ? ccRules[t.ccName] : generalRules;
   h += '<div style="margin-bottom:var(--spacing-md);"><div class="so-label">Regras aplicáveis a este time</div><div class="rules-readonly">';
-  rules.forEach(r => {
-    const badge = r.source === 'cc' ? '<span class="scope-badge scope-cc">CC: ' + (t.ccName || t.cc) + '</span>' : '<span class="scope-badge scope-geral">Geral</span>';
+  rules.forEach(function(r) {
+    var badge = r.source === 'cc' ? '<span class="scope-badge scope-cc">CC: ' + (t.ccName || t.cc) + '</span>' : '<span class="scope-badge scope-geral">Geral</span>';
     h += '<div class="rule-line"><span>' + r.icon + '</span><span style="flex:1">' + r.text + '</span>' + badge + '</div>';
   });
   h += '</div><div style="font-size:12px;color:var(--gray-500);margin-top:var(--spacing-xs);"><a href="index-v6-politicas.html">Ver Política Completa →</a></div></div>';
@@ -523,29 +600,45 @@ function openSlideover(teamKey) {
   // Exceptions
   h += '<div><div class="so-label">Exceções deste Time</div>';
   if (t.exceptions.length === 0) {
-    h += '<div class="empty-state">Este time segue a política do CC ' + t.cc + ' / empresa.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showToast(\'Criação de exceção em desenvolvimento.\',\'info\')">Criar exceção →</button></div></div>';
+    h += '<div class="empty-state">Este time segue a política do CC ' + t.cc + ' / empresa.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showCreateExceptionForm(\'' + teamKey + '\')">Criar exceção →</button></div></div>';
   } else {
-    t.exceptions.forEach(ex => {
+    t.exceptions.forEach(function(ex) {
       h += '<div class="exception-block" id="exc-' + ex.id + '"><div class="exception-header"><div class="exception-flow"><span>' + ex.flow + '</span><span class="exception-badge">Exceção Time</span></div></div>';
       h += '<div class="exception-detail">' + ex.detail + '</div>';
-      h += '<div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showToast(\'Editor de workflow em desenvolvimento.\',\'info\')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="removeException(\'' + ex.id + '\')">Remover exceção</button></div></div>';
+      h += '<div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showEditExceptionForm(\'' + teamKey + '\',\'' + ex.id + '\')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="showRemoveConfirm(\'' + teamKey + '\',\'' + ex.id + '\')">Remover exceção</button></div></div>';
     });
     h += '<div class="explanatory-text">Exceções deste time substituem inteiramente a regra do CC/empresa para o fluxo correspondente.</div>';
-    h += '<button class="btn btn-ghost btn-sm" style="margin-top:var(--spacing-sm);" onclick="showToast(\'Selecione o fluxo para customizar.\',\'info\')">+ Nova exceção</button>';
+    h += '<button class="btn btn-ghost btn-sm" style="margin-top:var(--spacing-sm);" onclick="showCreateExceptionForm(\'' + teamKey + '\')">+ Nova exceção</button>';
   }
+  h += '<div id="exceptionFormArea"></div>';
   h += '</div></div>';
 
   // Cobertura de Férias
-  h += '<div class="so-section"><div class="so-section-title">🏖️ Cobertura de Férias</div><div class="vacation-block">';
-  h += '<div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:13px;font-weight:500;color:var(--gray-700);">Aprovador substituto ativo</span><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>';
-  h += '<div class="vacation-fields"><div class="so-field"><div class="so-label">Substituto</div><input type="text" class="form-input" placeholder="Buscar usuário..." aria-label="Substituto"></div><div class="so-field"><div class="so-label">Data início</div><input type="date" class="form-input" aria-label="Data início"></div><div class="so-field"><div class="so-label">Data fim</div><input type="date" class="form-input" aria-label="Data fim"></div></div>';
-  h += '<div style="font-size:12px;color:var(--gray-500);margin-top:var(--spacing-sm);">Durante este período, o substituto receberá as aprovações do responsável.</div>';
-  h += '</div></div>';
+  h += '<div class="so-section"><div class="so-section-title">🏖️ Cobertura de Férias</div>';
+  if (t.vacation && t.vacation.length > 0) {
+    t.vacation.forEach(function(v, idx) {
+      h += '<div class="vacation-card">';
+      h += '<div class="vacation-card-header"><div class="vacation-card-name">' + v.person + '</div><div class="vacation-card-period">' + v.start + ' — ' + v.end + '</div></div>';
+      if (v.responsibilities) {
+        v.responsibilities.forEach(function(resp) {
+          h += '<div class="vacation-delegation"><span>' + resp + '</span><span class="vacation-delegation-arrow">→</span><span><strong>' + v.substitute + '</strong></span></div>';
+        });
+      }
+      h += '<div style="display:flex;gap:var(--spacing-sm);margin-top:var(--spacing-sm);">';
+      h += '<button class="btn btn-secondary btn-sm" onclick="showVacationForm(\'' + teamKey + '\')">Editar</button>';
+      h += '<button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="endVacation(\'' + teamKey + '\',' + idx + ')">Encerrar cobertura</button>';
+      h += '</div></div>';
+    });
+  } else {
+    h += '<div class="empty-state">Nenhuma cobertura ativa no momento.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showVacationForm(\'' + teamKey + '\')">+ Configurar cobertura</button></div></div>';
+  }
+  h += '<div id="vacationFormArea"></div>';
+  h += '</div>';
 
   // Membros
   h += '<div class="so-section"><div class="so-section-title">Membros (' + t.members.length + ')</div><div class="member-list">';
-  t.members.forEach(m => {
-    const initials = m.name.split(' ').map(n => n[0]).join('');
+  t.members.forEach(function(m) {
+    var initials = m.name.split(' ').map(function(n) { return n[0]; }).join('');
     h += '<div class="member-item"><div class="member-info"><div class="member-avatar">' + initials + '</div><div><div class="member-name">' + m.name + '</div><div class="member-email">' + m.email + '</div></div></div>';
     h += '<div class="member-actions"><button class="member-action-btn" aria-label="Transferir ' + m.name + '" onclick="event.stopPropagation();openModal(\'transferModal\')">↗</button><button class="member-action-btn" aria-label="Remover ' + m.name + '" onclick="event.stopPropagation();showToast(\'Funcionalidade de remoção em desenvolvimento.\',\'info\')">✕</button></div></div>';
   });
@@ -567,18 +660,12 @@ function closeSlideover() {
   document.getElementById('slideover').classList.remove('open');
 }
 
-function removeException(id) {
-  const el = document.getElementById('exc-' + id);
-  if (el) el.remove();
-  showToast('Exceção removida. Time voltou para regra padrão.', 'success');
-}
-
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
 function checkDeleteReady() {
-  const checks = document.querySelectorAll('#deleteModal .checklist-item input[type="checkbox"]');
-  const allChecked = Array.from(checks).every(c => c.checked);
+  var checks = document.querySelectorAll('#deleteModal .checklist-item input[type="checkbox"]');
+  var allChecked = Array.from(checks).every(function(c) { return c.checked; });
   document.getElementById('deleteBtn').disabled = !allChecked;
 }
 
@@ -589,13 +676,13 @@ function confirmDelete() {
 }
 
 function showToast(message, type) {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
+  var container = document.getElementById('toastContainer');
+  var toast = document.createElement('div');
   toast.className = 'toast ' + (type || 'info');
   toast.setAttribute('role', 'alert');
   toast.innerHTML = '<span>' + (type === 'success' ? '✓' : 'ℹ') + '</span> ' + message;
   container.appendChild(toast);
-  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 4000);
+  setTimeout(function() { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(function() { toast.remove(); }, 300); }, 4000);
 }
 
 function toggleSidebars() {
@@ -610,9 +697,9 @@ function closeSidebars() {
 }
 
 function trapFocus(element) {
-  const focusable = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  var focusable = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
   if (!focusable.length) return;
-  const first = focusable[0], last = focusable[focusable.length - 1];
+  var first = focusable[0], last = focusable[focusable.length - 1];
   element.addEventListener('keydown', function handler(e) {
     if (e.key === 'Escape') { closeSlideover(); element.removeEventListener('keydown', handler); return; }
     if (e.key !== 'Tab') return;
@@ -623,8 +710,346 @@ function trapFocus(element) {
 }
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') { closeSlideover(); closeSidebars(); document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); }
+  if (e.key === 'Escape') { closeSlideover(); closeSidebars(); document.querySelectorAll('.modal-overlay.active').forEach(function(m) { m.classList.remove('active'); }); }
 });
+
+// ========= EXCEPTION FLOW =========
+
+let currentTeamKey = null;
+
+const allFlows = ['Solicitações','Despesas de Cartão','Reembolsos','Viagens'];
+
+const defaultRules = {
+  'Solicitações': 'Quando solicitação ocorre → Se valor ≤ R$ 2.000 → Auto-aprovar. Se valor > R$ 2.000 → Escalar para gestor.',
+  'Despesas de Cartão': 'Quando despesa de cartão ocorre → Se valor > R$ 50 → Exigir comprovante. Categorização automática por MCC.',
+  'Reembolsos': 'Quando reembolso ocorre → Limite mensal R$ 3.000. Prazo 30 dias. Se > R$ 1.000 → Aprovação dupla.',
+  'Viagens': 'Quando viagem ocorre → Classe econômica obrigatória. Hospedagem até R$ 500/noite. Antecedência 7 dias.'
+};
+
+function showCreateExceptionForm(teamKey) {
+  currentTeamKey = teamKey;
+  var t = teamsData[teamKey];
+  var existingFlows = t.exceptions.map(function(e) { return e.flow; });
+
+  var container = document.getElementById('exceptionFormArea');
+  var h = '<div class="inline-form">';
+  h += '<div class="so-section-title">Nova exceção</div>';
+  h += '<div class="flow-selector">';
+  allFlows.forEach(function(f) {
+    var disabled = existingFlows.includes(f);
+    h += '<label class="flow-option' + (disabled ? ' disabled' : '') + '">';
+    h += '<input type="radio" name="newExcFlow" value="' + f + '"' + (disabled ? ' disabled' : '') + '>';
+    h += '<span>' + f + '</span>';
+    if (disabled) h += '<span class="flow-option-disabled-text">(já possui exceção)</span>';
+    h += '</label>';
+  });
+  h += '</div>';
+  h += '<div style="display:flex;gap:var(--spacing-sm);margin-top:var(--spacing-md);">';
+  h += '<button class="btn btn-primary btn-sm" onclick="proceedToWorkflowBuilder()">Continuar</button>';
+  h += '<button class="btn btn-ghost btn-sm" onclick="openSlideover(\'' + teamKey + '\')">Cancelar</button>';
+  h += '</div></div>';
+
+  container.innerHTML = h;
+}
+
+function proceedToWorkflowBuilder() {
+  var selected = document.querySelector('input[name="newExcFlow"]:checked');
+  if (!selected) { showToast('Selecione um fluxo.', 'info'); return; }
+  showWorkflowBuilder(currentTeamKey, selected.value, null);
+}
+
+function showWorkflowBuilder(teamKey, flow, existingException) {
+  currentTeamKey = teamKey;
+  var t = teamsData[teamKey];
+  var scopeLabel = 'Exceção Time';
+  var scopeClass = 'exception-badge';
+
+  var container = document.getElementById('exceptionFormArea');
+
+  var conditions = existingException ? existingException.conditions : [{field:'Valor',op:'menor que',value:''}];
+  var actions = existingException ? existingException.actions : ['Aprovar automaticamente'];
+
+  var h = '<div class="inline-form">';
+  h += '<div style="display:flex;align-items:center;gap:var(--spacing-sm);margin-bottom:var(--spacing-md);"><span style="font-size:14px;font-weight:600;">Exceção para ' + flow + '</span><span class="' + scopeClass + '">' + scopeLabel + '</span></div>';
+  h += '<div class="wb-alert">⚠️ Esta exceção substituirá inteiramente a regra geral para este fluxo neste time.</div>';
+
+  // Current rule reference
+  h += '<div class="wb-container"><div class="wb-header"><span class="wb-header-title">Regra atual</span></div><div class="wb-body" style="background:var(--gray-50);font-size:13px;color:var(--gray-600);">' + (defaultRules[flow] || '') + '</div></div>';
+
+  // Editable builder
+  h += '<div class="wb-container"><div class="wb-header"><span class="wb-header-title">Sua exceção</span></div><div class="wb-body" id="builderBody">';
+
+  // Trigger (fixed)
+  h += '<div class="wb-trigger">⚡ Quando <strong>' + flow.toLowerCase() + '</strong> ocorre</div>';
+
+  // Conditions
+  h += '<div id="conditionsArea">';
+  conditions.forEach(function(c, i) {
+    h += renderConditionBlock(c, i);
+    if (i < conditions.length - 1) h += '<div class="wb-connector"><div class="wb-connector-line"></div><select class="wb-connector-label" style="border:none;"><option>E</option><option>OU</option></select></div>';
+  });
+  h += '</div>';
+  h += '<button class="wb-add-btn" onclick="addCondition()" style="margin-bottom:var(--spacing-md);">+ Adicionar condição</button>';
+
+  // Action
+  h += '<div id="actionsArea">';
+  actions.forEach(function(a, i) {
+    h += renderActionBlock(a, i);
+  });
+  h += '</div>';
+
+  h += '</div></div>';
+
+  // Buttons
+  var saveLabel = existingException ? 'Salvar alterações' : 'Salvar exceção';
+  h += '<div style="display:flex;gap:var(--spacing-sm);">';
+  h += '<button class="btn btn-primary btn-sm" onclick="saveException(\'' + teamKey + '\',\'' + flow + '\',' + (existingException ? 'true' : 'false') + ')">' + saveLabel + '</button>';
+  h += '<button class="btn btn-secondary btn-sm" onclick="openSlideover(\'' + teamKey + '\')">Cancelar</button>';
+  h += '</div></div>';
+
+  container.innerHTML = h;
+}
+
+function renderConditionBlock(c, idx) {
+  return '<div class="wb-condition" id="cond-' + idx + '">' +
+    '<span class="wb-condition-keyword">Se</span>' +
+    '<select onchange="updateCondition(' + idx + ',\'field\',this.value)"><option' + (c.field==='Valor'?' selected':'') + '>Valor</option><option' + (c.field==='Categoria'?' selected':'') + '>Categoria</option><option' + (c.field==='Cargo'?' selected':'') + '>Cargo</option><option' + (c.field==='Merchant'?' selected':'') + '>Merchant</option></select>' +
+    '<select onchange="updateCondition(' + idx + ',\'op\',this.value)"><option' + (c.op==='maior que'?' selected':'') + '>maior que</option><option' + (c.op==='menor que'?' selected':'') + '>menor que</option><option' + (c.op==='igual a'?' selected':'') + '>igual a</option><option' + (c.op==='contém'?' selected':'') + '>contém</option></select>' +
+    '<input type="text" value="' + (c.value||'') + '" placeholder="valor" style="width:120px;" onchange="updateCondition(' + idx + ',\'value\',this.value)">' +
+    '<button class="wb-remove-btn" onclick="removeCondition(' + idx + ')" aria-label="Remover condição">✕</button>' +
+    '</div>';
+}
+
+function renderActionBlock(a, idx) {
+  return '<div class="wb-action" id="act-' + idx + '">' +
+    '<span class="wb-action-keyword">Então →</span>' +
+    '<select onchange="updateAction(' + idx + ',this.value)">' +
+    '<option' + (a==='Aprovar automaticamente'?' selected':'') + '>Aprovar automaticamente</option>' +
+    '<option' + (a.startsWith('Escalar para')?' selected':'') + '>Escalar para</option>' +
+    '<option' + (a==='Bloquear'?' selected':'') + '>Bloquear</option>' +
+    '<option' + (a==='Policy Agent decide'?' selected':'') + '>Policy Agent decide</option>' +
+    '<option' + (a==='Requerer comprovante'?' selected':'') + '>Requerer comprovante</option>' +
+    '<option' + (a==='Alertar gestor'?' selected':'') + '>Alertar gestor</option>' +
+    '</select>' +
+    (a.startsWith('Escalar para') ? '<input type="text" value="' + a.replace('Escalar para ','') + '" placeholder="Nome do aprovador" style="width:150px;">' : '') +
+    '</div>';
+}
+
+function addCondition() {
+  var area = document.getElementById('conditionsArea');
+  var count = area.querySelectorAll('.wb-condition').length;
+  // Add connector
+  var connectorDiv = document.createElement('div');
+  connectorDiv.className = 'wb-connector';
+  connectorDiv.innerHTML = '<div class="wb-connector-line"></div><select class="wb-connector-label" style="border:none;"><option>E</option><option>OU</option></select>';
+  area.appendChild(connectorDiv);
+
+  var condDiv = document.createElement('div');
+  condDiv.className = 'wb-condition';
+  condDiv.id = 'cond-' + count;
+  condDiv.innerHTML =
+    '<span class="wb-condition-keyword">Se</span>' +
+    '<select onchange="updateCondition(' + count + ',\'field\',this.value)"><option>Valor</option><option>Categoria</option><option>Cargo</option><option>Merchant</option></select>' +
+    '<select onchange="updateCondition(' + count + ',\'op\',this.value)"><option>maior que</option><option selected>menor que</option><option>igual a</option><option>contém</option></select>' +
+    '<input type="text" value="" placeholder="valor" style="width:120px;" onchange="updateCondition(' + count + ',\'value\',this.value)">' +
+    '<button class="wb-remove-btn" onclick="removeCondition(' + count + ')" aria-label="Remover condição">✕</button>';
+  area.appendChild(condDiv);
+}
+
+function removeCondition(idx) {
+  var el = document.getElementById('cond-' + idx);
+  if (el) {
+    // Also remove preceding connector if exists
+    var prev = el.previousElementSibling;
+    if (prev && prev.classList.contains('wb-connector')) prev.remove();
+    el.remove();
+  }
+}
+
+function updateCondition(idx, prop, val) { /* DOM already updated */ }
+function updateAction(idx, val) {
+  var act = document.getElementById('act-' + idx);
+  if (val === 'Escalar para' && !act.querySelector('input')) {
+    var input = document.createElement('input');
+    input.type = 'text'; input.placeholder = 'Nome do aprovador'; input.style.cssText = 'width:150px;padding:var(--spacing-xs) var(--spacing-sm);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:inherit;min-height:32px;';
+    act.appendChild(input);
+  } else if (val !== 'Escalar para') {
+    var input = act.querySelector('input');
+    if (input) input.remove();
+  }
+}
+
+function saveException(teamKey, flow, isEdit) {
+  var t = teamsData[teamKey];
+  // Gather conditions from DOM
+  var condEls = document.querySelectorAll('#conditionsArea .wb-condition');
+  var conditions = Array.from(condEls).map(function(el) {
+    var selects = el.querySelectorAll('select');
+    var input = el.querySelector('input');
+    return { field: selects[0].value, op: selects[1].value, value: input ? input.value : '' };
+  });
+  var actEls = document.querySelectorAll('#actionsArea .wb-action');
+  var actions = Array.from(actEls).map(function(el) {
+    var select = el.querySelector('select');
+    var input = el.querySelector('input');
+    return select.value === 'Escalar para' && input ? 'Escalar para ' + input.value : select.value;
+  });
+
+  // Build summary
+  var summary = conditions.map(function(c) { return c.field + ' ' + c.op + ' ' + c.value; }).join(', ') + ' → ' + actions.join(', ');
+
+  if (isEdit) {
+    var exc = t.exceptions.find(function(e) { return e.flow === flow; });
+    if (exc) { exc.conditions = conditions; exc.actions = actions; exc.detail = summary; }
+    showToast('Exceção atualizada.', 'success');
+  } else {
+    var newId = teamKey + '-' + flow.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
+    t.exceptions.push({ flow: flow, detail: summary, id: newId, conditions: conditions, actions: actions });
+    showToast('Exceção criada para ' + flow + ' no Time ' + t.name + '.', 'success');
+  }
+
+  openSlideover(teamKey);
+}
+
+function showEditExceptionForm(teamKey, excId) {
+  var t = teamsData[teamKey];
+  var exc = t.exceptions.find(function(e) { return e.id === excId; });
+  if (exc) showWorkflowBuilder(teamKey, exc.flow, exc);
+}
+
+function showRemoveConfirm(teamKey, excId) {
+  var t = teamsData[teamKey];
+  var exc = t.exceptions.find(function(e) { return e.id === excId; });
+  if (!exc) return;
+
+  document.getElementById('removeConfirmText').innerHTML = 'O fluxo de <strong>' + exc.flow + '</strong> voltará a usar a regra geral da empresa.';
+  document.getElementById('removeConfirmBtn').onclick = function() {
+    t.exceptions = t.exceptions.filter(function(e) { return e.id !== excId; });
+    showToast('Exceção removida. ' + t.name + ' agora usa a regra padrão.', 'success');
+    closeModal('removeConfirmModal');
+    openSlideover(teamKey);
+  };
+  openModal('removeConfirmModal');
+}
+
+// ========= VACATION FLOW =========
+
+function showVacationForm(teamKey) {
+  currentTeamKey = teamKey;
+  var t = teamsData[teamKey];
+
+  // Get approvers/managers
+  var approvers = t.approvals.map(function(a) { return a.name; });
+
+  var container = document.getElementById('vacationFormArea');
+  var h = '<div class="inline-form">';
+  h += '<div class="so-section-title">Configurar Cobertura de Férias</div>';
+
+  // Who
+  h += '<div class="vacation-form-section"><div class="vacation-form-label">Quem sai de férias</div>';
+  h += '<select class="form-input" id="vacPerson" onchange="updateVacationPreview()">';
+  approvers.forEach(function(a) { h += '<option>' + a + '</option>'; });
+  h += '</select></div>';
+
+  // Period
+  h += '<div class="vacation-form-section"><div class="vacation-form-label">Período</div>';
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-sm);">';
+  h += '<input type="date" class="form-input" id="vacStart" onchange="updateVacationPreview()">';
+  h += '<input type="date" class="form-input" id="vacEnd" onchange="updateVacationPreview()">';
+  h += '</div></div>';
+
+  // Responsibilities
+  h += '<div class="vacation-form-section"><div class="vacation-form-label">Responsabilidades a delegar</div>';
+  h += '<label class="vacation-resp-item" style="margin-bottom:var(--spacing-sm);font-weight:600;"><input type="checkbox" id="vacSameSubst" checked onchange="toggleSameSubstitute()"> Mesmo substituto para todas</label>';
+  h += '<div id="vacSubstArea"><input type="text" class="form-input" id="vacSubstAll" placeholder="Buscar substituto..." onchange="updateVacationPreview()"></div>';
+  h += '<div class="vacation-resp-list" id="vacRespList">';
+  var resps = ['Aprovar despesas (Nível 1 — todos os valores)','Aprovar reembolsos','Aprovar solicitações de cartão','Realizar pagamentos'];
+  resps.forEach(function(r) {
+    h += '<label class="vacation-resp-item"><input type="checkbox" checked class="vacRespCheck" data-resp="' + r + '" onchange="updateVacationPreview()"> ' + r + '</label>';
+  });
+  h += '</div></div>';
+
+  // Preview
+  h += '<div class="vacation-summary" id="vacPreview" style="display:none;"></div>';
+
+  // Buttons
+  h += '<div style="display:flex;gap:var(--spacing-sm);">';
+  h += '<button class="btn btn-primary btn-sm" onclick="saveVacation(\'' + teamKey + '\')">Salvar cobertura</button>';
+  h += '<button class="btn btn-secondary btn-sm" onclick="openSlideover(\'' + teamKey + '\')">Cancelar</button>';
+  h += '</div></div>';
+
+  container.innerHTML = h;
+}
+
+function toggleSameSubstitute() {
+  var same = document.getElementById('vacSameSubst').checked;
+  var area = document.getElementById('vacSubstArea');
+  if (same) {
+    area.innerHTML = '<input type="text" class="form-input" id="vacSubstAll" placeholder="Buscar substituto..." onchange="updateVacationPreview()">';
+  } else {
+    var checks = document.querySelectorAll('.vacRespCheck:checked');
+    var h = '';
+    checks.forEach(function(c) {
+      h += '<div style="display:flex;align-items:center;gap:var(--spacing-sm);margin-bottom:var(--spacing-sm);"><span style="font-size:12px;color:var(--gray-600);flex:1;">' + c.dataset.resp.split(' (')[0] + '</span><input type="text" class="form-input" style="flex:1;" placeholder="Substituto..."></div>';
+    });
+    area.innerHTML = h;
+  }
+}
+
+function updateVacationPreview() {
+  var person = document.getElementById('vacPerson') ? document.getElementById('vacPerson').value : '';
+  var start = document.getElementById('vacStart') ? document.getElementById('vacStart').value : '';
+  var end = document.getElementById('vacEnd') ? document.getElementById('vacEnd').value : '';
+  var preview = document.getElementById('vacPreview');
+
+  if (!person || !start || !end) { preview.style.display = 'none'; return; }
+
+  preview.style.display = '';
+  var checks = document.querySelectorAll('.vacRespCheck:checked');
+  var same = document.getElementById('vacSameSubst') ? document.getElementById('vacSameSubst').checked : true;
+  var subst = document.getElementById('vacSubstAll') ? document.getElementById('vacSubstAll').value : '[substituto]';
+  if (!subst) subst = '[substituto]';
+
+  var h = '<strong>' + person + '</strong> em férias de ' + formatDate(start) + ' a ' + formatDate(end) + '<br>';
+  if (same) {
+    h += 'Todas as responsabilidades → <strong>' + subst + '</strong>';
+  } else {
+    Array.from(checks).forEach(function(c) { h += c.dataset.resp.split(' (')[0] + ' → [substituto]<br>'; });
+  }
+  preview.innerHTML = h;
+}
+
+function formatDate(d) { if (!d) return ''; var parts = d.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
+
+function saveVacation(teamKey) {
+  var t = teamsData[teamKey];
+  var person = document.getElementById('vacPerson').value;
+  var start = formatDate(document.getElementById('vacStart').value);
+  var end = formatDate(document.getElementById('vacEnd').value);
+  var same = document.getElementById('vacSameSubst').checked;
+  var substEl = document.getElementById('vacSubstAll');
+  var subst = substEl ? substEl.value : 'Substituto';
+  if (!subst) subst = 'Substituto';
+  var checks = document.querySelectorAll('.vacRespCheck:checked');
+  var resps = Array.from(checks).map(function(c) { return c.dataset.resp; });
+
+  t.vacation.push({ person: person, start: start, end: end, sameSubstitute: same, substitute: subst, responsibilities: resps });
+  showToast('Cobertura de férias configurada para ' + person + '. ' + resps.length + ' responsabilidade(s) delegada(s).', 'success');
+  openSlideover(teamKey);
+}
+
+function endVacation(teamKey, idx) {
+  var t = teamsData[teamKey];
+  var v = t.vacation[idx];
+  document.getElementById('removeConfirmText').innerHTML = 'Encerrar cobertura de <strong>' + v.person + '</strong>? As responsabilidades voltarão para ' + v.person + ' imediatamente.';
+  document.getElementById('removeConfirmBtn').onclick = function() {
+    t.vacation.splice(idx, 1);
+    showToast('Cobertura encerrada.', 'success');
+    closeModal('removeConfirmModal');
+    openSlideover(teamKey);
+  };
+  openModal('removeConfirmModal');
+}
 </script>
 </body>
 </html>

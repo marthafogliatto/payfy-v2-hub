@@ -546,6 +546,50 @@ a:hover { text-decoration: underline; }
 .confirm-text { font-size: 14px; color: var(--gray-600); margin-bottom: var(--spacing-lg); }
 .confirm-actions { display: flex; gap: var(--spacing-sm); justify-content: flex-end; }
 
+/* Modal overlay (for remove confirm) */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  max-width: 560px;
+  width: 90%;
+  box-shadow: var(--shadow-xl);
+  animation: modalIn 0.3s ease;
+}
+.modal-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.modal-title { font-size: 18px; font-weight: 700; color: var(--gray-900); }
+.modal-close {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--gray-100);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-600);
+  font-size: 16px;
+}
+.modal-close:hover { background: var(--gray-200); }
+.modal-body { padding: var(--spacing-lg); }
+.modal-actions { display: flex; gap: var(--spacing-sm); justify-content: flex-end; }
+
 /* Mobile card view */
 .mobile-cards { display: none; }
 .mobile-card {
@@ -578,6 +622,36 @@ a:hover { text-decoration: underline; }
   z-index: 200;
   box-shadow: var(--shadow-md);
 }
+
+/* Workflow Builder */
+.wb-container { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: var(--spacing-md); }
+.wb-header { padding: var(--spacing-sm) var(--spacing-md); background: var(--gray-50); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.wb-header-title { font-size: 12px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; }
+.wb-body { padding: var(--spacing-md); }
+.wb-trigger { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); background: var(--info-blue-light); border: 1px solid #BFDBFE; border-radius: var(--radius-md); font-size: 13px; color: var(--scope-cc-text); margin-bottom: var(--spacing-sm); }
+.wb-condition { display: flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-sm); background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: var(--spacing-sm); flex-wrap: wrap; border-left: 3px solid var(--info-blue); }
+.wb-condition select, .wb-condition input { padding: var(--spacing-xs) var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; font-family: inherit; min-height: 32px; background: var(--white); }
+.wb-condition-keyword { font-size: 12px; font-weight: 600; color: var(--info-blue); white-space: nowrap; }
+.wb-connector { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm); }
+.wb-connector-line { width: 2px; height: 16px; background: var(--gray-300); margin-left: var(--spacing-lg); }
+.wb-connector-label { font-size: 11px; font-weight: 600; padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); background: var(--gray-100); color: var(--gray-500); }
+.wb-action { display: flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-sm); background: var(--success-green-light); border: 1px solid #BBF7D0; border-radius: var(--radius-md); margin-bottom: var(--spacing-sm); border-left: 3px solid var(--success-green); flex-wrap: wrap; }
+.wb-action select, .wb-action input { padding: var(--spacing-xs) var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; font-family: inherit; min-height: 32px; background: var(--white); }
+.wb-action-keyword { font-size: 12px; font-weight: 600; color: var(--success-green); white-space: nowrap; }
+.wb-remove-btn { width: 28px; height: 28px; border: none; background: transparent; border-radius: var(--radius-sm); color: var(--gray-400); font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: auto; }
+.wb-remove-btn:hover { background: var(--danger-red-light); color: var(--danger-red); }
+.wb-add-btn { display: inline-flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-sm); border: 1px dashed var(--border); border-radius: var(--radius-md); background: transparent; font-size: 12px; color: var(--gray-500); min-height: 32px; }
+.wb-add-btn:hover { border-color: var(--primary-orange); color: var(--primary-orange); background: var(--primary-orange-light); }
+.wb-alert { display: flex; align-items: flex-start; gap: var(--spacing-sm); padding: var(--spacing-md); background: var(--warning-yellow-light); border: 1px solid #FDE68A; border-radius: var(--radius-md); font-size: 12px; color: #92400E; margin-bottom: var(--spacing-md); }
+.flow-selector { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.flow-option { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 13px; color: var(--gray-700); cursor: pointer; min-height: 44px; transition: all 0.2s; }
+.flow-option:hover { border-color: var(--primary-orange); background: var(--primary-orange-light); }
+.flow-option.disabled { opacity: 0.5; cursor: not-allowed; background: var(--gray-50); }
+.flow-option.disabled:hover { border-color: var(--border); background: var(--gray-50); }
+.flow-option input[type="radio"] { accent-color: var(--primary-orange); width: 18px; height: 18px; }
+.flow-option-disabled-text { font-size: 11px; color: var(--gray-400); margin-left: auto; }
+.inline-form { animation: fadeSlideIn 0.3s ease; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Responsive */
 @media (max-width: 1280px) {
@@ -798,7 +872,7 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- CONFIRM MODAL -->
+<!-- CONFIRM MODAL (legacy) -->
 <div class="confirm-overlay" id="confirmModal" onclick="if(event.target===this)closeConfirm()">
   <div class="confirm-modal" role="dialog" aria-modal="true" aria-label="Confirmação">
     <div class="confirm-title">Remover exceção?</div>
@@ -810,60 +884,56 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
+<!-- REMOVE CONFIRM MODAL -->
+<div class="modal-overlay" id="removeConfirmModal" onclick="if(event.target===this)closeModal('removeConfirmModal')">
+  <div class="modal" style="max-width:440px;" role="dialog" aria-modal="true">
+    <div class="modal-header"><div><div class="modal-title" style="font-size:18px;">Confirmar</div></div><button class="modal-close" onclick="closeModal('removeConfirmModal')">✕</button></div>
+    <div class="modal-body">
+      <div id="removeConfirmText" style="font-size:14px;color:var(--gray-600);margin-bottom:var(--spacing-lg);"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('removeConfirmModal')">Cancelar</button>
+        <button class="btn btn-danger btn-sm" id="removeConfirmBtn">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // CC data
 const ccData = {
-  vendas: {
-    name: 'Vendas',
-    responsible: 'Maria Oliveira',
-    approvers: ['Maria Oliveira', 'Carlos Santos'],
-    teams: [{ name: 'Comercial', members: 12 }, { name: 'Pré-vendas', members: 4 }],
-    erp: { name: 'SAP', desc: 'SAP Business One', code: 'CC-001', status: 'Ativo' },
+  vendas: { name: 'Vendas', responsible: 'Maria Oliveira', approvers: ['Maria Oliveira','Carlos Santos'],
+    teams: [{name:'Comercial',members:12},{name:'Pré-vendas',members:4}],
+    erp: {name:'SAP',desc:'SAP Business One',code:'CC-001',status:'Ativo'},
     exceptions: []
   },
-  marketing: {
-    name: 'Marketing',
-    responsible: 'Francisco Duarte',
-    approvers: ['Francisco Duarte', 'Ana Paula'],
-    teams: [{ name: 'Marketing Digital', members: 8 }, { name: 'Branding', members: 3 }],
-    erp: { name: 'SAP', desc: 'SAP Business One', code: 'CC-002', status: 'Ativo' },
+  marketing: { name: 'Marketing', responsible: 'Francisco Duarte', approvers: ['Francisco Duarte','Ana Paula'],
+    teams: [{name:'Marketing Digital',members:8},{name:'Branding',members:3}],
+    erp: {name:'SAP',desc:'SAP Business One',code:'CC-002',status:'Ativo'},
     exceptions: [
-      { flow: 'Solicitações', detail: 'Limite auto-aprovação: R$ 5.000 (geral: R$ 2.000)', id: 'mkt-sol' },
-      { flow: 'Despesas de Cartão', detail: 'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)', id: 'mkt-desp' }
+      {flow:'Solicitações',detail:'Limite auto-aprovação: R$ 5.000 (geral: R$ 2.000)',id:'mkt-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 5.000'}],actions:['Aprovar automaticamente']},
+      {flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente']}
     ]
   },
-  produto: {
-    name: 'Produto',
-    responsible: 'João Mendes',
-    approvers: ['João Mendes'],
-    teams: [{ name: 'Engenharia', members: 15 }],
-    erp: { name: 'SAP', desc: 'SAP Business One', code: 'CC-003', status: 'Ativo' },
+  produto: { name: 'Produto', responsible: 'João Mendes', approvers: ['João Mendes'],
+    teams: [{name:'Engenharia',members:15}],
+    erp: {name:'SAP',desc:'SAP Business One',code:'CC-003',status:'Ativo'},
     exceptions: []
   },
-  administrativo: {
-    name: 'Administrativo',
-    responsible: 'Camila Vieira',
-    approvers: ['Camila Vieira', 'Sandra Ferreira'],
-    teams: [{ name: 'Financeiro', members: 6 }, { name: 'RH', members: 4 }, { name: 'Jurídico', members: 3 }],
-    erp: { name: 'Totvs', desc: 'Totvs Protheus', code: 'CC-004', status: 'Ativo' },
+  administrativo: { name: 'Administrativo', responsible: 'Camila Vieira', approvers: ['Camila Vieira','Sandra Ferreira'],
+    teams: [{name:'Financeiro',members:6},{name:'RH',members:4},{name:'Jurídico',members:3}],
+    erp: {name:'Totvs',desc:'Totvs Protheus',code:'CC-004',status:'Ativo'},
     exceptions: []
   },
-  operacoes: {
-    name: 'Operações',
-    responsible: 'Sandra Ferreira',
-    approvers: ['Sandra Ferreira'],
-    teams: [{ name: 'Operações', members: 10 }],
-    erp: { name: 'SAP', desc: 'SAP Business One', code: 'CC-005', status: 'Ativo' },
+  operacoes: { name: 'Operações', responsible: 'Sandra Ferreira', approvers: ['Sandra Ferreira'],
+    teams: [{name:'Operações',members:10}],
+    erp: {name:'SAP',desc:'SAP Business One',code:'CC-005',status:'Ativo'},
     exceptions: []
   },
-  internacional: {
-    name: 'Internacional',
-    responsible: 'Marcos Miranda',
-    approvers: ['Marcos Miranda', 'André Costa'],
-    teams: [{ name: 'Comércio Exterior', members: 7 }],
-    erp: { name: 'SAP', desc: 'SAP Business One', code: 'CC-006', status: 'Ativo' },
+  internacional: { name: 'Internacional', responsible: 'Marcos Miranda', approvers: ['Marcos Miranda','André Costa'],
+    teams: [{name:'Comércio Exterior',members:7}],
+    erp: {name:'SAP',desc:'SAP Business One',code:'CC-006',status:'Ativo'},
     exceptions: [
-      { flow: 'Solicitações', detail: 'Limite auto-aprovação: R$ 10.000 (geral: R$ 2.000)', id: 'int-sol' }
+      {flow:'Solicitações',detail:'Limite auto-aprovação: R$ 10.000 (geral: R$ 2.000)',id:'int-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 10.000'}],actions:['Aprovar automaticamente']}
     ]
   }
 };
@@ -876,7 +946,22 @@ const generalRules = [
   { icon: '📄', text: 'NF-e obrigatória acima de R$ 200' }
 ];
 
+const defaultRules = {
+  'Solicitações': 'Quando solicitação ocorre → Se valor ≤ R$ 2.000 → Auto-aprovar. Se valor > R$ 2.000 → Escalar para gestor.',
+  'Despesas de Cartão': 'Quando despesa de cartão ocorre → Se valor > R$ 50 → Exigir comprovante. Categorização automática por MCC.',
+  'Reembolsos': 'Quando reembolso ocorre → Limite mensal R$ 3.000. Prazo 30 dias. Se > R$ 1.000 → Aprovação dupla.',
+  'Viagens': 'Quando viagem ocorre → Classe econômica obrigatória. Hospedagem até R$ 500/noite. Antecedência 7 dias.'
+};
+
+const flowOptions = ['Solicitações', 'Despesas de Cartão', 'Reembolsos', 'Viagens'];
+
 let currentCC = null;
+
+// Temporary state for workflow builder
+let tempConditions = [];
+let tempActions = [];
+let builderCCKey = null;
+let builderFlow = null;
 
 function openSlideover(ccKey) {
   currentCC = ccKey;
@@ -909,18 +994,19 @@ function openSlideover(ccKey) {
   // Exceptions
   html += '<div><div class="so-label">Exceções deste Centro de Custo</div>';
   if (cc.exceptions.length === 0) {
-    html += '<div class="empty-state">Este centro de custo segue a política padrão da empresa.<div class="empty-state-cta"><button class="btn btn-secondary btn-sm" onclick="showToast(\'Funcionalidade de criação de exceção em desenvolvimento.\',\'info\')">Criar exceção →</button></div></div>';
+    html += '<div class="empty-state">Este centro de custo segue a política padrão da empresa.<div class="empty-state-cta"><button class="btn btn-secondary btn-sm" onclick="showCreateExceptionForm(\'' + ccKey + '\')">Criar exceção →</button></div></div>';
   } else {
     cc.exceptions.forEach(ex => {
       html += '<div class="exception-block" id="exc-' + ex.id + '">';
       html += '<div class="exception-header"><div class="exception-flow"><span>' + ex.flow + '</span><span class="exception-badge">Exceção CC</span></div></div>';
       html += '<div class="exception-detail">' + ex.detail + '</div>';
-      html += '<div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showToast(\'Editor de workflow em desenvolvimento.\',\'info\')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="openConfirm(\'' + ex.id + '\')">Remover exceção</button></div>';
+      html += '<div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showEditExceptionForm(\'' + ccKey + '\',\'' + ex.id + '\')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="showRemoveConfirm(\'' + ccKey + '\',\'' + ex.id + '\')">Remover exceção</button></div>';
       html += '</div>';
     });
     html += '<div class="explanatory-text">Exceções deste CC substituem inteiramente a regra geral para o fluxo correspondente. Times dentro deste CC podem ter suas próprias exceções.</div>';
-    html += '<button class="btn btn-ghost btn-sm" style="margin-top:var(--spacing-sm);" onclick="showToast(\'Selecione o fluxo para customizar.\',\'info\')">+ Nova exceção</button>';
+    html += '<button class="btn btn-ghost btn-sm" style="margin-top:var(--spacing-sm);" onclick="showCreateExceptionForm(\'' + ccKey + '\')">+ Nova exceção</button>';
   }
+  html += '<div id="exceptionFormArea"></div>';
   html += '</div></div>';
 
   // Times
@@ -950,6 +1036,237 @@ function closeSlideover() {
   document.getElementById('slideover').classList.remove('open');
 }
 
+// ========== Exception Creation Flow ==========
+
+function showCreateExceptionForm(ccKey) {
+  const cc = ccData[ccKey];
+  const existingFlows = cc.exceptions.map(e => e.flow);
+  const area = document.getElementById('exceptionFormArea');
+
+  let html = '<div class="inline-form" style="margin-top:var(--spacing-md);">';
+  html += '<div class="so-label" style="margin-bottom:var(--spacing-sm);">Selecione o fluxo para criar exceção</div>';
+  html += '<div class="flow-selector">';
+
+  flowOptions.forEach(flow => {
+    const isUsed = existingFlows.includes(flow);
+    if (isUsed) {
+      html += '<label class="flow-option disabled"><input type="radio" name="flowSelect" value="' + flow + '" disabled><span>' + flow + '</span><span class="flow-option-disabled-text">Já possui exceção</span></label>';
+    } else {
+      html += '<label class="flow-option"><input type="radio" name="flowSelect" value="' + flow + '"><span>' + flow + '</span></label>';
+    }
+  });
+
+  html += '</div>';
+  html += '<div style="margin-top:var(--spacing-md);display:flex;gap:var(--spacing-sm);">';
+  html += '<button class="btn btn-primary btn-sm" onclick="proceedToWorkflowBuilder(\'' + ccKey + '\')">Continuar</button>';
+  html += '<button class="btn btn-secondary btn-sm" onclick="document.getElementById(\'exceptionFormArea\').innerHTML=\'\'">Cancelar</button>';
+  html += '</div></div>';
+
+  area.innerHTML = html;
+  area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function proceedToWorkflowBuilder(ccKey) {
+  const selected = document.querySelector('input[name="flowSelect"]:checked');
+  if (!selected) {
+    showToast('Selecione um fluxo para continuar.', 'error');
+    return;
+  }
+  showWorkflowBuilder(ccKey, selected.value, null);
+}
+
+function showWorkflowBuilder(ccKey, flow, existingException) {
+  builderCCKey = ccKey;
+  builderFlow = flow;
+
+  if (existingException) {
+    tempConditions = JSON.parse(JSON.stringify(existingException.conditions || [{field:'Valor',op:'menor que',value:''}]));
+    tempActions = existingException.actions ? [...existingException.actions] : ['Aprovar automaticamente'];
+  } else {
+    tempConditions = [{field:'Valor',op:'menor que',value:''}];
+    tempActions = ['Aprovar automaticamente'];
+  }
+
+  renderWorkflowBuilder(ccKey, flow, !!existingException);
+}
+
+function renderWorkflowBuilder(ccKey, flow, isEdit) {
+  const area = document.getElementById('exceptionFormArea');
+  const ruleText = defaultRules[flow] || '';
+
+  let html = '<div class="inline-form" style="margin-top:var(--spacing-md);">';
+
+  // Alert with default rule info
+  html += '<div class="wb-alert"><span>⚠️</span><div><strong>Regra padrão para ' + flow + ':</strong><br>' + ruleText + '</div></div>';
+
+  // Workflow builder container
+  html += '<div class="wb-container">';
+  html += '<div class="wb-header"><span class="wb-header-title">Workflow Builder</span><span class="exception-badge">Exceção CC</span></div>';
+  html += '<div class="wb-body">';
+
+  // Trigger
+  html += '<div class="wb-trigger"><strong>QUANDO</strong> <span>' + flow + ' ocorre neste Centro de Custo</span></div>';
+
+  // Conditions
+  tempConditions.forEach((c, idx) => {
+    if (idx > 0) {
+      html += '<div class="wb-connector"><div class="wb-connector-line"></div><span class="wb-connector-label">E</span></div>';
+    }
+    html += renderConditionBlock(c, idx);
+  });
+
+  html += '<button class="wb-add-btn" onclick="addCondition()">+ Adicionar condição</button>';
+
+  // Connector between conditions and actions
+  html += '<div class="wb-connector"><div class="wb-connector-line"></div><span class="wb-connector-label">ENTÃO</span></div>';
+
+  // Actions
+  tempActions.forEach((a, idx) => {
+    html += renderActionBlock(a, idx);
+  });
+
+  html += '</div></div>';
+
+  // Save/Cancel buttons
+  html += '<div style="margin-top:var(--spacing-md);display:flex;gap:var(--spacing-sm);">';
+  html += '<button class="btn btn-primary btn-sm" onclick="saveException(\'' + ccKey + '\',\'' + flow + '\',' + isEdit + ')">Salvar exceção</button>';
+  html += '<button class="btn btn-secondary btn-sm" onclick="document.getElementById(\'exceptionFormArea\').innerHTML=\'\'">Cancelar</button>';
+  html += '</div></div>';
+
+  area.innerHTML = html;
+  area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderConditionBlock(c, idx) {
+  let html = '<div class="wb-condition">';
+  html += '<span class="wb-condition-keyword">SE</span>';
+  html += '<select onchange="tempConditions[' + idx + '].field=this.value;renderWorkflowBuilder(builderCCKey,builderFlow,false)">';
+  ['Valor','Categoria','Fornecedor','Descrição'].forEach(f => {
+    html += '<option value="' + f + '"' + (c.field === f ? ' selected' : '') + '>' + f + '</option>';
+  });
+  html += '</select>';
+  html += '<select onchange="tempConditions[' + idx + '].op=this.value">';
+  ['menor que','maior que','igual a','diferente de','contém'].forEach(op => {
+    html += '<option value="' + op + '"' + (c.op === op ? ' selected' : '') + '>' + op + '</option>';
+  });
+  html += '</select>';
+  html += '<input type="text" placeholder="Valor..." value="' + (c.value || '') + '" onchange="tempConditions[' + idx + '].value=this.value" style="min-width:100px;">';
+  if (tempConditions.length > 1) {
+    html += '<button class="wb-remove-btn" onclick="removeCondition(' + idx + ')" title="Remover condição">✕</button>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderActionBlock(a, idx) {
+  let html = '<div class="wb-action">';
+  html += '<span class="wb-action-keyword">AÇÃO</span>';
+  html += '<select onchange="updateAction(' + idx + ',this.value)">';
+  ['Aprovar automaticamente','Escalar para gestor','Exigir comprovante','Bloquear','Notificar admin'].forEach(act => {
+    html += '<option value="' + act + '"' + (a === act ? ' selected' : '') + '>' + act + '</option>';
+  });
+  html += '</select>';
+  if (tempActions.length > 1) {
+    html += '<button class="wb-remove-btn" onclick="removeAction(' + idx + ')" title="Remover ação">✕</button>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function addCondition() {
+  tempConditions.push({field:'Valor',op:'menor que',value:''});
+  renderWorkflowBuilder(builderCCKey, builderFlow, false);
+}
+
+function removeCondition(idx) {
+  tempConditions.splice(idx, 1);
+  renderWorkflowBuilder(builderCCKey, builderFlow, false);
+}
+
+function updateAction(idx, val) {
+  tempActions[idx] = val;
+}
+
+function removeAction(idx) {
+  tempActions.splice(idx, 1);
+  renderWorkflowBuilder(builderCCKey, builderFlow, false);
+}
+
+function saveException(ccKey, flow, isEdit) {
+  // Validate that at least one condition has a value
+  const hasValue = tempConditions.some(c => c.value && c.value.trim() !== '');
+  if (!hasValue) {
+    showToast('Preencha pelo menos uma condição com um valor.', 'error');
+    return;
+  }
+
+  const cc = ccData[ccKey];
+  const condCopy = JSON.parse(JSON.stringify(tempConditions));
+  const actCopy = [...tempActions];
+
+  // Build detail string
+  const detailParts = condCopy.map(c => c.field + ' ' + c.op + ' ' + c.value);
+  const actionParts = actCopy.join(', ');
+  const detail = detailParts.join(' e ') + ' → ' + actionParts;
+
+  if (isEdit) {
+    // Find existing exception for this flow and update it
+    const existing = cc.exceptions.find(e => e.flow === flow);
+    if (existing) {
+      existing.conditions = condCopy;
+      existing.actions = actCopy;
+      existing.detail = detail;
+    }
+    showToast('Exceção do CC "' + cc.name + '" atualizada com sucesso.', 'success');
+  } else {
+    // Create new exception
+    const newId = ccKey.substring(0,3) + '-' + flow.substring(0,3).toLowerCase() + '-' + Date.now();
+    cc.exceptions.push({
+      flow: flow,
+      detail: detail,
+      id: newId,
+      conditions: condCopy,
+      actions: actCopy
+    });
+    showToast('Exceção criada para CC "' + cc.name + '" no fluxo "' + flow + '".', 'success');
+  }
+
+  // Re-render the slideover
+  openSlideover(ccKey);
+}
+
+function showEditExceptionForm(ccKey, excId) {
+  const cc = ccData[ccKey];
+  const exc = cc.exceptions.find(e => e.id === excId);
+  if (!exc) return;
+  showWorkflowBuilder(ccKey, exc.flow, exc);
+}
+
+function showRemoveConfirm(ccKey, excId) {
+  const cc = ccData[ccKey];
+  const exc = cc.exceptions.find(e => e.id === excId);
+  if (!exc) return;
+
+  document.getElementById('removeConfirmText').innerHTML = 'Tem certeza que deseja remover a exceção <strong>' + exc.flow + '</strong> do centro de custo <strong>' + cc.name + '</strong>? O CC voltará a usar a regra padrão da empresa para este fluxo.';
+
+  const confirmBtn = document.getElementById('removeConfirmBtn');
+  // Clone to remove old event listeners
+  const newBtn = confirmBtn.cloneNode(true);
+  confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+  newBtn.addEventListener('click', function() {
+    // Remove from data
+    const idx = cc.exceptions.findIndex(e => e.id === excId);
+    if (idx !== -1) cc.exceptions.splice(idx, 1);
+    closeModal('removeConfirmModal');
+    showToast('Exceção removida. CC "' + cc.name + '" voltou para regra padrão neste fluxo.', 'success');
+    // Re-render slideover
+    openSlideover(ccKey);
+  });
+
+  openModal('removeConfirmModal');
+}
+
+// ========== Legacy confirm (kept for backward compat) ==========
 let pendingRemoveId = null;
 function openConfirm(excId) { pendingRemoveId = excId; document.getElementById('confirmModal').classList.add('active'); }
 function closeConfirm() { document.getElementById('confirmModal').classList.remove('active'); pendingRemoveId = null; }
@@ -963,6 +1280,11 @@ function removeException() {
   closeConfirm();
 }
 
+// ========== Modal helpers ==========
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+// ========== Utility functions ==========
 function showToast(message, type) {
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
@@ -1000,7 +1322,7 @@ function trapFocus(element) {
 }
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') { closeSlideover(); closeConfirm(); closeSidebars(); }
+  if (e.key === 'Escape') { closeSlideover(); closeConfirm(); closeSidebars(); closeModal('removeConfirmModal'); }
 });
 </script>
 </body>
