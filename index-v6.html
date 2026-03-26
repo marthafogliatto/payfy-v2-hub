@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payfy — Policy Engine V6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS DESIGN TOKENS
+   ============================================ */
+:root {
+  --primary-orange: #E55A20;
+  --primary-orange-dark: #C94E1A;
+  --primary-orange-light: #FFF3ED;
+  --success-green: #059669;
+  --success-green-light: #D1FAE5;
+  --warning-yellow: #D97706;
+  --warning-yellow-light: #FEF3C7;
+  --info-blue: #3B82F6;
+  --info-blue-light: #EFF6FF;
+  --purple: #8B5CF6;
+  --purple-light: #EDE9FE;
+  --danger-red: #DC2626;
+  --danger-red-light: #FEE2E2;
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F5;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
+  --white: #FFFFFF;
+  --border: #E5E7EB;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+  --scope-empresa-bg: var(--gray-100);
+  --scope-empresa-text: var(--gray-700);
+  --scope-cc-bg: var(--info-blue-light);
+  --scope-cc-text: #1E40AF;
+  --scope-time-bg: var(--purple-light);
+  --scope-time-text: #6B21A8;
+  --badge-agent-bg: var(--info-blue-light);
+  --badge-agent-text: #1E40AF;
+  --badge-flag-bg: var(--danger-red-light);
+  --badge-flag-text: #991B1B;
+  --badge-confidential-bg: var(--warning-yellow-light);
+  --badge-confidential-text: #92400E;
+  --badge-brasil-bg: #D1FAE5;
+  --badge-brasil-text: #065F46;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--gray-50); color: var(--gray-800); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+button { font-family: inherit; cursor: pointer; }
+a { color: var(--info-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 3px solid var(--info-blue); outline-offset: 2px; }
+
+/* ============================================
+   APP LAYOUT
+   ============================================ */
+.app-layout { display: flex; min-height: 100vh; }
+
+/* ============================================
+   MAIN SIDEBAR
+   ============================================ */
+.main-sidebar { width: 212px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; z-index: 100; }
+.sidebar-logo { padding: var(--spacing-lg); border-bottom: 1px solid var(--border); }
+.sidebar-logo-text { font-size: 24px; font-weight: 700; color: var(--primary-orange); letter-spacing: -0.5px; }
+.sidebar-nav { flex: 1; padding: var(--spacing-sm) 0; }
+.sidebar-item { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-md) var(--spacing-lg); font-size: 14px; font-weight: 500; color: var(--gray-600); border: none; background: none; width: 100%; text-align: left; border-left: 3px solid transparent; transition: all 0.15s; min-height: 44px; text-decoration: none; }
+.sidebar-item:hover { background: var(--gray-50); color: var(--gray-800); text-decoration: none; }
+.sidebar-item.active { border-left-color: var(--primary-orange); color: var(--gray-900); font-weight: 600; background: var(--primary-orange-light); }
+.sidebar-item svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--gray-400); }
+.sidebar-item.active svg { color: var(--primary-orange); }
+.sidebar-separator { height: 1px; background: var(--border); margin: var(--spacing-sm) 0; }
+
+/* ============================================
+   SETTINGS SUB-SIDEBAR
+   ============================================ */
+.settings-sidebar { width: 212px; background: var(--white); border-right: 1px solid var(--border); flex-shrink: 0; overflow-y: auto; padding: var(--spacing-lg) 0; }
+.settings-sidebar.hidden { display: none; }
+.settings-group-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-400); padding: var(--spacing-md) var(--spacing-lg) var(--spacing-xs); }
+.settings-item { display: flex; align-items: center; padding: var(--spacing-sm) var(--spacing-lg); font-size: 13px; font-weight: 500; color: var(--gray-600); border: none; background: none; width: 100%; text-align: left; border-left: 3px solid transparent; transition: all 0.15s; min-height: 44px; text-decoration: none; }
+.settings-item:hover { background: var(--gray-50); color: var(--gray-800); text-decoration: none; }
+.settings-item.active { border-left-color: var(--primary-orange); color: var(--primary-orange); font-weight: 600; }
+.settings-separator { height: 1px; background: var(--border); margin: var(--spacing-sm) var(--spacing-lg); }
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+.main-content { flex: 1; min-width: 0; overflow-y: auto; height: 100vh; }
+.content-wrapper { max-width: 1400px; padding: var(--spacing-xl) var(--spacing-2xl); }
+.page-header { margin-bottom: var(--spacing-lg); }
+.page-header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-md); margin-bottom: var(--spacing-sm); }
+.page-title { font-size: 28px; font-weight: 700; color: var(--gray-900); line-height: 1.2; }
+.page-subtitle { font-size: 14px; color: var(--gray-500); }
+
+/* Screen routing */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn { display: inline-flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-lg); font-size: 14px; font-weight: 600; border: none; transition: all 0.2s; min-height: 44px; white-space: nowrap; }
+.btn-primary { background: var(--primary-orange); color: var(--white); }
+.btn-primary:hover { background: var(--primary-orange-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-secondary { background: var(--white); color: var(--gray-700); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--gray-50); }
+.btn-ghost { background: transparent; color: var(--gray-600); padding: var(--spacing-sm); }
+.btn-ghost:hover { background: var(--gray-100); }
+.btn-sm { padding: var(--spacing-xs) var(--spacing-sm); font-size: 12px; min-height: 32px; border-radius: var(--radius-md); }
+.btn-danger { background: var(--danger-red-light); color: var(--danger-red); border: 1px solid var(--danger-red); }
+.btn-danger:hover { background: var(--danger-red); color: var(--white); }
+.btn-success { background: var(--success-green); color: var(--white); }
+.btn-success:hover { background: #047857; }
+.btn-danger-fill { background: var(--danger-red); color: var(--white); }
+.btn-danger-fill:hover { background: #B91C1C; }
+
+/* ============================================
+   COMMON: Search, Filters, Table
+   ============================================ */
+.search-bar { display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); flex-wrap: wrap; }
+.search-input { padding: var(--spacing-sm) var(--spacing-md); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 13px; min-height: 40px; min-width: 200px; background: var(--white); font-family: inherit; }
+.search-input:focus { border-color: var(--info-blue); outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.filter-select { padding: var(--spacing-sm) var(--spacing-md); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 13px; min-height: 40px; background: var(--white); font-family: inherit; color: var(--gray-700); }
+
+.table-container { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-2xl); overflow-x: auto; box-shadow: var(--shadow-sm); }
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.data-table th { background: var(--gray-50); font-size: 12px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; padding: var(--spacing-md) var(--spacing-lg); border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.data-table td { padding: var(--spacing-md) var(--spacing-lg); font-size: 13px; color: var(--gray-700); border-bottom: 1px solid var(--border); vertical-align: middle; height: 56px; }
+.data-table tbody tr { cursor: pointer; transition: background 0.15s; }
+.data-table tbody tr:hover td { background: var(--gray-50); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.table-footer { padding: var(--spacing-md) var(--spacing-lg); font-size: 12px; color: var(--gray-500); border-top: 1px solid var(--border); background: var(--gray-50); }
+
+/* ============================================
+   BADGES
+   ============================================ */
+.status-badge { display: inline-flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-2xl); font-size: 12px; font-weight: 600; }
+.status-active { background: var(--success-green-light); color: var(--success-green); }
+.status-inactive { background: var(--gray-100); color: var(--gray-500); }
+.status-pending { background: var(--warning-yellow-light); color: var(--warning-yellow); }
+.status-auto { background: var(--gray-100); color: var(--gray-500); }
+
+.pill { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-2xl); font-size: 11px; font-weight: 700; letter-spacing: 0.03em; white-space: nowrap; }
+.pill-agent { background: var(--badge-agent-bg); color: var(--badge-agent-text); }
+.pill-flag { background: var(--badge-flag-bg); color: var(--badge-flag-text); }
+.pill-conf { background: var(--badge-confidential-bg); color: var(--badge-confidential-text); }
+.pill-brasil { background: var(--badge-brasil-bg); color: var(--badge-brasil-text); }
+
+.policy-badge { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-2xl); font-size: 12px; font-weight: 600; }
+.policy-default { background: var(--gray-100); color: var(--gray-500); }
+.policy-exception-cc { background: var(--scope-cc-bg); color: var(--scope-cc-text); }
+.policy-exception-time { background: var(--scope-time-bg); color: var(--scope-time-text); }
+
+.scope-badge { padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; }
+.scope-geral { background: var(--scope-empresa-bg); color: var(--scope-empresa-text); }
+.scope-cc { background: var(--scope-cc-bg); color: var(--scope-cc-text); }
+.scope-time { background: var(--scope-time-bg); color: var(--scope-time-text); }
+
+.type-badge { padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; }
+.badge-agent { background: var(--badge-agent-bg); color: var(--badge-agent-text); }
+.badge-flag { background: var(--badge-flag-bg); color: var(--badge-flag-text); }
+.badge-conf { background: var(--badge-confidential-bg); color: var(--badge-confidential-text); }
+.badge-brasil { background: var(--badge-brasil-bg); color: var(--badge-brasil-text); }
+
+.rec-badge { display: inline-flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-2xl); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.rec-approve { background: var(--success-green-light); color: var(--success-green); }
+.rec-review { background: var(--warning-yellow-light); color: var(--warning-yellow); }
+.rec-reject { background: var(--danger-red-light); color: var(--danger-red); }
+.rec-auto { background: var(--gray-100); color: var(--gray-500); }
+
+.exception-badge-cc { background: var(--scope-cc-bg); color: var(--scope-cc-text); padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; }
+.exception-badge-time { background: var(--scope-time-bg); color: var(--scope-time-text); padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; }
+
+.erp-badge { display: inline-flex; align-items: center; gap: var(--spacing-xs); font-size: 12px; color: var(--gray-600); }
+.erp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success-green); }
+
+.flag-icon { color: var(--danger-red); margin-right: var(--spacing-xs); }
+.confidence { font-size: 11px; color: var(--gray-500); font-weight: 500; }
+
+/* ============================================
+   SLIDE-OVER
+   ============================================ */
+.slideover-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.slideover-overlay.active { opacity: 1; pointer-events: auto; }
+.slideover { position: fixed; top: 0; right: -560px; width: 560px; height: 100vh; background: var(--white); box-shadow: var(--shadow-xl); z-index: 950; transition: right 0.3s ease; display: flex; flex-direction: column; border-left: 1px solid var(--border); }
+.slideover.open { right: 0; }
+.slideover-header { padding: var(--spacing-lg); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; flex-shrink: 0; }
+.slideover-title { font-size: 20px; font-weight: 700; color: var(--gray-900); }
+.slideover-subtitle { font-size: 13px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+.slideover-close { width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--gray-100); border: none; display: flex; align-items: center; justify-content: center; color: var(--gray-600); font-size: 20px; flex-shrink: 0; }
+.slideover-close:hover { background: var(--gray-200); }
+.slideover-body { flex: 1; overflow-y: auto; padding: var(--spacing-lg); }
+
+.so-section { margin-bottom: var(--spacing-lg); }
+.so-section-title { font-size: 14px; font-weight: 600; color: var(--gray-700); margin-bottom: var(--spacing-sm); display: flex; align-items: center; gap: var(--spacing-sm); }
+.so-label { font-size: 12px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--spacing-xs); }
+.so-value { font-size: 14px; color: var(--gray-800); }
+.so-field { margin-bottom: var(--spacing-md); }
+
+/* ============================================
+   AGENT BANNER
+   ============================================ */
+.agent-banner { background: var(--info-blue-light); border: 1px solid #BFDBFE; border-radius: var(--radius-lg); padding: var(--spacing-md) var(--spacing-lg); display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); flex-wrap: wrap; }
+.agent-banner-left { display: flex; align-items: center; gap: var(--spacing-sm); flex-wrap: wrap; }
+.agent-dot { width: 10px; height: 10px; background: var(--success-green); border-radius: 50%; flex-shrink: 0; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.agent-label { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+.agent-info { font-size: 13px; color: var(--gray-500); }
+.agent-info-divider { color: var(--gray-300); margin: 0 var(--spacing-xs); }
+.agent-banner-right { position: relative; }
+.agent-dropdown { display: none; position: absolute; top: calc(100% + var(--spacing-xs)); right: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); min-width: 320px; z-index: 200; padding: var(--spacing-sm); }
+.agent-dropdown.show { display: block; }
+.agent-dropdown-item { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-md); font-size: 13px; color: var(--gray-700); border: none; background: none; width: 100%; text-align: left; min-height: 44px; }
+.agent-dropdown-item:hover { background: var(--gray-50); }
+.agent-dropdown-item.active { background: var(--info-blue-light); color: var(--scope-cc-text); font-weight: 600; }
+.agent-dropdown-separator { height: 1px; background: var(--border); margin: var(--spacing-xs) 0; }
+.hierarchy-badge { padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; }
+.hierarchy-badge.flags { background: var(--badge-flag-bg); color: var(--badge-flag-text); }
+.hierarchy-badge.agent { background: var(--badge-agent-bg); color: var(--badge-agent-text); }
+.hierarchy-badge.workflows { background: var(--gray-100); color: var(--gray-600); }
+.threshold-section { padding: var(--spacing-sm) var(--spacing-md); }
+.threshold-label { font-size: 12px; color: var(--gray-500); margin-bottom: var(--spacing-xs); display: flex; justify-content: space-between; }
+.threshold-slider { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: var(--gray-200); border-radius: 3px; outline: none; }
+.threshold-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--info-blue); cursor: pointer; }
+
+/* Agent mini-banner (Despesas) */
+.agent-mini-banner { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-sm) var(--spacing-md); background: var(--info-blue-light); border: 1px solid #BFDBFE; border-radius: var(--radius-md); margin-bottom: var(--spacing-md); font-size: 13px; flex-wrap: wrap; gap: var(--spacing-sm); }
+.agent-mini-left { display: flex; align-items: center; gap: var(--spacing-sm); }
+.agent-mini-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success-green); flex-shrink: 0; }
+
+/* ============================================
+   TABS
+   ============================================ */
+.tabs-nav { display: flex; gap: var(--spacing-xs); background: var(--gray-100); border-radius: var(--radius-lg); padding: var(--spacing-xs); margin-bottom: var(--spacing-lg); }
+.tab-btn { padding: var(--spacing-sm) var(--spacing-lg); border: none; background: transparent; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; color: var(--gray-500); min-height: 44px; transition: all 0.2s; }
+.tab-btn:hover { color: var(--gray-700); }
+.tab-btn.active { background: var(--white); color: var(--gray-900); box-shadow: var(--shadow-sm); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ============================================
+   VIEW TOGGLE
+   ============================================ */
+.view-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--spacing-md); gap: var(--spacing-md); flex-wrap: wrap; }
+.view-toggle { display: flex; background: var(--gray-100); border-radius: var(--radius-md); padding: 2px; }
+.view-toggle-btn { padding: var(--spacing-xs) var(--spacing-md); border: none; background: transparent; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; color: var(--gray-500); min-height: 36px; transition: all 0.2s; }
+.view-toggle-btn.active { background: var(--white); color: var(--gray-800); box-shadow: var(--shadow-sm); }
+
+/* ============================================
+   ACCORDION CARDS
+   ============================================ */
+.accordion-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.accordion-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-2xl); overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s; }
+.accordion-card:hover { box-shadow: var(--shadow-md); }
+.accordion-header { padding: var(--spacing-md) var(--spacing-lg); display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); border: none; background: linear-gradient(135deg, var(--bg-start, var(--gray-50)), var(--bg-end, var(--white))); width: 100%; text-align: left; min-height: 64px; }
+.accordion-header-left { display: flex; align-items: center; gap: var(--spacing-md); }
+.policy-icon { width: 40px; height: 40px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.policy-name { font-size: 16px; font-weight: 600; color: var(--gray-900); }
+.policy-description { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+.summary-pills { display: flex; gap: var(--spacing-xs); flex-wrap: wrap; }
+.expand-icon { width: 20px; height: 20px; color: var(--gray-400); transition: transform 0.3s; flex-shrink: 0; }
+.accordion-card.expanded .expand-icon { transform: rotate(180deg); }
+.accordion-body { display: none; padding: var(--spacing-lg); background: var(--gray-50); border-top: 1px solid var(--border); }
+.accordion-card.expanded .accordion-body { display: block; }
+
+/* Rule groups */
+.rule-group { border-radius: var(--radius-lg); padding: var(--spacing-md); border: 1px solid; margin-bottom: var(--spacing-md); }
+.rule-group-agent { background: #F0FDF4; border-color: #BBF7D0; }
+.rule-group-flag { background: #FEF2F2; border-color: #FECACA; }
+.rule-group-confidential { background: var(--warning-yellow-light); border-color: #FDE68A; }
+.rule-group-brasil { background: var(--badge-brasil-bg); border-color: #A7F3D0; }
+.rule-group-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--spacing-sm); }
+.rule-group-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-2xl); }
+.rule-item { font-size: 13px; color: var(--gray-700); padding: var(--spacing-xs) 0; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: var(--spacing-sm); }
+.rule-item:last-child { border-bottom: none; }
+.accordion-actions { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-md); padding-top: var(--spacing-md); border-top: 1px solid var(--border); }
+
+/* Exceptions summary */
+.exceptions-summary { margin-top: var(--spacing-md); padding: var(--spacing-md); background: var(--white); border: 1px dashed var(--border); border-radius: var(--radius-lg); }
+.exceptions-summary-title { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: var(--spacing-sm); }
+.exception-link { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-xs) 0; font-size: 13px; }
+.exceptions-count { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-sm); }
+
+/* Confidential */
+.confidential-block { background: var(--warning-yellow-light); border: 1px solid #FDE68A; border-radius: var(--radius-lg); padding: var(--spacing-md); margin-top: var(--spacing-md); }
+.confidential-header { display: flex; align-items: center; gap: var(--spacing-sm); font-size: 14px; font-weight: 600; color: #92400E; margin-bottom: var(--spacing-sm); }
+.visibility-checkboxes { display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-top: var(--spacing-sm); }
+.visibility-checkbox { display: flex; align-items: center; gap: var(--spacing-xs); font-size: 12px; color: var(--gray-600); }
+.visibility-checkbox input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary-orange); }
+
+/* ============================================
+   DOCUMENT TAB
+   ============================================ */
+.document-banner { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-md); background: var(--info-blue-light); border: 1px solid #BFDBFE; border-radius: var(--radius-md); font-size: 13px; color: var(--scope-cc-text); margin-bottom: var(--spacing-md); }
+.document-editor { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.document-toolbar { display: flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border); background: var(--gray-50); flex-wrap: wrap; }
+.toolbar-btn { width: 36px; height: 36px; border: none; background: transparent; border-radius: var(--radius-sm); font-size: 14px; color: var(--gray-600); display: flex; align-items: center; justify-content: center; }
+.toolbar-btn:hover { background: var(--gray-200); }
+.toolbar-separator { width: 1px; height: 24px; background: var(--border); margin: 0 var(--spacing-xs); }
+.document-body { padding: var(--spacing-xl); min-height: 400px; font-size: 14px; line-height: 1.8; color: var(--gray-800); }
+.document-body h2 { font-size: 20px; font-weight: 700; margin: var(--spacing-lg) 0 var(--spacing-sm); color: var(--gray-900); }
+.document-body h3 { font-size: 16px; font-weight: 600; margin: var(--spacing-md) 0 var(--spacing-sm); color: var(--gray-800); }
+.document-body ul { padding-left: var(--spacing-lg); margin: var(--spacing-sm) 0; }
+.document-body li { margin-bottom: var(--spacing-xs); }
+.document-footer { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-md) var(--spacing-lg); border-top: 1px solid var(--border); background: var(--gray-50); flex-wrap: wrap; gap: var(--spacing-sm); }
+
+/* ============================================
+   COMPLIANCE TAB
+   ============================================ */
+.compliance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); }
+.compliance-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-lg); }
+.compliance-card-title { font-size: 16px; font-weight: 600; color: var(--gray-800); margin-bottom: var(--spacing-md); }
+.flag-toggle-item { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--gray-100); gap: var(--spacing-sm); }
+.flag-toggle-item:last-child { border-bottom: none; }
+.flag-toggle-info { flex: 1; }
+.flag-toggle-name { font-size: 13px; font-weight: 500; color: var(--gray-700); }
+.flag-toggle-desc { font-size: 12px; color: var(--gray-500); }
+.flag-toggle-action { font-size: 11px; font-weight: 600; padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); white-space: nowrap; }
+.suggested-flag { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-md); background: var(--gray-50); border: 1px dashed var(--border); border-radius: var(--radius-md); margin-bottom: var(--spacing-sm); gap: var(--spacing-md); }
+.suggested-flag-info { flex: 1; }
+.suggested-flag-pattern { font-size: 13px; color: var(--gray-700); font-weight: 500; }
+.suggested-flag-detail { font-size: 12px; color: var(--gray-500); }
+.suggested-actions { display: flex; gap: var(--spacing-xs); flex-shrink: 0; }
+
+/* ============================================
+   HISTORY TAB
+   ============================================ */
+.timeline { position: relative; padding-left: var(--spacing-xl); }
+.timeline::before { content: ''; position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.timeline-item { position: relative; padding-bottom: var(--spacing-lg); }
+.timeline-dot { position: absolute; left: -24px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--gray-300); border: 2px solid var(--white); }
+.timeline-dot.active { background: var(--success-green); }
+.timeline-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); }
+.timeline-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--spacing-sm); flex-wrap: wrap; gap: var(--spacing-sm); }
+.timeline-version { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+.timeline-date { font-size: 12px; color: var(--gray-500); }
+.timeline-author { font-size: 13px; color: var(--gray-600); }
+.timeline-desc { font-size: 13px; color: var(--gray-700); margin-top: var(--spacing-xs); }
+.timeline-actions { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+.diff-block { font-size: 12px; font-family: 'SF Mono', Monaco, monospace; margin-top: var(--spacing-sm); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); }
+.diff-added { background: #D1FAE5; color: #065F46; padding: var(--spacing-xs) var(--spacing-sm); }
+.diff-removed { background: var(--danger-red-light); color: #991B1B; padding: var(--spacing-xs) var(--spacing-sm); }
+.version-compare { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg); font-size: 13px; color: var(--gray-600); }
+.version-select { padding: var(--spacing-xs) var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 13px; background: var(--white); font-family: inherit; }
+
+/* ============================================
+   TOGGLE SWITCH
+   ============================================ */
+.toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--gray-300); border-radius: 12px; cursor: pointer; transition: 0.3s; }
+.toggle-slider::before { content: ''; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: var(--white); border-radius: 50%; transition: 0.3s; }
+.toggle input:checked + .toggle-slider { background: var(--success-green); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* ============================================
+   COMMON SLIDE-OVER ELEMENTS
+   ============================================ */
+.rules-readonly { background: var(--gray-50); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); }
+.rule-line { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-xs) 0; font-size: 13px; color: var(--gray-700); border-bottom: 1px solid rgba(0,0,0,0.05); }
+.rule-line:last-child { border-bottom: none; }
+.exception-block { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-sm); }
+.exception-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--spacing-sm); }
+.exception-flow { font-size: 14px; font-weight: 600; color: var(--gray-800); display: flex; align-items: center; gap: var(--spacing-sm); }
+.exception-detail { font-size: 13px; color: var(--gray-600); padding: var(--spacing-sm) 0; border-top: 1px solid var(--gray-100); }
+.exception-actions { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+.explanatory-text { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-sm); padding: var(--spacing-sm); background: var(--gray-50); border-radius: var(--radius-md); }
+.empty-state { text-align: center; padding: var(--spacing-lg); color: var(--gray-500); font-size: 13px; }
+.approver-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-orange-light); color: var(--primary-orange); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.member-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-orange-light); color: var(--primary-orange); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.payment-badge { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-md); font-size: 12px; font-weight: 600; }
+.payment-active { background: var(--success-green-light); color: var(--success-green); }
+.payment-inactive { background: var(--gray-100); color: var(--gray-400); text-decoration: line-through; }
+.approval-card { border-radius: var(--radius-lg); padding: var(--spacing-md); color: var(--white); display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm); }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-sm) var(--spacing-lg); }
+.detail-label { font-size: 12px; color: var(--gray-500); font-weight: 500; }
+.detail-value { font-size: 13px; color: var(--gray-800); font-weight: 500; }
+
+/* Agent analysis */
+.agent-analysis { background: var(--gray-50); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-lg); }
+.analysis-rec { display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.analysis-rec-badge { padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-lg); font-size: 16px; font-weight: 700; }
+.analysis-rec-badge.approve { background: var(--success-green-light); color: var(--success-green); }
+.analysis-rec-badge.review { background: var(--warning-yellow-light); color: var(--warning-yellow); }
+.analysis-rec-badge.reject { background: var(--danger-red-light); color: var(--danger-red); }
+.analysis-confidence { font-size: 24px; font-weight: 700; color: var(--gray-800); }
+.analysis-rationale { font-size: 13px; color: var(--gray-700); line-height: 1.6; margin-bottom: var(--spacing-md); padding: var(--spacing-md); background: var(--white); border-radius: var(--radius-md); border: 1px solid var(--border); }
+.flag-badge { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; background: var(--danger-red-light); color: #991B1B; }
+
+/* Feedback / Override */
+.feedback-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-lg); }
+.feedback-actions { display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); }
+.thumb-btn { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.thumb-btn:hover { background: var(--gray-50); }
+.override-panel { display: none; background: var(--warning-yellow-light); border: 1px solid #FDE68A; border-radius: var(--radius-lg); padding: var(--spacing-md); margin-top: var(--spacing-md); }
+.override-panel.show { display: block; }
+.override-title { font-size: 14px; font-weight: 600; color: #92400E; margin-bottom: var(--spacing-sm); }
+.override-option { display: flex; align-items: flex-start; gap: var(--spacing-sm); font-size: 13px; color: var(--gray-700); margin-bottom: var(--spacing-sm); }
+.override-option input[type="radio"] { margin-top: 2px; accent-color: var(--primary-orange); }
+.override-comment { width: 100%; min-height: 60px; padding: var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 13px; resize: vertical; margin-bottom: var(--spacing-sm); }
+.override-comment:focus { border-color: var(--info-blue); outline: none; }
+
+/* Status progress bar */
+.status-progress { display: flex; align-items: center; gap: var(--spacing-xs); margin-bottom: var(--spacing-xs); }
+.progress-step-bar { flex: 1; height: 4px; border-radius: 2px; background: var(--gray-200); }
+.progress-step-bar.done { background: var(--success-green); }
+.progress-step-bar.current { background: var(--warning-yellow); }
+.progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-500); margin-bottom: var(--spacing-md); }
+
+/* Row variants (Despesas) */
+.row-auto td { background: #F0FDF4; }
+.row-reject { border-left: 3px solid var(--danger-red); }
+
+/* ============================================
+   MODALS
+   ============================================ */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--white); border-radius: var(--radius-2xl); max-width: 720px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-xl); animation: modalIn 0.3s ease; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-header { padding: var(--spacing-lg); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
+.modal-title { font-size: 24px; font-weight: 700; color: var(--gray-900); }
+.modal-subtitle { font-size: 14px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+.modal-close { width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--gray-100); border: none; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--gray-600); flex-shrink: 0; }
+.modal-close:hover { background: var(--gray-200); }
+.modal-body { padding: var(--spacing-lg); }
+.modal-actions { display: flex; gap: var(--spacing-sm); justify-content: flex-end; margin-top: var(--spacing-lg); }
+.modal-tabs { display: flex; gap: var(--spacing-xs); margin-bottom: var(--spacing-lg); border-bottom: 1px solid var(--border); padding-bottom: var(--spacing-sm); }
+.modal-tab { padding: var(--spacing-sm) var(--spacing-md); border: none; background: transparent; font-size: 14px; font-weight: 500; color: var(--gray-500); border-bottom: 2px solid transparent; min-height: 44px; }
+.modal-tab:hover { color: var(--gray-700); }
+.modal-tab.active { color: var(--primary-orange); border-bottom-color: var(--primary-orange); font-weight: 600; }
+.modal-tab-panel { display: none; }
+.modal-tab-panel.active { display: block; }
+.upload-area { border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: var(--spacing-2xl); text-align: center; cursor: pointer; transition: all 0.2s; }
+.upload-area:hover { border-color: var(--primary-orange); background: var(--primary-orange-light); }
+.template-card { padding: var(--spacing-lg); border: 1px solid var(--border); border-radius: var(--radius-lg); cursor: pointer; transition: all 0.2s; }
+.template-card:hover { border-color: var(--primary-orange); box-shadow: var(--shadow-md); }
+.template-tags { display: flex; gap: var(--spacing-xs); margin-top: var(--spacing-sm); flex-wrap: wrap; }
+.template-tag { padding: 2px var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; }
+.ai-textarea { width: 100%; min-height: 120px; padding: var(--spacing-md); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 14px; resize: vertical; }
+.ai-textarea:focus { border-color: var(--info-blue); outline: none; }
+.form-input { padding: var(--spacing-sm) var(--spacing-md); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 14px; font-family: inherit; min-height: 40px; width: 100%; }
+.form-input:focus { border-color: var(--info-blue); outline: none; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.05em; }
+.form-group { display: flex; flex-direction: column; gap: var(--spacing-xs); margin-bottom: var(--spacing-md); }
+
+/* Delete team checklist */
+.delete-warning { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-md); background: var(--warning-yellow-light); border: 1px solid #FDE68A; border-radius: var(--radius-md); font-size: 13px; color: #92400E; margin-bottom: var(--spacing-md); }
+.checklist { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.checklist-item { display: flex; align-items: center; gap: var(--spacing-sm); font-size: 13px; color: var(--gray-700); }
+.checklist-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-orange); }
+
+/* ============================================
+   FAB
+   ============================================ */
+.fab { position: fixed; bottom: var(--spacing-xl); right: var(--spacing-xl); width: 56px; height: 56px; border-radius: 50%; background: var(--info-blue); color: var(--white); border: none; box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 800; transition: all 0.2s; }
+.fab:hover { transform: scale(1.1); box-shadow: var(--shadow-xl); }
+.fab-badge { position: absolute; top: -4px; right: -4px; width: 22px; height: 22px; border-radius: 50%; background: var(--danger-red); color: var(--white); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.fab-drawer { position: fixed; bottom: 100px; right: var(--spacing-xl); width: 360px; max-height: 500px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); z-index: 800; display: none; flex-direction: column; overflow: hidden; }
+.fab-drawer.open { display: flex; }
+.fab-drawer-header { padding: var(--spacing-md) var(--spacing-lg); border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; color: var(--gray-800); }
+.fab-drawer-body { flex: 1; overflow-y: auto; padding: var(--spacing-sm); }
+.suggestion-item { padding: var(--spacing-md); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: var(--spacing-sm); }
+.suggestion-pattern { font-size: 13px; font-weight: 500; color: var(--gray-700); }
+.suggestion-detail { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+.suggestion-actions { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+
+/* ============================================
+   TOAST
+   ============================================ */
+.toast-container { position: fixed; top: var(--spacing-lg); right: var(--spacing-lg); z-index: 2000; display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.toast { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md) var(--spacing-lg); box-shadow: var(--shadow-lg); font-size: 13px; color: var(--gray-700); display: flex; align-items: center; gap: var(--spacing-sm); animation: toastIn 0.3s ease; min-width: 300px; }
+.toast.success { border-left: 4px solid var(--success-green); }
+.toast.error { border-left: 4px solid var(--danger-red); }
+.toast.info { border-left: 4px solid var(--info-blue); }
+@keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+.hamburger-btn { display: none; width: 44px; height: 44px; border: none; background: var(--white); border-radius: var(--radius-md); font-size: 20px; color: var(--gray-600); align-items: center; justify-content: center; position: fixed; top: var(--spacing-md); left: var(--spacing-md); z-index: 200; box-shadow: var(--shadow-md); }
+
+@media (max-width: 1280px) { .slideover { width: 480px; right: -480px; } .content-wrapper { padding: var(--spacing-lg); } }
+@media (max-width: 1024px) {
+  .hamburger-btn { display: flex; }
+  .main-sidebar, .settings-sidebar { position: fixed; top: 0; height: 100vh; z-index: 300; transform: translateX(-100%); transition: transform 0.3s; }
+  .main-sidebar { left: 0; } .settings-sidebar { left: 212px; }
+  .main-sidebar.open, .settings-sidebar.open { transform: translateX(0); }
+  .sidebar-backdrop { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); z-index: 250; }
+  .sidebar-backdrop.active { display: block; }
+  .slideover { width: 100%; right: -100%; }
+  .compliance-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .content-wrapper { padding: var(--spacing-md); padding-top: 60px; }
+  .page-header-top { flex-direction: column; }
+  .search-bar { flex-direction: column; }
+  .view-controls { flex-direction: column; }
+  .agent-banner { flex-direction: column; align-items: flex-start; }
+  .data-table { display: none; }
+  .mobile-cards { display: block !important; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .fab { bottom: var(--spacing-md); right: var(--spacing-md); }
+}
+@media (max-width: 480px) { body { font-size: 16px; } .page-title { font-size: 24px; } }
+@media (min-width: 900px) { .compliance-grid { grid-template-columns: 1fr 1fr; } }
+
+.mobile-cards { display: none; }
+.mobile-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-sm); cursor: pointer; }
+.mobile-card:hover { box-shadow: var(--shadow-md); }
+.mobile-card-title { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+.mobile-card-detail { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); display: flex; gap: var(--spacing-sm); flex-wrap: wrap; align-items: center; }
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebars()"></div>
+<button class="hamburger-btn" onclick="toggleSidebars()" aria-label="Abrir menu">☰</button>
+
+<div class="app-layout">
+
+  <!-- ===== MAIN SIDEBAR ===== -->
+  <nav class="main-sidebar" id="mainSidebar" aria-label="Navegação principal">
+    <div class="sidebar-logo"><span class="sidebar-logo-text">payfy</span></div>
+    <div class="sidebar-nav">
+      <button class="sidebar-item" onclick="navigateTo('politicas')"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>Início</button>
+      <button class="sidebar-item"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>Solicitações</button>
+      <button class="sidebar-item"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>Cartões</button>
+      <button class="sidebar-item"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>Usuários</button>
+      <button class="sidebar-item" id="navDespesas" onclick="navigateTo('despesas')"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"/></svg>Despesas</button>
+      <button class="sidebar-item"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>Passagens</button>
+      <button class="sidebar-item"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm2 0a1 1 0 10-1-1v1h1z" clip-rule="evenodd"/><path d="M9 11H3v5a2 2 0 002 2h4v-7zM11 18h4a2 2 0 002-2v-5h-6v7z"/></svg>Benefícios</button>
+      <button class="sidebar-item"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd"/></svg>Relatórios</button>
+      <div class="sidebar-separator"></div>
+      <button class="sidebar-item" id="navConfig" onclick="navigateTo('politicas')"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>Configurações</button>
+    </div>
+  </nav>
+
+  <!-- ===== SETTINGS SUB-SIDEBAR ===== -->
+  <nav class="settings-sidebar" id="settingsSidebar" aria-label="Configurações">
+    <div class="settings-group-label">Organização</div>
+    <button class="settings-item" onclick="navigateTo('politicas')">Geral</button>
+    <button class="settings-item" id="navUnidades" onclick="navigateTo('centros-custo')">Unidades</button>
+    <button class="settings-item" id="navTimes" onclick="navigateTo('times')">Times</button>
+    <button class="settings-item">Categorias</button>
+    <button class="settings-item">Projetos</button>
+    <button class="settings-item">Permissões</button>
+    <div class="settings-separator"></div>
+    <div class="settings-group-label">Política de Gastos</div>
+    <button class="settings-item" id="navPoliticas" onclick="navigateTo('politicas')">Políticas de Gastos</button>
+    <button class="settings-item">Despesas</button>
+    <button class="settings-item">Categorias</button>
+    <button class="settings-item">Reembolsos</button>
+    <button class="settings-item">Níveis de Aprovação</button>
+    <button class="settings-item">Regras de Gastos</button>
+    <button class="settings-item">Regras de Bloqueio</button>
+    <div class="settings-separator"></div>
+    <div class="settings-group-label">Integrações</div>
+    <button class="settings-item">ERP</button>
+    <div class="settings-separator"></div>
+    <div class="settings-group-label">Cartões</div>
+    <button class="settings-item">Recarga em Lote</button>
+    <button class="settings-item">Plástico</button>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content" id="mainContent">
+
+    <!-- ================================================
+         SCREEN 1: POLÍTICAS DE GASTOS
+         ================================================ -->
+    <div class="screen active" id="screenPoliticas">
+      <div class="content-wrapper" id="politicasContent"></div>
+    </div>
+
+    <!-- ================================================
+         SCREEN 2: CENTROS DE CUSTO
+         ================================================ -->
+    <div class="screen" id="screenCentrosCusto">
+      <div class="content-wrapper" id="centrosCustoContent"></div>
+    </div>
+
+    <!-- ================================================
+         SCREEN 3: TIMES
+         ================================================ -->
+    <div class="screen" id="screenTimes">
+      <div class="content-wrapper" id="timesContent"></div>
+    </div>
+
+    <!-- ================================================
+         SCREEN 4: DESPESAS
+         ================================================ -->
+    <div class="screen" id="screenDespesas">
+      <div class="content-wrapper" id="despesasContent"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- SLIDE-OVER -->
+<div class="slideover-overlay" id="slideoverOverlay" onclick="closeSlideover()"></div>
+<div class="slideover" id="slideover" role="dialog" aria-modal="true" aria-label="Detalhes">
+  <div class="slideover-header">
+    <div><div class="slideover-title" id="soTitle"></div><div class="slideover-subtitle" id="soSubtitle"></div></div>
+    <button class="slideover-close" onclick="closeSlideover()" aria-label="Fechar">✕</button>
+  </div>
+  <div class="slideover-body" id="soBody"></div>
+</div>
+
+<!-- MODAL: Create Policy -->
+<div class="modal-overlay" id="createPolicyModal" onclick="if(event.target===this)closeModal('createPolicyModal')">
+  <div class="modal" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+    <div class="modal-header"><div><div class="modal-title">Criar Nova Política</div><div class="modal-subtitle">Escolha como deseja criar sua política de gastos</div></div><button class="modal-close" onclick="closeModal('createPolicyModal')" aria-label="Fechar">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-tabs" role="tablist">
+        <button class="modal-tab active" onclick="switchModalTab(this,'uploadTab')">Upload de PDF</button>
+        <button class="modal-tab" onclick="switchModalTab(this,'aiTab')">Descrever com IA</button>
+        <button class="modal-tab" onclick="switchModalTab(this,'templateTab')">Template Payfy</button>
+        <button class="modal-tab" onclick="switchModalTab(this,'manualTab')">Criar Manualmente</button>
+      </div>
+      <div class="modal-tab-panel active" id="uploadTab"><div class="upload-area" onclick="showToast('Upload simulado — 4 políticas geradas!','success');closeModal('createPolicyModal')"><div style="font-size:40px;margin-bottom:var(--spacing-md);">📄</div><div style="font-size:14px;color:var(--gray-600);">Arraste e solte seu PDF aqui ou clique para selecionar</div></div></div>
+      <div class="modal-tab-panel" id="aiTab"><p style="font-size:14px;color:var(--gray-600);margin-bottom:var(--spacing-md);">Descreva suas regras em linguagem natural.</p><textarea class="ai-textarea" placeholder="Ex: Queremos que gastos abaixo de R$ 500 sejam auto-aprovados..."></textarea><button class="btn btn-primary btn-sm" style="margin-top:var(--spacing-md);" onclick="showToast('Política gerada pela IA!','success');closeModal('createPolicyModal')">Gerar com IA</button></div>
+      <div class="modal-tab-panel" id="templateTab"><div class="template-card" onclick="showToast('Template aplicado!','success');closeModal('createPolicyModal')"><div style="font-size:16px;font-weight:600;color:var(--gray-800);">Template Payfy — Melhores Práticas Brasil</div><div style="font-size:13px;color:var(--gray-500);margin-top:var(--spacing-xs);">Template pré-configurado com regras para empresas brasileiras.</div><div class="template-tags"><span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">NF-e</span><span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">VR/VA</span><span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">CLT</span><span class="template-tag" style="background:var(--badge-brasil-bg);color:var(--badge-brasil-text);">CNPJ</span></div></div></div>
+      <div class="modal-tab-panel" id="manualTab"><div class="form-group"><label class="form-label">Nome da Política</label><input type="text" class="form-input" placeholder="Ex: Política de Viagens Internacionais"></div><div class="form-group"><label class="form-label">Tipo de Fluxo</label><select class="form-input"><option>Solicitações</option><option>Despesas de Cartão</option><option>Reembolsos</option><option>Viagens</option></select></div><button class="btn btn-primary" onclick="showToast('Política criada!','success');closeModal('createPolicyModal')">Criar Política</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Confirm -->
+<div class="modal-overlay" id="confirmModal" onclick="if(event.target===this)closeModal('confirmModal')">
+  <div class="modal" style="max-width:440px;" role="dialog" aria-modal="true"><div class="modal-header"><div><div class="modal-title" style="font-size:18px;" id="confirmTitle">Confirmação</div></div><button class="modal-close" onclick="closeModal('confirmModal')">✕</button></div><div class="modal-body"><div id="confirmText" style="font-size:14px;color:var(--gray-600);margin-bottom:var(--spacing-lg);"></div><div class="modal-actions"><button class="btn btn-secondary btn-sm" onclick="closeModal('confirmModal')">Cancelar</button><button class="btn btn-danger btn-sm" id="confirmBtn" onclick="confirmAction()">Confirmar</button></div></div></div>
+</div>
+
+<!-- MODAL: Delete Team -->
+<div class="modal-overlay" id="deleteTeamModal" onclick="if(event.target===this)closeModal('deleteTeamModal')">
+  <div class="modal" style="max-width:500px;" role="dialog" aria-modal="true"><div class="modal-header"><div><div class="modal-title" style="font-size:18px;">Excluir Time</div></div><button class="modal-close" onclick="closeModal('deleteTeamModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="delete-warning" id="deleteWarning">⚠️ Este time possui membros e regras de política específicas.</div>
+      <div class="checklist"><label class="checklist-item"><input type="checkbox" onchange="checkDeleteReady()"> Transferir todos os membros para outro time</label><label class="checklist-item"><input type="checkbox" onchange="checkDeleteReady()"> Remover exceções de política deste time</label><label class="checklist-item"><input type="checkbox" onchange="checkDeleteReady()"> Reatribuir cartões deste time</label></div>
+      <div class="modal-actions"><button class="btn btn-secondary btn-sm" onclick="closeModal('deleteTeamModal')">Cancelar</button><button class="btn btn-danger btn-sm" id="deleteTeamBtn" disabled onclick="showToast('Time excluído.','success');closeModal('deleteTeamModal');closeSlideover()">Excluir</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fabBtn" onclick="toggleFabDrawer()" aria-label="Sugestões do Agent">🤖<span class="fab-badge">3</span></button>
+<div class="fab-drawer" id="fabDrawer"><div class="fab-drawer-header">Sugestões do Agent <span style="font-size:12px;color:var(--gray-500);margin-left:var(--spacing-sm);">3 pendentes</span></div><div class="fab-drawer-body">
+  <div class="suggestion-item"><div class="suggestion-pattern">Ajustar limite de auto-aprovação</div><div class="suggestion-detail">62% das aprovações manuais são &lt; R$ 3.000. Sugerimos aumentar de R$ 2.000 para R$ 3.000.</div><div class="suggestion-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Sugestão aplicada.','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+  <div class="suggestion-item"><div class="suggestion-pattern">Nova flag: gasto recorrente alto</div><div class="suggestion-detail">5 usuários com gastos mensais &gt; R$ 2.500 em alimentação.</div><div class="suggestion-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag criada.','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+  <div class="suggestion-item"><div class="suggestion-pattern">Regra de antecedência para viagens</div><div class="suggestion-detail">40% das viagens solicitadas com &lt;3 dias custam 35% a mais.</div><div class="suggestion-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Sugestão aplicada.','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+</div></div>
+
+<script>
+/* ============================================
+   DATA
+   ============================================ */
+const generalRules = [
+  {icon:'🤖',text:'Auto-aprovação até R$ 2.000 (Agent)'},
+  {icon:'🚩',text:'Valor divergente → Escalar para admin'},
+  {icon:'💳',text:'Comprovante obrigatório acima de R$ 50'},
+  {icon:'💰',text:'Limite mensal reembolso: R$ 3.000'},
+  {icon:'📄',text:'NF-e obrigatória acima de R$ 200'}
+];
+
+const ccData = {
+  vendas:{name:'Vendas',resp:'Maria Oliveira',times:'2 times',erp:'SAP',exceptions:[],approvers:['Maria Oliveira','Carlos Santos'],teams:[{n:'Comercial',m:12},{n:'Pré-vendas',m:4}]},
+  marketing:{name:'Marketing',resp:'Francisco Duarte',times:'2 times',erp:'SAP',exceptions:[{flow:'Solicitações',detail:'Limite auto-aprovação: R$ 5.000 (geral: R$ 2.000)',id:'mkt1'},{flow:'Despesas de Cartão',detail:'Sem comprovante até R$ 200 (geral: R$ 50)',id:'mkt2'}],approvers:['Francisco Duarte','Ana Paula'],teams:[{n:'Marketing Digital',m:8},{n:'Branding',m:3}]},
+  produto:{name:'Produto',resp:'João Mendes',times:'1 time',erp:'SAP',exceptions:[],approvers:['João Mendes'],teams:[{n:'Engenharia',m:15}]},
+  administrativo:{name:'Administrativo',resp:'Camila Vieira',times:'3 times',erp:'Totvs',exceptions:[],approvers:['Camila Vieira','Sandra Ferreira'],teams:[{n:'Financeiro',m:6},{n:'RH',m:4},{n:'Jurídico',m:3}]},
+  operacoes:{name:'Operações',resp:'Sandra Ferreira',times:'1 time',erp:'SAP',exceptions:[],approvers:['Sandra Ferreira'],teams:[{n:'Operações',m:10}]},
+  internacional:{name:'Internacional',resp:'Marcos Miranda',times:'1 time',erp:'SAP',exceptions:[{flow:'Solicitações',detail:'Limite auto-aprovação: R$ 10.000 (geral: R$ 2.000)',id:'int1'}],approvers:['Marcos Miranda','André Costa'],teams:[{n:'Comércio Exterior',m:7}]}
+};
+
+const teamsData = {
+  comercial:{name:'Comercial',cc:'Vendas',resp:'Maria Oliveira',members:[{n:'Ana Silva',e:'ana.s@payfy.com'},{n:'Bruno Costa',e:'bruno.c@payfy.com'},{n:'Carla Dias',e:'carla.d@payfy.com'},{n:'Daniel Lima',e:'daniel.l@payfy.com'}],approvals:[{l:1,n:'Maria Oliveira',v:'R$ 0',c:'#F97316'},{l:2,n:'Carlos Santos',v:'R$ 2.000',c:'#EA580C'},{l:3,n:'André Costa',v:'R$ 10.000',c:'#C2410C'}],payments:['Cartão','Reembolso','Pix'],payOff:['Boleto'],exceptions:[]},
+  mkt_digital:{name:'Marketing Digital',cc:'Marketing',resp:'Francisco Duarte',members:[{n:'Fernanda Rocha',e:'fernanda.r@payfy.com'},{n:'Gabriel Santos',e:'gabriel.s@payfy.com'},{n:'Helena Vieira',e:'helena.v@payfy.com'}],approvals:[{l:1,n:'Francisco Duarte',v:'R$ 0',c:'#F97316'},{l:2,n:'Ana Paula',v:'R$ 3.000',c:'#EA580C'}],payments:['Cartão','Reembolso','Pix'],payOff:['Boleto'],exceptions:[{flow:'Despesas de Cartão',detail:'Sem comprovante até R$ 200 (geral: R$ 50)',id:'mkd1'}]},
+  engenharia:{name:'Engenharia',cc:'Produto',resp:'João Mendes',members:[{n:'Igor Pereira',e:'igor.p@payfy.com'},{n:'Julia Martins',e:'julia.m@payfy.com'},{n:'Kevin Alves',e:'kevin.a@payfy.com'}],approvals:[{l:1,n:'João Mendes',v:'R$ 0',c:'#F97316'}],payments:['Cartão','Reembolso','Pix','Boleto'],payOff:[],exceptions:[]},
+  financeiro:{name:'Financeiro',cc:'Administrativo',resp:'Camila Vieira',members:[{n:'Natália Souza',e:'natalia.s@payfy.com'},{n:'Otávio Lima',e:'otavio.l@payfy.com'}],approvals:[{l:1,n:'Camila Vieira',v:'R$ 0',c:'#F97316'}],payments:['Cartão','Reembolso','Pix','Boleto'],payOff:[],exceptions:[]},
+  rh:{name:'RH',cc:'Administrativo',resp:'Sandra Ferreira',members:[{n:'Paula Ramos',e:'paula.r@payfy.com'}],approvals:[{l:1,n:'Sandra Ferreira',v:'R$ 0',c:'#F97316'}],payments:['Reembolso','Pix'],payOff:['Cartão','Boleto'],exceptions:[]},
+  operacoes_t:{name:'Operações',cc:'Operações',resp:'Ricardo Lopes',members:[{n:'Simone Torres',e:'simone.t@payfy.com'},{n:'Thiago Nunes',e:'thiago.n@payfy.com'}],approvals:[{l:1,n:'Ricardo Lopes',v:'R$ 0',c:'#F97316'}],payments:['Cartão','Reembolso','Pix'],payOff:['Boleto'],exceptions:[]},
+  juridico:{name:'Jurídico',cc:'Administrativo',resp:'Ana Pereira',members:[{n:'Ulisses Barros',e:'ulisses.b@payfy.com'}],approvals:[{l:1,n:'Ana Pereira',v:'R$ 0',c:'#F97316'}],payments:['Reembolso'],payOff:['Cartão','Pix','Boleto'],exceptions:[]},
+  diretoria:{name:'Diretoria',cc:'Administrativo',resp:'André Costa',members:[{n:'André Costa',e:'andre.c@payfy.com'},{n:'Carlos Mendes',e:'carlos.m@payfy.com'},{n:'Camila Vieira',e:'camila.v@payfy.com'},{n:'Marcos Miranda',e:'marcos.m@payfy.com'}],approvals:[{l:1,n:'André Costa (CEO)',v:'R$ 0',c:'#F97316'},{l:2,n:'Camila Vieira (CFO)',v:'R$ 5.000',c:'#EA580C'},{l:3,n:'Conselho',v:'R$ 50.000',c:'#C2410C'}],payments:['Cartão','Reembolso','Pix','Boleto'],payOff:[],exceptions:[{flow:'Solicitações',detail:'CFO aprova acima de R$ 5.000 (geral: gestor acima de R$ 500)',id:'dir1'},{flow:'Reembolsos',detail:'Sem limite mensal (geral: R$ 3.000)',id:'dir2'}]}
+};
+
+const expenses = [
+  {vendor:'iFood',date:'18/03/2026',user:'Maria Oliveira',type:'Cartão',value:'R$ 87,50',rec:'approve',conf:98,status:'Aprovada',rationale:'Aprovação recomendada (98%) — Valor dentro do limite para Alimentação. Fornecedor com histórico positivo.',rule:'Auto-aprovação ≤ R$ 2.000',flags:[],scope:'geral',cnpj:'12.345.678/0001-90',cc:'Vendas',team:'Comercial',cat:'Alimentação'},
+  {vendor:'Uber',date:'17/03/2026',user:'João Mendes',type:'Cartão',value:'R$ 234,00',rec:'approve',conf:95,status:'Pendente',rationale:'Aprovação recomendada (95%) — Transporte dentro do padrão. MCC confirmado.',rule:'Categorização por MCC',flags:[],scope:'geral',cnpj:'08.744.210/0001-60',cc:'Produto',team:'Engenharia',cat:'Transporte'},
+  {vendor:'Rest. Fasano',date:'15/03/2026',user:'André Costa',type:'Reembolso',value:'R$ 4.500,00',rec:'review',conf:62,status:'Pendente',rationale:'Revisão necessária (62%) — Valor acima do limite habitual. Reembolso > R$ 1.000 exige aprovação dupla.',rule:'Reembolso > R$ 1.000 → Aprovação dupla',flags:['VALOR ACIMA DO LIMITE'],scope:'time',scopeName:'Time Diretoria',cnpj:'33.456.789/0001-22',cc:'Administrativo',team:'Diretoria',cat:'Alimentação'},
+  {vendor:'Decolar',date:'14/03/2026',user:'Francisco Duarte',type:'Pix',value:'R$ 8.750,00',rec:'review',conf:58,status:'Pendente',rationale:'Revisão necessária (58%) — Valor elevado para viagem. Antecedência não confirmada.',rule:'Viagens > R$ 5.000 → Escalar gestor',flags:[],scope:'geral',cnpj:'10.200.300/0001-50',cc:'Marketing',team:'Marketing Digital',cat:'Viagens'},
+  {vendor:'Magazine Luiza',date:'13/03/2026',user:'Sandra Ferreira',type:'Cartão',value:'R$ 1.200,00',rec:'reject',conf:89,status:'Pendente',rationale:'Rejeição recomendada (89%) — Recibo duplicado detectado. Comprovante já enviado em despesa #4521.',rule:'Flag: Recibo duplicado → Bloquear',flags:['RECIBO DUPLICADO'],scope:'geral',cnpj:'47.960.950/0001-21',cc:'Operações',team:'Operações',cat:'Material'},
+  {vendor:'Padaria Real',date:'19/03/2026',user:'Camila Vieira',type:'Cartão',value:'R$ 32,00',rec:'auto',conf:99,status:'Auto-aprovada',rationale:'Auto-aprovado (99%) — Valor abaixo do limite. Fornecedor recorrente.',rule:'Auto-aprovação ≤ R$ 2.000',flags:[],scope:'geral',cnpj:'22.333.444/0001-55',cc:'Administrativo',team:'Financeiro',cat:'Alimentação'},
+  {vendor:'99',date:'18/03/2026',user:'Ricardo Lopes',type:'Cartão',value:'R$ 45,90',rec:'approve',conf:97,status:'Pendente',rationale:'Aprovação recomendada (97%) — Transporte urbano dentro do padrão.',rule:'Auto-aprovação ≤ R$ 2.000',flags:[],scope:'geral',cnpj:'16.789.000/0001-77',cc:'Operações',team:'Operações',cat:'Transporte'},
+  {vendor:'Azul',date:'16/03/2026',user:'Ana Pereira',type:'Pix',value:'R$ 2.340,00',rec:'approve',conf:91,status:'Pendente',rationale:'Aprovação recomendada (91%) — Passagem nacional classe econômica. Antecedência de 14 dias.',rule:'Viagens nacionais',flags:[],scope:'geral',cnpj:'09.296.295/0001-60',cc:'Administrativo',team:'Jurídico',cat:'Viagens'},
+  {vendor:'Posto Shell',date:'12/03/2026',user:'Marcos Miranda',type:'Reembolso',value:'R$ 890,00',rec:'review',conf:55,status:'Pendente',rationale:'Revisão necessária (55%) — CNPJ com situação irregular na Receita Federal.',rule:'Flag: CNPJ inativo → Bloquear',flags:['CNPJ INATIVO'],scope:'geral',cnpj:'55.666.777/0001-88',cc:'Internacional',team:'Comércio Exterior',cat:'Combustível'},
+  {vendor:'Uber',date:'20/03/2026',user:'João Mendes',type:'Cartão',value:'R$ 67,00',rec:'auto',conf:99,status:'Auto-aprovada',rationale:'Auto-aprovado (99%) — Transporte recorrente.',rule:'Auto-aprovação ≤ R$ 2.000',flags:[],scope:'geral',cnpj:'08.744.210/0001-60',cc:'Produto',team:'Engenharia',cat:'Transporte'},
+  {vendor:'Hotel Ibis',date:'11/03/2026',user:'Francisco Duarte',type:'Reembolso',value:'R$ 1.850,00',rec:'approve',conf:88,status:'Aprovada',rationale:'Aprovação recomendada (88%) — Hospedagem dentro do limite diário. NF-e presente.',rule:'Hospedagem até R$ 500/noite',flags:[],scope:'geral',cnpj:'07.100.200/0001-99',cc:'Marketing',team:'Marketing Digital',cat:'Hospedagem'},
+  {vendor:'iFood',date:'19/03/2026',user:'Sandra Ferreira',type:'Cartão',value:'R$ 156,00',rec:'reject',conf:82,status:'Pendente',rationale:'Rejeição recomendada (82%) — Gasto no domingo sem justificativa. Valor acima do padrão habitual.',rule:'Flag: Gasto fora de horário',flags:['FIM DE SEMANA'],scope:'geral',cnpj:'12.345.678/0001-90',cc:'Operações',team:'Operações',cat:'Alimentação'}
+];
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+let currentScreen = 'politicas';
+
+function navigateTo(screen) {
+  closeSlideover();
+  closeSidebars();
+  currentScreen = screen;
+
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+  // Update sidebar active states
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.settings-item').forEach(i => i.classList.remove('active'));
+
+  const settingsSidebar = document.getElementById('settingsSidebar');
+  const fabEl = document.getElementById('fabBtn');
+
+  if (screen === 'despesas') {
+    document.getElementById('screenDespesas').classList.add('active');
+    document.getElementById('navDespesas').classList.add('active');
+    settingsSidebar.classList.add('hidden');
+    fabEl.style.display = 'none';
+    renderDespesas();
+  } else {
+    settingsSidebar.classList.remove('hidden');
+    document.getElementById('navConfig').classList.add('active');
+    fabEl.style.display = '';
+
+    if (screen === 'politicas') {
+      document.getElementById('screenPoliticas').classList.add('active');
+      document.getElementById('navPoliticas').classList.add('active');
+      renderPoliticas();
+    } else if (screen === 'centros-custo') {
+      document.getElementById('screenCentrosCusto').classList.add('active');
+      document.getElementById('navUnidades').classList.add('active');
+      renderCentrosCusto();
+    } else if (screen === 'times') {
+      document.getElementById('screenTimes').classList.add('active');
+      document.getElementById('navTimes').classList.add('active');
+      renderTimes();
+    }
+  }
+
+  // Scroll to top
+  document.getElementById('mainContent').scrollTop = 0;
+}
+
+/* ============================================
+   RENDER: POLÍTICAS
+   ============================================ */
+function renderPoliticas() {
+  const el = document.getElementById('politicasContent');
+  if (el.innerHTML) return; // already rendered
+
+  el.innerHTML = `
+    <div class="page-header"><div class="page-header-top"><div><h1 class="page-title">Políticas de Gastos</h1><p class="page-subtitle">Hub de controle — gerencie spend controls e configure o Policy Agent</p></div><button class="btn btn-primary" onclick="openModal('createPolicyModal')"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 010-2h4V3a1 1 0 011-1z"/></svg>Criar Nova Política</button></div></div>
+
+    <!-- Agent Banner -->
+    <div class="agent-banner"><div class="agent-banner-left"><span class="agent-dot"></span><span class="agent-label">Policy Agent ativo</span><span class="agent-info">Modo: Recomendação <span class="agent-info-divider">·</span> 99.1% acurácia <span class="agent-info-divider">·</span> 847 transações <span class="agent-info-divider">·</span> R$ 45k economia</span><div style="display:flex;align-items:center;gap:var(--spacing-xs);font-size:12px;color:var(--gray-500);margin-top:var(--spacing-xs);"><span class="hierarchy-badge flags">Flags</span><span style="color:var(--gray-400);">›</span><span class="hierarchy-badge agent">Agent</span><span style="color:var(--gray-400);">›</span><span class="hierarchy-badge workflows">Workflows</span></div></div><div class="agent-banner-right"><button class="btn btn-secondary btn-sm" onclick="showToast('Configuração do Agent disponível no dropdown.','info')">Configurar Agent ▾</button></div></div>
+
+    <!-- Tabs -->
+    <div class="tabs-nav" role="tablist"><button class="tab-btn active" onclick="switchPolicyTab(this,'pRegras')">Regras</button><button class="tab-btn" onclick="switchPolicyTab(this,'pDocumento')">Documento</button><button class="tab-btn" onclick="switchPolicyTab(this,'pCompliance')">Compliance</button><button class="tab-btn" onclick="switchPolicyTab(this,'pHistorico')">Histórico</button></div>
+
+    <!-- TAB: REGRAS -->
+    <div class="tab-panel active" id="pRegras">
+      <div class="view-controls"><div class="search-bar" style="flex:1;margin-bottom:0;"><input type="text" class="search-input" placeholder="Buscar regras..." aria-label="Buscar"><select class="filter-select"><option>Todas as Políticas</option></select><select class="filter-select"><option>Todos os Tipos</option></select></div><div class="view-toggle"><button class="view-toggle-btn active" onclick="switchPolicyView('cards',this)">Cards</button><button class="view-toggle-btn" onclick="switchPolicyView('table',this)">Tabela</button></div></div>
+
+      <div id="pCardsView" class="accordion-list">
+        ${renderPolicyCard('Solicitações','Fluxo de solicitação de compras','📋','#F0F9FF','#E0F2FE','3 Agent','2 Flags','1 Conf.',
+          [{type:'agent',rules:['⚡ IA preenche: Centro de Custo, Projeto, Categoria','🤖 Valor ≤ R$ 2.000 → Auto-aprovação','🤖 Valor > R$ 2.000 → Escalar para gestor']},{type:'flag',rules:['🚩 Valor divergente (>2x média) → Escalar admin','🚩 Fornecedor novo → Alertar gestor']}],
+          [{text:'CC Internacional: auto-aprovação R$ 10.000',badge:'cc'},{text:'Time Diretoria: CFO aprova > R$ 5.000',badge:'time'}],'2 exceções ativas · 6 usando padrão',true)}
+
+        ${renderPolicyCard('Despesas de Cartão','Gastos em cartão corporativo','💳','#FFF7ED','#FFEDD5','2 Agent','3 Flags','2 Brasil',
+          [{type:'agent',rules:['🤖 Comprovante obrigatório acima de R$ 50','🤖 Categorização automática por MCC']},{type:'flag',rules:['🚩 Gasto fora do horário → Alertar gestor','🚩 Recibo duplicado → Bloquear','🚩 Merchant proibido → Bloquear']},{type:'brasil',rules:['📄 NF-e obrigatória acima de R$ 200','🏢 Validação CNPJ ativo']}],
+          [{text:'CC Marketing: sem comprovante até R$ 200',badge:'cc'}],'1 exceção ativa · 7 usando padrão',false)}
+
+        ${renderPolicyCard('Reembolsos','Solicitações de reembolso','💰','#F0FDF4','#DCFCE7','2 Agent','2 Flags','1 Brasil',
+          [{type:'agent',rules:['🤖 Limite mensal por colaborador: R$ 3.000','🤖 Prazo de submissão: 30 dias']},{type:'flag',rules:['🚩 Comprovante AI-generated → Escalar admin','🚩 Reembolso > R$ 1.000 → Aprovação dupla']},{type:'brasil',rules:['🍽️ VR/VA: limite per diem CLT R$ 44,60']}],
+          [{text:'Time Comercial: sem limite reembolso viagem',badge:'time'},{text:'Time Diretoria: sem limite mensal',badge:'time'}],'2 exceções ativas · 6 usando padrão',false)}
+
+        ${renderPolicyCard('Viagens','Passagens, hospedagem e viagem','✈️','#EDE9FE','#DDD6FE','3 Agent','2 Flags','1 Conf.',
+          [{type:'agent',rules:['🤖 Classe econômica obrigatória voos nacionais','🤖 Hospedagem: até R$ 500/noite (nac.), R$ 1.200 (int.)','🤖 Antecedência mínima de 7 dias']},{type:'flag',rules:['🚩 Viagem sem aprovação prévia → Bloquear reembolso','🚩 Destino de alto risco → Escalar RH + admin']}],
+          [{text:'CC Internacional: hospedagem até R$ 2.000/noite',badge:'cc'}],'1 exceção ativa · 7 usando padrão',false)}
+      </div>
+
+      <div id="pTableView" style="display:none;"><div class="table-container"><table class="data-table"><thead><tr><th>Política</th><th>Regra</th><th>Tipo</th><th>Escopo</th><th>Ação</th><th>Status</th></tr></thead><tbody>
+        <tr><td><strong>Solicitações</strong></td><td>Auto-aprovação ≤ R$ 2.000</td><td><span class="type-badge badge-agent">Agent</span></td><td><span class="scope-badge scope-geral">Geral</span></td><td>Auto-aprovar</td><td><span class="status-badge status-active">Ativo</span></td></tr>
+        <tr><td><strong>Solicitações</strong></td><td>Escalar > R$ 2.000</td><td><span class="type-badge badge-agent">Agent</span></td><td><span class="scope-badge scope-geral">Geral</span></td><td>Escalar gestor</td><td><span class="status-badge status-active">Ativo</span></td></tr>
+        <tr><td><strong>Solicitações</strong></td><td>Valor divergente</td><td><span class="type-badge badge-flag">Flag</span></td><td><span class="scope-badge scope-geral">Geral</span></td><td>Escalar admin</td><td><span class="status-badge status-active">Ativo</span></td></tr>
+        <tr><td><strong>Despesas Cartão</strong></td><td>Comprovante > R$ 50</td><td><span class="type-badge badge-agent">Agent</span></td><td><span class="scope-badge scope-geral">Geral</span></td><td>Exigir</td><td><span class="status-badge status-active">Ativo</span></td></tr>
+        <tr><td><strong>Despesas Cartão</strong></td><td>Recibo duplicado</td><td><span class="type-badge badge-flag">Flag</span></td><td><span class="scope-badge scope-geral">Geral</span></td><td>Bloquear</td><td><span class="status-badge status-active">Ativo</span></td></tr>
+        <tr><td><strong>Despesas Cartão</strong></td><td>NF-e > R$ 200</td><td><span class="type-badge badge-brasil">🇧🇷 Brasil</span></td><td><span class="scope-badge scope-geral">Geral</span></td><td>Exigir NF-e</td><td><span class="status-badge status-active">Ativo</span></td></tr>
+        <tr><td><strong>Solicitações</strong></td><td>Auto-aprovação R$ 10.000</td><td><span class="type-badge badge-agent">Agent</span></td><td><span class="scope-badge scope-cc">CC Internacional</span></td><td>Auto-aprovar</td><td><span class="status-badge status-active">Ativo</span></td></tr>
+        <tr><td><strong>Solicitações</strong></td><td>CFO aprova > R$ 5.000</td><td><span class="type-badge badge-agent">Agent</span></td><td><span class="scope-badge scope-time">Time Diretoria</span></td><td>Escalar CFO</td><td><span class="status-badge status-active">Ativo</span></td></tr>
+      </tbody></table><div class="table-footer">22 regras totais · 8 Agent · 10 Flags · 4 Conf. · 3 exceções</div></div></div>
+    </div>
+
+    <!-- TAB: DOCUMENTO -->
+    <div class="tab-panel" id="pDocumento">
+      <div class="document-banner"><span>ℹ️</span> Este documento é sincronizado com suas regras. Alterações aqui podem atualizar regras automaticamente.</div>
+      <div class="document-editor"><div class="document-toolbar"><button class="toolbar-btn"><strong>B</strong></button><button class="toolbar-btn"><em>I</em></button><button class="toolbar-btn"><u>U</u></button><div class="toolbar-separator"></div><button class="toolbar-btn">H1</button><button class="toolbar-btn">H2</button></div>
+      <div class="document-body" contenteditable="true"><h2>Política de Gastos — Payfy</h2><p><em>Versão 3.0 — 20/03/2026</em></p><h3>1. Solicitações de Compras</h3><ul><li>Valores até <strong>R$ 2.000,00</strong> são auto-aprovados pelo Policy Agent.</li><li>Valores acima exigem aprovação do gestor direto.</li></ul><h3>2. Despesas de Cartão</h3><ul><li>Comprovante obrigatório para gastos acima de <strong>R$ 50,00</strong>.</li><li>NF-e obrigatória acima de R$ 200,00.</li></ul><h3>3. Reembolsos</h3><ul><li>Limite mensal: <strong>R$ 3.000,00</strong>.</li><li>Prazo: 30 dias após o gasto.</li></ul><h3>4. Viagens</h3><ul><li>Classe econômica obrigatória (voos nacionais).</li><li>Hospedagem: até R$ 500/noite (nacional).</li></ul></div>
+      <div class="document-footer"><button class="btn btn-primary btn-sm" onclick="showToast('Nova versão publicada!','success')">Publicar versão</button><span style="font-size:12px;color:var(--gray-500);">v3 · 20/03/2026</span></div></div>
+    </div>
+
+    <!-- TAB: COMPLIANCE -->
+    <div class="tab-panel" id="pCompliance">
+      <div class="compliance-grid">
+        <div class="compliance-card"><div class="compliance-card-title">Flags Configuradas</div>
+          <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Recibo duplicado</div><div class="flag-toggle-desc">Comprovantes duplicados</div></div><span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Valor divergente</div><div class="flag-toggle-desc">>2x média histórica</div></div><span class="flag-toggle-action" style="background:var(--warning-yellow-light);color:var(--warning-yellow);">Escalar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Gasto fora de horário</div><div class="flag-toggle-desc">Horário não-comercial</div></div><span class="flag-toggle-action" style="background:var(--info-blue-light);color:var(--info-blue);">Alertar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">CNPJ inativo</div><div class="flag-toggle-desc">Situação irregular</div></div><span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Comprovante AI-generated</div><div class="flag-toggle-desc">Gerado por IA</div></div><span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Escalar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        </div>
+        <div class="compliance-card"><div class="compliance-card-title">Sugestões do Agent</div><p style="font-size:13px;color:var(--gray-500);margin-bottom:var(--spacing-md);">Padrões dos últimos 30 dias</p>
+          <div class="suggested-flag"><div class="suggested-flag-info"><div class="suggested-flag-pattern">Gastos recorrentes iFood</div><div class="suggested-flag-detail">12 transações > R$ 100 em 7 dias</div></div><div class="suggested-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada!','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+          <div class="suggested-flag"><div class="suggested-flag-info"><div class="suggested-flag-pattern">Gastos de fim de semana</div><div class="suggested-flag-detail">8 despesas sem justificativa</div></div><div class="suggested-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada!','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+          <div class="suggested-flag"><div class="suggested-flag-info"><div class="suggested-flag-pattern">Split de despesas</div><div class="suggested-flag-detail">3 pares próximas ao limite</div></div><div class="suggested-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada!','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: HISTÓRICO -->
+    <div class="tab-panel" id="pHistorico">
+      <div class="version-compare">Comparar <select class="version-select"><option>v3</option><option>v2</option></select> com <select class="version-select"><option>v2</option><option>v1</option></select> <button class="btn btn-secondary btn-sm">Comparar</button></div>
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-dot active"></div><div class="timeline-card"><div class="timeline-header"><div><span class="timeline-version">v3</span><span class="status-badge status-active" style="margin-left:var(--spacing-sm);">Ativa</span></div><span class="timeline-date">20/03/2026 · 14:32</span></div><div class="timeline-author">Por Carlos M. (CPO)</div><div class="timeline-desc">Flags Brasil (NF-e, CNPJ) e regras VR/VA per diem CLT.</div><div class="diff-block"><div class="diff-added">+ NF-e obrigatória acima de R$ 200</div><div class="diff-added">+ Validação CNPJ ativo</div><div class="diff-removed">- Limite auto-aprovação: R$ 1.500 → R$ 2.000</div></div></div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><div class="timeline-header"><span class="timeline-version">v2</span><span class="timeline-date">10/03/2026 · 09:15</span></div><div class="timeline-author">Por André C. (CEO)</div><div class="timeline-desc">Policy Agent modo Recomendação. Regras de viagem.</div><div class="timeline-actions"><button class="btn btn-secondary btn-sm">Ver versão</button><button class="btn btn-ghost btn-sm" onclick="showToast('Versão restaurada!','success')">Restaurar</button></div></div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><div class="timeline-header"><span class="timeline-version">v1</span><span class="timeline-date">01/03/2026 · 16:45</span></div><div class="timeline-author">Por Matheus R. (Tech Lead)</div><div class="timeline-desc">Versão inicial. Regras básicas.</div></div></div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPolicyCard(name,desc,icon,bgStart,bgEnd,p1,p2,p3,groups,exceptions,excCount,hasConf) {
+  let groupsHtml = groups.map(g => {
+    const cls = g.type==='agent'?'rule-group-agent':g.type==='flag'?'rule-group-flag':g.type==='brasil'?'rule-group-brasil':'rule-group-confidential';
+    const badge = g.type==='agent'?'badge-agent':g.type==='flag'?'badge-flag':g.type==='brasil'?'badge-brasil':'badge-conf';
+    const label = g.type==='agent'?'REGRA · Agent':g.type==='flag'?'FLAG · Override':g.type==='brasil'?'🇧🇷 FLAGS BRASIL':'🔒 CONFIDENCIAL';
+    return `<div class="rule-group ${cls}"><div class="rule-group-header"><span class="rule-group-badge ${badge}">${label}</span></div>${g.rules.map(r=>'<div class="rule-item">'+r+'</div>').join('')}</div>`;
+  }).join('');
+
+  let excHtml = exceptions.length ? `<div class="exceptions-summary"><div class="exceptions-summary-title">Exceções ativas</div>${exceptions.map(e=>`<div class="exception-link"><a href="#" onclick="event.preventDefault();navigateTo('${e.badge==='cc'?'centros-custo':'times'}')">${e.text}</a><span class="exception-badge-${e.badge}">Exceção ${e.badge==='cc'?'CC':'Time'}</span></div>`).join('')}<div class="exceptions-count">${excCount}</div></div>`:'';
+
+  const pillClass = p3.includes('Conf')?'pill-conf':p3.includes('Brasil')?'pill-brasil':'pill-flag';
+
+  return `<div class="accordion-card" style="--bg-start:${bgStart};--bg-end:${bgEnd};">
+    <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this.parentElement)">
+      <div class="accordion-header-left"><div class="policy-icon" style="background:${bgStart};color:var(--gray-700);">${icon}</div><div><div class="policy-name">${name}</div><div class="policy-description">${desc}</div></div></div>
+      <div class="summary-pills"><span class="pill pill-agent">${p1}</span><span class="pill pill-flag">${p2}</span><span class="pill ${pillClass}">${p3}</span></div>
+      <svg class="expand-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+    </button>
+    <div class="accordion-body">${groupsHtml}${excHtml}<div class="accordion-actions"><button class="btn btn-secondary btn-sm" onclick="showToast('Editor de regras em desenvolvimento.','info')">Editar Regras</button><button class="btn btn-ghost btn-sm" onclick="showToast('Simulação em desenvolvimento.','info')">Testar Regras</button></div></div>
+  </div>`;
+}
+
+function switchPolicyTab(btn, panelId) {
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#screenPoliticas .tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+function switchPolicyView(view, btn) {
+  document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pCardsView').style.display = view==='cards'?'':'none';
+  document.getElementById('pTableView').style.display = view==='table'?'':'none';
+}
+
+/* ============================================
+   RENDER: CENTROS DE CUSTO
+   ============================================ */
+function renderCentrosCusto() {
+  const el = document.getElementById('centrosCustoContent');
+  if (el.innerHTML) return;
+  const rows = Object.entries(ccData).map(([k,c])=> {
+    const pBadge = c.exceptions.length ? `<span class="policy-badge policy-exception-cc">${c.exceptions.length} exceç${c.exceptions.length>1?'ões':'ão'}</span>` : '<span class="policy-badge policy-default">Padrão</span>';
+    return `<tr onclick="openCCSlideover('${k}')"><td><strong>${c.name}</strong></td><td>${c.resp.split(' ')[0]} ${c.resp.split(' ')[1]?c.resp.split(' ')[1][0]+'.':''}</td><td>${c.times}</td><td><span class="erp-badge"><span class="erp-dot"></span>${c.erp}</span></td><td>${pBadge}</td><td><span class="status-badge status-active">Ativo</span></td></tr>`;
+  }).join('');
+
+  el.innerHTML = `<div class="page-header"><div class="page-header-top"><h1 class="page-title">Centros de Custo</h1><button class="btn btn-primary" onclick="showToast('Funcionalidade em desenvolvimento.','info')"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 010-2h4V3a1 1 0 011-1z"/></svg>Novo Centro de Custo</button></div></div>
+    <div class="search-bar"><input type="text" class="search-input" placeholder="Buscar centros de custo..." aria-label="Buscar"><select class="filter-select"><option>Todos os status</option></select></div>
+    <div class="table-container"><table class="data-table"><thead><tr><th>Nome</th><th>Responsável</th><th>Times</th><th>ERP</th><th>Política</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function openCCSlideover(key) {
+  const c = ccData[key];
+  document.getElementById('soTitle').textContent = c.name;
+  document.getElementById('soSubtitle').textContent = 'Centro de Custo';
+
+  let h = `<div class="so-section"><div class="so-field"><div class="so-label">Responsável</div><div class="so-value">${c.resp}</div></div></div>`;
+  h += `<div class="so-section"><div class="so-section-title">Aprovadores</div>${c.approvers.map(a=>`<div style="display:flex;align-items:center;gap:var(--spacing-sm);margin-bottom:var(--spacing-xs);"><div class="approver-avatar">${a.split(' ').map(n=>n[0]).join('')}</div><span style="font-size:13px;">${a}</span></div>`).join('')}</div>`;
+
+  h += `<div class="so-section"><div class="so-section-title">📋 Política de Gastos</div>`;
+  h += `<div style="margin-bottom:var(--spacing-md);"><div class="so-label">Regra geral da empresa</div><div class="rules-readonly">${generalRules.map(r=>`<div class="rule-line"><span>${r.icon}</span><span>${r.text}</span></div>`).join('')}</div><div style="font-size:12px;color:var(--gray-500);margin-top:var(--spacing-xs);font-style:italic;">Definidas na Política Geral. <a href="#" onclick="event.preventDefault();navigateTo('politicas')">Ver Política Geral →</a></div></div>`;
+
+  h += `<div><div class="so-label">Exceções deste CC</div>`;
+  if (!c.exceptions.length) {
+    h += `<div class="empty-state">Este centro de custo segue a política padrão da empresa.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showToast('Criação de exceção em desenvolvimento.','info')">Criar exceção →</button></div></div>`;
+  } else {
+    c.exceptions.forEach(ex => {
+      h += `<div class="exception-block"><div class="exception-header"><div class="exception-flow"><span>${ex.flow}</span><span class="exception-badge-cc">Exceção CC</span></div></div><div class="exception-detail">${ex.detail}</div><div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showToast('Editor em desenvolvimento.','info')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="showConfirm('Remover exceção?','O CC voltará para regra padrão.',function(){showToast('Exceção removida.','success');closeSlideover();})">Remover</button></div></div>`;
+    });
+    h += `<div class="explanatory-text">Exceções substituem inteiramente a regra geral para o fluxo correspondente.</div>`;
+  }
+  h += `</div></div>`;
+
+  h += `<div class="so-section"><div class="so-section-title">Times</div>${c.teams.map(t=>`<div style="display:flex;justify-content:space-between;padding:var(--spacing-sm) var(--spacing-md);background:var(--gray-50);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:var(--spacing-sm);"><span style="font-size:13px;font-weight:500;">${t.n}</span><span style="font-size:12px;color:var(--gray-500);">${t.m} membros</span></div>`).join('')}</div>`;
+
+  document.getElementById('soBody').innerHTML = h;
+  openSlideoverPanel();
+}
+
+/* ============================================
+   RENDER: TIMES
+   ============================================ */
+function renderTimes() {
+  const el = document.getElementById('timesContent');
+  if (el.innerHTML) return;
+  const rows = Object.entries(teamsData).map(([k,t])=> {
+    const pBadge = t.exceptions.length ? `<span class="policy-badge policy-exception-time">${t.exceptions.length} exceç${t.exceptions.length>1?'ões':'ão'}</span>` : '<span class="policy-badge policy-default">Padrão</span>';
+    return `<tr onclick="openTeamSlideover('${k}')"><td><strong>${t.name}</strong></td><td>${t.cc}</td><td>${t.resp.split(' ')[0]} ${t.resp.split(' ')[1]?t.resp.split(' ')[1][0]+'.':''}</td><td>${t.members.length}</td><td>${pBadge}</td><td><span class="status-badge status-active">Ativo</span></td></tr>`;
+  }).join('');
+
+  el.innerHTML = `<div class="page-header"><div class="page-header-top"><h1 class="page-title">Times</h1><button class="btn btn-primary" onclick="showToast('Funcionalidade em desenvolvimento.','info')"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 010-2h4V3a1 1 0 011-1z"/></svg>Novo Time</button></div></div>
+    <div class="search-bar"><input type="text" class="search-input" placeholder="Buscar times..." aria-label="Buscar"><select class="filter-select"><option>Todos os CCs</option></select></div>
+    <div class="table-container"><table class="data-table"><thead><tr><th>Nome</th><th>Centro de Custo</th><th>Responsável</th><th>Membros</th><th>Política</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function openTeamSlideover(key) {
+  const t = teamsData[key];
+  document.getElementById('soTitle').textContent = t.name;
+  document.getElementById('soSubtitle').textContent = 'CC: ' + t.cc;
+
+  let h = `<div class="so-section"><div class="so-field"><div class="so-label">Responsável</div><div class="so-value">${t.resp}</div></div></div>`;
+
+  h += `<div class="so-section"><div class="so-section-title">Formas de Pagamento</div><div style="display:flex;gap:var(--spacing-sm);flex-wrap:wrap;">${t.payments.map(p=>`<span class="payment-badge payment-active">✓ ${p}</span>`).join('')}${t.payOff.map(p=>`<span class="payment-badge payment-inactive">✗ ${p}</span>`).join('')}</div></div>`;
+
+  h += `<div class="so-section"><div class="so-section-title">Níveis de Aprovação</div>${t.approvals.map(a=>`<div class="approval-card" style="background:${a.c};"><div><div style="font-size:12px;font-weight:700;text-transform:uppercase;opacity:0.9;">Nível ${a.l}</div><div style="font-size:14px;font-weight:600;">${a.n}</div></div><div style="font-size:12px;opacity:0.9;">A partir de ${a.v}</div></div>`).join('')}</div>`;
+
+  h += `<div class="so-section"><div class="so-section-title">📋 Política de Gastos</div>`;
+  h += `<div style="margin-bottom:var(--spacing-md);"><div class="so-label">Regras aplicáveis</div><div class="rules-readonly">${generalRules.map(r=>`<div class="rule-line"><span>${r.icon}</span><span style="flex:1">${r.text}</span><span class="scope-badge scope-geral">Geral</span></div>`).join('')}</div><div style="font-size:12px;color:var(--gray-500);margin-top:var(--spacing-xs);"><a href="#" onclick="event.preventDefault();navigateTo('politicas')">Ver Política Completa →</a></div></div>`;
+
+  h += `<div><div class="so-label">Exceções deste Time</div>`;
+  if (!t.exceptions.length) {
+    h += `<div class="empty-state">Este time segue a política do CC ${t.cc} / empresa.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showToast('Criação de exceção em desenvolvimento.','info')">Criar exceção →</button></div></div>`;
+  } else {
+    t.exceptions.forEach(ex => {
+      h += `<div class="exception-block"><div class="exception-header"><div class="exception-flow"><span>${ex.flow}</span><span class="exception-badge-time">Exceção Time</span></div></div><div class="exception-detail">${ex.detail}</div><div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showToast('Editor em desenvolvimento.','info')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="showConfirm('Remover exceção?','O time voltará para regra padrão.',function(){showToast('Exceção removida.','success');closeSlideover();})">Remover</button></div></div>`;
+    });
+    h += `<div class="explanatory-text">Exceções substituem inteiramente a regra do CC/empresa.</div>`;
+  }
+  h += `</div></div>`;
+
+  // Vacation coverage
+  h += `<div class="so-section"><div class="so-section-title">🏖️ Cobertura de Férias</div><div style="background:var(--gray-50);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--spacing-md);"><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:13px;font-weight:500;">Aprovador substituto ativo</span><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div><div style="font-size:12px;color:var(--gray-500);margin-top:var(--spacing-sm);">Ative para configurar um substituto durante férias.</div></div></div>`;
+
+  // Members
+  h += `<div class="so-section"><div class="so-section-title">Membros (${t.members.length})</div>${t.members.map(m=>{
+    const ini = m.n.split(' ').map(x=>x[0]).join('');
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-sm) 0;border-bottom:1px solid var(--gray-100);"><div style="display:flex;align-items:center;gap:var(--spacing-sm);"><div class="member-avatar">${ini}</div><div><div style="font-size:13px;font-weight:500;">${m.n}</div><div style="font-size:12px;color:var(--gray-500);">${m.e}</div></div></div></div>`;
+  }).join('')}</div>`;
+
+  // Delete
+  h += `<div style="padding-top:var(--spacing-md);border-top:1px solid var(--border);"><button class="btn btn-danger btn-sm" onclick="openModal('deleteTeamModal')">Excluir Time</button></div>`;
+
+  document.getElementById('soBody').innerHTML = h;
+  openSlideoverPanel();
+}
+
+/* ============================================
+   RENDER: DESPESAS
+   ============================================ */
+function renderDespesas() {
+  const el = document.getElementById('despesasContent');
+  if (el.innerHTML) return;
+
+  const rows = expenses.map((e,i)=>{
+    const flagHtml = e.flags.length ? '<span class="flag-icon">⚑</span>' : '';
+    const recCls = {approve:'rec-approve',review:'rec-review',reject:'rec-reject',auto:'rec-auto'}[e.rec];
+    const recLbl = {approve:'Aprovar',review:'Revisar',reject:'Rejeitar',auto:'Auto'}[e.rec];
+    const stCls = e.status==='Pendente'?'status-pending':e.status==='Aprovada'?'status-active':'status-auto';
+    const rowCls = e.rec==='auto'?'class="row-auto"':e.rec==='reject'?'class="row-reject"':'';
+    return `<tr ${rowCls} onclick="openExpenseSlideover(${i})"><td>${flagHtml}${e.vendor}</td><td>${e.date}</td><td>${e.user.split(' ')[0]} ${e.user.split(' ')[1]?e.user.split(' ')[1][0]+'.':''}</td><td>${e.type}</td><td>${e.value}</td><td><span class="rec-badge ${recCls}">${recLbl}</span></td><td class="confidence">${e.conf}%</td><td><span class="status-badge ${stCls}">${e.status}</span></td></tr>`;
+  }).join('');
+
+  el.innerHTML = `<div class="page-header"><div class="page-header-top"><h1 class="page-title">Despesas</h1><button class="btn btn-primary" onclick="showToast('Selecione despesas para aprovar.','info')">Aprovar Selecionadas</button></div></div>
+    <div class="agent-mini-banner"><div class="agent-mini-left"><span class="agent-mini-dot"></span><strong>Policy Agent</strong><span style="color:var(--gray-500);">Modo: Recomendação · 12 pendentes</span></div><a href="#" onclick="event.preventDefault();navigateTo('politicas')" style="font-size:13px;font-weight:600;">Configurar →</a></div>
+    <div class="search-bar"><input type="text" class="search-input" placeholder="Buscar despesas..." aria-label="Buscar"><select class="filter-select"><option>Todos os status</option></select><select class="filter-select"><option>Todas recomendações</option><option>Aprovação</option><option>Revisão</option><option>Rejeição</option><option>Auto</option></select><select class="filter-select"><option>Todas flags</option><option>Com flags</option><option>Sem flags</option></select></div>
+    <div class="table-container"><table class="data-table"><thead><tr><th>Fornecedor</th><th>Data</th><th>Usuário</th><th>Tipo</th><th>Valor</th><th>Recomendação</th><th>Conf.</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function openExpenseSlideover(idx) {
+  const e = expenses[idx];
+  document.getElementById('soTitle').textContent = e.vendor + ' — ' + e.value;
+  document.getElementById('soSubtitle').textContent = e.type + ' · ' + e.date;
+
+  const recClass = {approve:'approve',review:'review',reject:'reject',auto:'approve'}[e.rec];
+  const recLabel = {approve:'Aprovação recomendada',review:'Revisão necessária',reject:'Rejeição recomendada',auto:'Auto-aprovado'}[e.rec];
+  const isDone = e.status!=='Pendente';
+
+  let h = '';
+
+  // Status progress
+  h += `<div class="so-section"><div class="status-progress"><div class="progress-step-bar done"></div><div class="progress-step-bar done"></div><div class="progress-step-bar ${isDone?'done':'current'}"></div><div class="progress-step-bar ${isDone?'done':''}"></div></div><div class="progress-labels"><span>Criada</span><span>Analisada</span><span>${isDone?'Concluída':'Pendente'}</span><span>Registrada</span></div></div>`;
+
+  // Agent Analysis
+  h += `<div class="so-section"><div class="so-section-title">🤖 Análise do Policy Agent</div><div class="agent-analysis">`;
+  h += `<div class="analysis-rec"><div class="analysis-rec-badge ${recClass}">${recLabel}</div><div><div class="analysis-confidence">${e.conf}%</div><div style="font-size:12px;color:var(--gray-500);">Confiança</div></div></div>`;
+  h += `<div class="analysis-rationale">${e.rationale}</div>`;
+  h += `<div style="font-size:13px;color:var(--gray-600);">Regra: <strong>${e.rule}</strong> · <a href="#" onclick="event.preventDefault();navigateTo('politicas')">Ver regra →</a></div>`;
+  if (e.flags.length) h += `<div style="margin-top:var(--spacing-sm);display:flex;gap:var(--spacing-xs);">${e.flags.map(f=>`<span class="flag-badge">${f}</span>`).join('')}</div>`;
+  const scopeBadge = e.scope==='geral'?'<span class="scope-badge scope-geral">Geral da empresa</span>':`<span class="scope-badge scope-time">${e.scopeName}</span>`;
+  h += `<div style="font-size:12px;color:var(--gray-500);margin-top:var(--spacing-sm);">Escopo: ${scopeBadge}</div>`;
+  h += `</div></div>`;
+
+  // Feedback
+  if (e.status==='Pendente') {
+    h += `<div class="so-section"><div class="so-section-title">Feedback</div><div class="feedback-section">`;
+    if (e.rec==='approve'||e.rec==='review') {
+      h += `<div class="feedback-actions"><button class="btn btn-success btn-sm" onclick="showToast('Despesa aprovada. Feedback positivo registrado.','success');closeSlideover()">✓ Aprovar</button><button class="btn btn-danger-fill btn-sm" onclick="document.getElementById('overridePanel').classList.add('show')">✗ Rejeitar</button></div>`;
+    } else {
+      h += `<div class="feedback-actions"><button class="btn btn-success btn-sm" onclick="document.getElementById('overridePanel').classList.add('show')">✓ Aprovar</button><button class="btn btn-danger-fill btn-sm" onclick="showToast('Despesa rejeitada. Feedback positivo registrado.','success');closeSlideover()">✗ Rejeitar</button></div>`;
+    }
+    h += `<div style="display:flex;align-items:center;gap:var(--spacing-sm);font-size:12px;color:var(--gray-500);">Análise correta? <button class="thumb-btn" onclick="showToast('Feedback registrado.','success')">👍</button><button class="thumb-btn" onclick="showToast('Obrigado pelo feedback.','info')">👎</button></div>`;
+    h += `<div class="override-panel" id="overridePanel"><div class="override-title">Motivo do override (obrigatório)</div>`;
+    h += `<div class="override-option"><input type="radio" name="override" value="1"> Conceder exceção</div>`;
+    h += `<div class="override-option"><input type="radio" name="override" value="2"> Política precisa atualizar</div>`;
+    h += `<div class="override-option"><input type="radio" name="override" value="3"> Avaliação incorreta do Agent</div>`;
+    h += `<div class="override-option"><input type="radio" name="override" value="4"> Política não se aplica</div>`;
+    h += `<textarea class="override-comment" placeholder="Comentário adicional (opcional)"></textarea>`;
+    h += `<button class="btn btn-primary btn-sm" onclick="if(!document.querySelector('input[name=override]:checked')){showToast('Selecione um motivo.','info');return;}showToast('Override registrado — o Agent usará isso para melhorar.','success');closeSlideover()">Confirmar</button>`;
+    h += `</div></div></div>`;
+  }
+
+  // Comprovantes
+  h += `<div class="so-section"><div class="so-section-title">Comprovantes</div><div style="padding:var(--spacing-lg);border:1px dashed var(--border);border-radius:var(--radius-md);text-align:center;color:var(--gray-500);font-size:13px;">📎 1 comprovante anexado</div></div>`;
+
+  // Detail grid
+  h += `<div class="so-section"><div class="so-section-title">Dados da Despesa</div><div class="detail-grid">`;
+  h += `<div><div class="detail-label">Usuário</div><div class="detail-value">${e.user}</div></div>`;
+  h += `<div><div class="detail-label">Pagamento</div><div class="detail-value">${e.type}</div></div>`;
+  h += `<div><div class="detail-label">Data</div><div class="detail-value">${e.date}</div></div>`;
+  h += `<div><div class="detail-label">Fornecedor</div><div class="detail-value">${e.vendor}</div></div>`;
+  h += `<div><div class="detail-label">CNPJ</div><div class="detail-value">${e.cnpj}</div></div>`;
+  h += `<div><div class="detail-label">CC</div><div class="detail-value">${e.cc}</div></div>`;
+  h += `<div><div class="detail-label">Time</div><div class="detail-value">${e.team}</div></div>`;
+  h += `<div><div class="detail-label">Categoria</div><div class="detail-value">${e.cat}</div></div>`;
+  h += `</div></div>`;
+
+  document.getElementById('soBody').innerHTML = h;
+  openSlideoverPanel();
+}
+
+/* ============================================
+   SHARED FUNCTIONS
+   ============================================ */
+function openSlideoverPanel() {
+  document.getElementById('slideoverOverlay').classList.add('active');
+  document.getElementById('slideover').classList.add('open');
+  trapFocus(document.getElementById('slideover'));
+}
+
+function closeSlideover() {
+  document.getElementById('slideoverOverlay').classList.remove('active');
+  document.getElementById('slideover').classList.remove('open');
+}
+
+function toggleAccordion(card) {
+  const was = card.classList.contains('expanded');
+  document.querySelectorAll('.accordion-card.expanded').forEach(c => { c.classList.remove('expanded'); c.querySelector('.accordion-header').setAttribute('aria-expanded','false'); });
+  if (!was) { card.classList.add('expanded'); card.querySelector('.accordion-header').setAttribute('aria-expanded','true'); }
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function switchModalTab(btn, panelId) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+let pendingConfirmFn = null;
+function showConfirm(title, text, fn) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmText').textContent = text;
+  pendingConfirmFn = fn;
+  openModal('confirmModal');
+}
+function confirmAction() { if (pendingConfirmFn) pendingConfirmFn(); closeModal('confirmModal'); }
+
+function checkDeleteReady() {
+  const checks = document.querySelectorAll('#deleteTeamModal .checklist-item input');
+  document.getElementById('deleteTeamBtn').disabled = !Array.from(checks).every(c => c.checked);
+}
+
+function showToast(msg, type) {
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type||'info');
+  t.setAttribute('role','alert');
+  t.innerHTML = `<span>${type==='success'?'✓':'ℹ'}</span> ${msg}`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity 0.3s'; setTimeout(()=>t.remove(),300); },4000);
+}
+
+function toggleFabDrawer() { document.getElementById('fabDrawer').classList.toggle('open'); }
+
+function toggleSidebars() {
+  document.getElementById('mainSidebar').classList.toggle('open');
+  if (!document.getElementById('settingsSidebar').classList.contains('hidden'))
+    document.getElementById('settingsSidebar').classList.toggle('open');
+  document.getElementById('sidebarBackdrop').classList.toggle('active');
+}
+
+function closeSidebars() {
+  document.getElementById('mainSidebar').classList.remove('open');
+  document.getElementById('settingsSidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('active');
+}
+
+function trapFocus(element) {
+  const focusable = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  if (!focusable.length) return;
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  element.addEventListener('keydown', function handler(e) {
+    if (e.key === 'Escape') { closeSlideover(); element.removeEventListener('keydown', handler); return; }
+    if (e.key !== 'Tab') return;
+    if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+    else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+  });
+  first.focus();
+}
+
+document.addEventListener('click', function(e) {
+  const fab = document.getElementById('fabDrawer');
+  const fabBtn = document.getElementById('fabBtn');
+  if (fab && fab.classList.contains('open') && !fab.contains(e.target) && !fabBtn.contains(e.target)) fab.classList.remove('open');
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { closeSlideover(); closeSidebars(); document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); document.getElementById('fabDrawer').classList.remove('open'); }
+});
+
+// Initialize
+navigateTo('politicas');
+</script>
+</body>
+</html>
