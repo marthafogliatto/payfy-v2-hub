@@ -281,6 +281,27 @@ a:hover { text-decoration: underline; }
 }
 @media (max-width: 768px) { .content-wrapper { padding: var(--spacing-md); padding-top: 60px; } .page-header-top { flex-direction: column; } .filters-bar { flex-direction: column; } .table-container { display: none; } .mobile-cards { display: block !important; } .detail-grid { grid-template-columns: 1fr; } }
 @media (max-width: 480px) { body { font-size: 16px; } .page-title { font-size: 24px; } }
+
+/* Audit Trail */
+.audit-block { background: var(--gray-50); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-md); border-left: 3px solid var(--info-blue); }
+.audit-block.override { border-left-color: var(--warning-yellow); }
+.audit-block.contested { border-left-color: var(--danger-red); }
+.audit-ref { font-family: 'SF Mono', Monaco, monospace; font-size: 12px; color: var(--info-blue); font-weight: 600; }
+.audit-row { display: flex; align-items: flex-start; gap: var(--spacing-sm); padding: var(--spacing-xs) 0; font-size: 13px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.audit-row:last-child { border-bottom: none; }
+.audit-label { font-size: 12px; font-weight: 600; color: var(--gray-500); min-width: 120px; flex-shrink: 0; }
+.audit-value { font-size: 13px; color: var(--gray-700); flex: 1; }
+.audit-copy-btn { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--gray-400); flex-shrink: 0; }
+.audit-copy-btn:hover { background: var(--gray-50); color: var(--gray-700); }
+.audit-data-considered { font-size: 12px; color: var(--gray-500); background: var(--white); padding: var(--spacing-sm); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-top: var(--spacing-xs); }
+.contest-form { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-top: var(--spacing-md); animation: fadeSlideIn 0.3s ease; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.contest-option { display: flex; align-items: flex-start; gap: var(--spacing-sm); font-size: 13px; color: var(--gray-700); margin-bottom: var(--spacing-sm); }
+.contest-option input[type="radio"] { margin-top: 2px; accent-color: var(--primary-orange); }
+.contest-textarea { width: 100%; min-height: 60px; padding: var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 13px; resize: vertical; }
+.contest-textarea:focus { border-color: var(--info-blue); outline: none; }
+.contested-badge { display: inline-flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; background: var(--danger-red-light); color: var(--danger-red); }
+.override-badge { display: inline-flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; background: var(--warning-yellow-light); color: #92400E; }
 </style>
 </head>
 <body>
@@ -378,18 +399,18 @@ a:hover { text-decoration: underline; }
 
 <script>
 const expenses = [
-  { vendor:'iFood', date:'18/03/2026', user:'Maria Oliveira', type:'Cartão', value:'R$ 87,50', rec:'approve', conf:98, status:'Aprovada', rationale:'Aprovação recomendada (98%) — Valor dentro do limite para categoria Alimentação (R$ 87,50 < R$ 1.000). Fornecedor com histórico positivo. Comprovante presente e válido.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'12.345.678/0001-90', cc:'Vendas', team:'Comercial', cat:'Alimentação' },
-  { vendor:'Uber', date:'17/03/2026', user:'João Mendes', type:'Cartão', value:'R$ 234,00', rec:'approve', conf:95, status:'Pendente', rationale:'Aprovação recomendada (95%) — Transporte dentro do padrão habitual do usuário. Categoria Transporte confirmada pelo MCC.', rule:'Categorização automática por MCC', flags:[], scope:'geral', cnpj:'08.744.210/0001-60', cc:'Produto', team:'Engenharia', cat:'Transporte' },
-  { vendor:'Restaurante Fasano', date:'15/03/2026', user:'André Costa', type:'Reembolso', value:'R$ 4.500,00', rec:'review', conf:62, status:'Pendente', rationale:'Revisão necessária (62%) — Valor acima do limite habitual para este usuário em categoria Alimentação. Reembolso acima de R$ 1.000 exige aprovação dupla. Comprovante sem detalhamento de itens.', rule:'Reembolso > R$ 1.000 → Aprovação dupla', flags:['VALOR ACIMA DO LIMITE'], scope:'time', scopeName:'Time Diretoria', cnpj:'33.456.789/0001-22', cc:'Administrativo', team:'Diretoria', cat:'Alimentação' },
-  { vendor:'Decolar', date:'14/03/2026', user:'Francisco Duarte', type:'Pix', value:'R$ 8.750,00', rec:'review', conf:58, status:'Pendente', rationale:'Revisão necessária (58%) — Valor elevado para viagem. Antecedência da viagem não confirmada. Requer aprovação do gestor.', rule:'Viagens > R$ 5.000 → Escalar gestor', flags:[], scope:'geral', cnpj:'10.200.300/0001-50', cc:'Marketing', team:'Marketing Digital', cat:'Viagens' },
-  { vendor:'Magazine Luiza', date:'13/03/2026', user:'Sandra Ferreira', type:'Cartão', value:'R$ 1.200,00', rec:'reject', conf:89, status:'Pendente', rationale:'Rejeição recomendada (89%) — Recibo duplicado detectado. Este comprovante já foi enviado na despesa #4521 de 10/03/2026.', rule:'Flag: Recibo duplicado → Bloquear', flags:['RECIBO DUPLICADO'], scope:'geral', cnpj:'47.960.950/0001-21', cc:'Operações', team:'Operações', cat:'Material de escritório' },
-  { vendor:'Padaria Real', date:'19/03/2026', user:'Camila Vieira', type:'Cartão', value:'R$ 32,00', rec:'auto', conf:99, status:'Auto-aprovada', rationale:'Auto-aprovado (99%) — Valor abaixo do limite de auto-aprovação (R$ 32 < R$ 2.000). Fornecedor recorrente. Sem flags ativas.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'22.333.444/0001-55', cc:'Administrativo', team:'Financeiro', cat:'Alimentação' },
-  { vendor:'99', date:'18/03/2026', user:'Ricardo Lopes', type:'Cartão', value:'R$ 45,90', rec:'approve', conf:97, status:'Pendente', rationale:'Aprovação recomendada (97%) — Transporte urbano dentro do padrão. MCC confirmado como transporte.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'16.789.000/0001-77', cc:'Operações', team:'Operações', cat:'Transporte' },
-  { vendor:'Azul', date:'16/03/2026', user:'Ana Pereira', type:'Pix', value:'R$ 2.340,00', rec:'approve', conf:91, status:'Pendente', rationale:'Aprovação recomendada (91%) — Passagem aérea nacional em classe econômica. Antecedência de 14 dias. Dentro dos padrões.', rule:'Viagens nacionais — classe econômica', flags:[], scope:'geral', cnpj:'09.296.295/0001-60', cc:'Administrativo', team:'Jurídico', cat:'Viagens' },
-  { vendor:'Posto Shell', date:'12/03/2026', user:'Marcos Miranda', type:'Reembolso', value:'R$ 890,00', rec:'review', conf:55, status:'Pendente', rationale:'Revisão necessária (55%) — CNPJ do fornecedor com situação irregular na Receita Federal. Recomenda-se verificação antes da aprovação.', rule:'Flag: CNPJ inativo → Bloquear', flags:['CNPJ INATIVO'], scope:'geral', cnpj:'55.666.777/0001-88', cc:'Internacional', team:'Comércio Exterior', cat:'Combustível' },
-  { vendor:'Uber', date:'20/03/2026', user:'João Mendes', type:'Cartão', value:'R$ 67,00', rec:'auto', conf:99, status:'Auto-aprovada', rationale:'Auto-aprovado (99%) — Transporte recorrente, valor dentro do limite.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'08.744.210/0001-60', cc:'Produto', team:'Engenharia', cat:'Transporte' },
-  { vendor:'Hotel Ibis', date:'11/03/2026', user:'Francisco Duarte', type:'Reembolso', value:'R$ 1.850,00', rec:'approve', conf:88, status:'Aprovada', rationale:'Aprovação recomendada (88%) — Hospedagem dentro do limite diário (R$ 370/noite × 5 noites). NF-e presente. Comprovante válido.', rule:'Hospedagem nacional até R$ 500/noite', flags:[], scope:'geral', cnpj:'07.100.200/0001-99', cc:'Marketing', team:'Marketing Digital', cat:'Hospedagem' },
-  { vendor:'iFood', date:'19/03/2026', user:'Sandra Ferreira', type:'Cartão', value:'R$ 156,00', rec:'reject', conf:82, status:'Pendente', rationale:'Rejeição recomendada (82%) — Gasto realizado no domingo. Sem justificativa de trabalho no fim de semana. Valor acima do padrão habitual do usuário para alimentação.', rule:'Flag: Gasto fora de horário', flags:['FIM DE SEMANA'], scope:'geral', cnpj:'12.345.678/0001-90', cc:'Operações', team:'Operações', cat:'Alimentação' }
+  { vendor:'iFood', date:'18/03/2026', user:'Maria Oliveira', type:'Cartão', value:'R$ 87,50', rec:'approve', conf:98, status:'Aprovada', rationale:'Aprovação recomendada (98%) — Valor dentro do limite para categoria Alimentação (R$ 87,50 < R$ 1.000). Fornecedor com histórico positivo. Comprovante presente e válido.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'12.345.678/0001-90', cc:'Vendas', team:'Comercial', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0342', decision: 'Aprovação automática', datetime: '18/03/2026 às 09:14:22', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 87,50 · Categoria: Alimentação · Fornecedor: iFood · CNPJ: válido · Comprovante: presente' } },
+  { vendor:'Uber', date:'17/03/2026', user:'João Mendes', type:'Cartão', value:'R$ 234,00', rec:'approve', conf:95, status:'Pendente', rationale:'Aprovação recomendada (95%) — Transporte dentro do padrão habitual do usuário. Categoria Transporte confirmada pelo MCC.', rule:'Categorização automática por MCC', flags:[], scope:'geral', cnpj:'08.744.210/0001-60', cc:'Produto', team:'Engenharia', cat:'Transporte', audit: { ref: 'AUD-2026-03-0345', decision: 'Recomendação de aprovação', datetime: '17/03/2026 às 11:02:45', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 234,00 · Categoria: Transporte · Fornecedor: Uber · CNPJ: válido · Comprovante: via app' } },
+  { vendor:'Restaurante Fasano', date:'15/03/2026', user:'André Costa', type:'Reembolso', value:'R$ 4.500,00', rec:'review', conf:62, status:'Pendente', rationale:'Revisão necessária (62%) — Valor acima do limite habitual para este usuário em categoria Alimentação. Reembolso acima de R$ 1.000 exige aprovação dupla. Comprovante sem detalhamento de itens.', rule:'Reembolso > R$ 1.000 → Aprovação dupla', flags:['VALOR ACIMA DO LIMITE'], scope:'time', scopeName:'Time Diretoria', cnpj:'33.456.789/0001-22', cc:'Administrativo', team:'Diretoria', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0298', decision: 'Escalado para revisão', datetime: '15/03/2026 às 14:55:30', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 4.500,00 · Categoria: Alimentação · Fornecedor: Fasano · CNPJ: válido · Comprovante: presente', contested: { by: 'Sandra Ferreira', date: '16/03/2026 às 10:22', reason: 'Avaliação incorreta do Agent', comment: 'Valor fora do padrão para este fornecedor. Fasano tem preço médio de R$ 350 por pessoa, e a despesa foi para 2 pessoas — está dentro do esperado.' } } },
+  { vendor:'Decolar', date:'14/03/2026', user:'Francisco Duarte', type:'Pix', value:'R$ 8.750,00', rec:'review', conf:58, status:'Pendente', rationale:'Revisão necessária (58%) — Valor elevado para viagem. Antecedência da viagem não confirmada. Requer aprovação do gestor.', rule:'Viagens > R$ 5.000 → Escalar gestor', flags:[], scope:'geral', cnpj:'10.200.300/0001-50', cc:'Marketing', team:'Marketing Digital', cat:'Viagens', audit: { ref: 'AUD-2026-03-0289', decision: 'Escalado para revisão', datetime: '14/03/2026 às 10:30:12', executor: 'Policy Agent v2.1', approvedBy: 'Carlos Santos em 14/03/2026 às 16:45', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 8.750,00 · Categoria: Viagens · Fornecedor: Decolar · CNPJ: válido · Comprovante: presente' } },
+  { vendor:'Magazine Luiza', date:'13/03/2026', user:'Sandra Ferreira', type:'Cartão', value:'R$ 1.200,00', rec:'reject', conf:89, status:'Pendente', rationale:'Rejeição recomendada (89%) — Recibo duplicado detectado. Este comprovante já foi enviado na despesa #4521 de 10/03/2026.', rule:'Flag: Recibo duplicado → Bloquear', flags:['RECIBO DUPLICADO'], scope:'geral', cnpj:'47.960.950/0001-21', cc:'Operações', team:'Operações', cat:'Material de escritório', audit: { ref: 'AUD-2026-03-0301', decision: 'Rejeição recomendada', datetime: '13/03/2026 às 08:15:44', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 1.200,00 · Categoria: Material · Fornecedor: Magazine Luiza · CNPJ: válido · Comprovante: duplicado (match #4521)' } },
+  { vendor:'Padaria Real', date:'19/03/2026', user:'Camila Vieira', type:'Cartão', value:'R$ 32,00', rec:'auto', conf:99, status:'Auto-aprovada', rationale:'Auto-aprovado (99%) — Valor abaixo do limite de auto-aprovação (R$ 32 < R$ 2.000). Fornecedor recorrente. Sem flags ativas.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'22.333.444/0001-55', cc:'Administrativo', team:'Financeiro', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0350', decision: 'Aprovação automática', datetime: '19/03/2026 às 07:45:10', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 32,00 · Categoria: Alimentação · Fornecedor: Padaria Real · CNPJ: válido · Comprovante: não exigido (< R$ 50)' } },
+  { vendor:'99', date:'18/03/2026', user:'Ricardo Lopes', type:'Cartão', value:'R$ 45,90', rec:'approve', conf:97, status:'Pendente', rationale:'Aprovação recomendada (97%) — Transporte urbano dentro do padrão. MCC confirmado como transporte.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'16.789.000/0001-77', cc:'Operações', team:'Operações', cat:'Transporte', audit: { ref: 'AUD-2026-03-0352', decision: 'Recomendação de aprovação', datetime: '18/03/2026 às 08:30:15', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 45,90 · Categoria: Transporte · Fornecedor: 99 · CNPJ: válido · Comprovante: via app' } },
+  { vendor:'Azul', date:'16/03/2026', user:'Ana Pereira', type:'Pix', value:'R$ 2.340,00', rec:'approve', conf:91, status:'Pendente', rationale:'Aprovação recomendada (91%) — Passagem aérea nacional em classe econômica. Antecedência de 14 dias. Dentro dos padrões.', rule:'Viagens nacionais — classe econômica', flags:[], scope:'geral', cnpj:'09.296.295/0001-60', cc:'Administrativo', team:'Jurídico', cat:'Viagens', audit: { ref: 'AUD-2026-03-0354', decision: 'Recomendação de aprovação', datetime: '16/03/2026 às 09:12:33', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 2.340,00 · Categoria: Viagens · Fornecedor: Azul · CNPJ: válido · Comprovante: presente' } },
+  { vendor:'Posto Shell', date:'12/03/2026', user:'Marcos Miranda', type:'Reembolso', value:'R$ 890,00', rec:'review', conf:55, status:'Pendente', rationale:'Revisão necessária (55%) — CNPJ do fornecedor com situação irregular na Receita Federal. Recomenda-se verificação antes da aprovação.', rule:'Flag: CNPJ inativo → Bloquear', flags:['CNPJ INATIVO'], scope:'geral', cnpj:'55.666.777/0001-88', cc:'Internacional', team:'Comércio Exterior', cat:'Combustível', audit: { ref: 'AUD-2026-03-0356', decision: 'Escalado para revisão', datetime: '12/03/2026 às 14:20:05', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 890,00 · Categoria: Combustível · Fornecedor: Posto Shell · CNPJ: inativo · Comprovante: presente' } },
+  { vendor:'Uber', date:'20/03/2026', user:'João Mendes', type:'Cartão', value:'R$ 67,00', rec:'auto', conf:99, status:'Auto-aprovada', rationale:'Auto-aprovado (99%) — Transporte recorrente, valor dentro do limite.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'08.744.210/0001-60', cc:'Produto', team:'Engenharia', cat:'Transporte', audit: { ref: 'AUD-2026-03-0357', decision: 'Aprovação automática', datetime: '20/03/2026 às 07:55:18', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 67,00 · Categoria: Transporte · Fornecedor: Uber · CNPJ: válido · Comprovante: via app' } },
+  { vendor:'Hotel Ibis', date:'11/03/2026', user:'Francisco Duarte', type:'Reembolso', value:'R$ 1.850,00', rec:'approve', conf:88, status:'Aprovada', rationale:'Aprovação recomendada (88%) — Hospedagem dentro do limite diário (R$ 370/noite × 5 noites). NF-e presente. Comprovante válido.', rule:'Hospedagem nacional até R$ 500/noite', flags:[], scope:'geral', cnpj:'07.100.200/0001-99', cc:'Marketing', team:'Marketing Digital', cat:'Hospedagem', audit: { ref: 'AUD-2026-03-0358', decision: 'Recomendação de aprovação', datetime: '11/03/2026 às 10:45:50', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 1.850,00 · Categoria: Hospedagem · Fornecedor: Hotel Ibis · CNPJ: válido · Comprovante: NF-e presente' } },
+  { vendor:'iFood', date:'19/03/2026', user:'Sandra Ferreira', type:'Cartão', value:'R$ 156,00', rec:'reject', conf:82, status:'Pendente', rationale:'Rejeição recomendada (82%) — Gasto realizado no domingo. Sem justificativa de trabalho no fim de semana. Valor acima do padrão habitual do usuário para alimentação.', rule:'Flag: Gasto fora de horário', flags:['FIM DE SEMANA'], scope:'geral', cnpj:'12.345.678/0001-90', cc:'Operações', team:'Operações', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0360', decision: 'Rejeição recomendada', datetime: '19/03/2026 às 11:05:33', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 156,00 · Categoria: Alimentação · Fornecedor: iFood · CNPJ: válido · Comprovante: presente · Flag: fim de semana' } }
 ];
 
 function openSlideover(idx) {
@@ -425,6 +446,60 @@ function openSlideover(idx) {
   const scopeBadge = e.scope === 'geral' ? '<span class="scope-badge scope-geral">Geral da empresa</span>' : '<span class="scope-badge scope-time">' + e.scopeName + '</span>';
   h += '<div class="analysis-scope" style="margin-top:var(--spacing-sm);">Escopo: ' + scopeBadge + '</div>';
   h += '</div></div>';
+
+  // Audit Trail
+  const a = e.audit;
+  if (a) {
+    h += '<div class="so-section"><div class="so-section-title">📋 Registro de Decisão</div>';
+    h += '<div class="audit-block">';
+    h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-sm);">';
+    h += '<span class="audit-ref">' + a.ref + '</span>';
+    h += '<button class="audit-copy-btn" onclick="copyAudit(\'' + idx + '\')" aria-label="Copiar registro">📋</button>';
+    h += '</div>';
+    h += '<div class="audit-row"><span class="audit-label">Decisão</span><span class="audit-value">' + a.decision + '</span></div>';
+    h += '<div class="audit-row"><span class="audit-label">Data/hora</span><span class="audit-value">' + a.datetime + '</span></div>';
+    h += '<div class="audit-row"><span class="audit-label">Executado por</span><span class="audit-value">' + a.executor + '</span></div>';
+    if (a.approvedBy) {
+      h += '<div class="audit-row"><span class="audit-label">Aprovado por</span><span class="audit-value">' + a.approvedBy + '</span></div>';
+    }
+    h += '<div class="audit-row"><span class="audit-label">Política aplicada</span><span class="audit-value">' + e.rule + ' <a href="index-v6-politicas.html" style="font-size:12px;">→ ver regra</a></span></div>';
+    h += '<div class="audit-row"><span class="audit-label">Versão</span><span class="audit-value">' + a.policyVersion + '</span></div>';
+    h += '<div class="audit-row"><span class="audit-label">Escopo</span><span class="audit-value">' + (e.scope === 'geral' ? '<span class="scope-badge scope-geral">Política Geral</span>' : '<span class="scope-badge scope-time">' + e.scopeName + '</span>') + '</span></div>';
+    h += '<div style="margin-top:var(--spacing-sm);"><span class="audit-label" style="display:block;margin-bottom:var(--spacing-xs);">Dados considerados</span><div class="audit-data-considered">' + a.dataConsidered + '</div></div>';
+    h += '</div>';
+
+    // Override block
+    if (e.audit.override) {
+      const ov = e.audit.override;
+      h += '<div class="audit-block override" style="margin-top:var(--spacing-sm);">';
+      h += '<div style="display:flex;align-items:center;gap:var(--spacing-sm);margin-bottom:var(--spacing-sm);"><span class="override-badge">🔄 Override</span></div>';
+      h += '<div class="audit-row"><span class="audit-label">Override por</span><span class="audit-value">' + ov.by + ' em ' + ov.date + '</span></div>';
+      h += '<div class="audit-row"><span class="audit-label">Motivo</span><span class="audit-value">' + ov.reason + '</span></div>';
+      if (ov.comment) h += '<div class="audit-row"><span class="audit-label">Comentário</span><span class="audit-value">' + ov.comment + '</span></div>';
+      h += '<div class="audit-row"><span class="audit-label">Decisão original</span><span class="audit-value">' + ov.originalDecision + '</span></div>';
+      h += '<div style="font-size:12px;color:var(--info-blue);margin-top:var(--spacing-sm);">🔄 Feedback registrado — Agent aprenderá com este caso</div>';
+      h += '</div>';
+    }
+
+    // Contested block
+    if (e.audit.contested) {
+      const ct = e.audit.contested;
+      h += '<div class="audit-block contested" style="margin-top:var(--spacing-sm);">';
+      h += '<div style="display:flex;align-items:center;gap:var(--spacing-sm);margin-bottom:var(--spacing-sm);"><span class="contested-badge">⚠️ Contestada</span></div>';
+      h += '<div class="audit-row"><span class="audit-label">Contestada por</span><span class="audit-value">' + ct.by + ' em ' + ct.date + '</span></div>';
+      h += '<div class="audit-row"><span class="audit-label">Motivo</span><span class="audit-value">' + ct.reason + '</span></div>';
+      if (ct.comment) h += '<div class="audit-row"><span class="audit-label">Comentário</span><span class="audit-value">' + ct.comment + '</span></div>';
+      h += '</div>';
+    }
+
+    // Contest button (for auto-approved or already-decided expenses)
+    if (e.status !== 'Pendente') {
+      h += '<button class="btn btn-secondary btn-sm" style="margin-top:var(--spacing-sm);" onclick="showContestForm(\'' + idx + '\')" id="contestBtn-' + idx + '">Contestar decisão</button>';
+      h += '<div id="contestForm-' + idx + '" style="display:none;"></div>';
+    }
+
+    h += '</div>';
+  }
 
   // Feedback section
   if (e.status === 'Pendente') {
@@ -530,6 +605,41 @@ function trapFocus(element) {
 }
 
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeSlideover(); closeSidebar(); } });
+
+function copyAudit(idx) {
+  const e = expenses[idx];
+  const a = e.audit;
+  const text = 'Ref: ' + a.ref + '\nDecisão: ' + a.decision + '\nData: ' + a.datetime + '\nExecutado por: ' + a.executor + '\nPolítica: ' + e.rule + '\nVersão: ' + a.policyVersion + '\nDados: ' + a.dataConsidered;
+  navigator.clipboard.writeText(text).then(() => showToast('Registro copiado para área de transferência.', 'success'));
+}
+
+function showContestForm(idx) {
+  const form = document.getElementById('contestForm-' + idx);
+  const btn = document.getElementById('contestBtn-' + idx);
+  if (form.style.display !== 'none') { form.style.display = 'none'; return; }
+  btn.style.display = 'none';
+  form.style.display = '';
+  form.innerHTML = '<div class="contest-form">' +
+    '<div style="font-size:14px;font-weight:600;color:var(--gray-800);margin-bottom:var(--spacing-sm);">Você discorda desta decisão automática?</div>' +
+    '<div class="contest-option"><input type="radio" name="contest-' + idx + '" value="Conceder exceção"> Conceder exceção</div>' +
+    '<div class="contest-option"><input type="radio" name="contest-' + idx + '" value="Política desatualizada"> Política precisa atualizar</div>' +
+    '<div class="contest-option"><input type="radio" name="contest-' + idx + '" value="Avaliação incorreta do Agent"> Avaliação incorreta do Agent</div>' +
+    '<div class="contest-option"><input type="radio" name="contest-' + idx + '" value="Política não se aplica"> Política não se aplica</div>' +
+    '<textarea class="contest-textarea" placeholder="Explique o que está errado"></textarea>' +
+    '<div style="display:flex;gap:var(--spacing-sm);margin-top:var(--spacing-sm);">' +
+    '<button class="btn btn-primary btn-sm" onclick="submitContest(\'' + idx + '\')">Registrar contestação</button>' +
+    '<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'contestForm-' + idx + '\').style.display=\'none\';document.getElementById(\'contestBtn-' + idx + '\').style.display=\'\';">Cancelar</button>' +
+    '</div></div>';
+}
+
+function submitContest(idx) {
+  const selected = document.querySelector('input[name="contest-' + idx + '"]:checked');
+  if (!selected) { showToast('Selecione um motivo.', 'info'); return; }
+  const ref = expenses[idx].audit.ref;
+  showToast('Contestação registrada (ref: ' + ref + '). O time de compliance será notificado.', 'success');
+  document.getElementById('contestForm-' + idx).style.display = 'none';
+  document.getElementById('contestBtn-' + idx).style.display = 'none';
+}
 </script>
 </body>
 </html>

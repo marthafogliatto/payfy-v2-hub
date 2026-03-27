@@ -697,6 +697,10 @@ a:hover { text-decoration: underline; }
 }
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* Audit metadata */
+.audit-meta { font-size: 11px; color: var(--gray-400); margin-top: var(--spacing-xs); padding-top: var(--spacing-xs); border-top: 1px solid rgba(0,0,0,0.05); }
+.audit-meta-ref { font-family: 'SF Mono', Monaco, monospace; color: var(--info-blue); font-weight: 500; }
 </style>
 </head>
 <body>
@@ -910,8 +914,8 @@ const ccData = {
     teams: [{name:'Marketing Digital',members:8},{name:'Branding',members:3}],
     erp: {name:'SAP',desc:'SAP Business One',code:'CC-002',status:'Ativo'},
     exceptions: [
-      {flow:'Solicitações',detail:'Limite auto-aprovação: R$ 5.000 (geral: R$ 2.000)',id:'mkt-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 5.000'}],actions:['Aprovar automaticamente']},
-      {flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente']}
+      {flow:'Solicitações',detail:'Limite auto-aprovação: R$ 5.000 (geral: R$ 2.000)',id:'mkt-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 5.000'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0005',created:'12/03/2026',by:'Francisco D.'}},
+      {flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0006',created:'12/03/2026',by:'Francisco D.'}}
     ]
   },
   produto: { name: 'Produto', responsible: 'João Mendes', approvers: ['João Mendes'],
@@ -933,7 +937,7 @@ const ccData = {
     teams: [{name:'Comércio Exterior',members:7}],
     erp: {name:'SAP',desc:'SAP Business One',code:'CC-006',status:'Ativo'},
     exceptions: [
-      {flow:'Solicitações',detail:'Limite auto-aprovação: R$ 10.000 (geral: R$ 2.000)',id:'int-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 10.000'}],actions:['Aprovar automaticamente']}
+      {flow:'Solicitações',detail:'Limite auto-aprovação: R$ 10.000 (geral: R$ 2.000)',id:'int-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 10.000'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0012',created:'18/03/2026',by:'André A.'}}
     ]
   }
 };
@@ -1000,6 +1004,7 @@ function openSlideover(ccKey) {
       html += '<div class="exception-block" id="exc-' + ex.id + '">';
       html += '<div class="exception-header"><div class="exception-flow"><span>' + ex.flow + '</span><span class="exception-badge">Exceção CC</span></div></div>';
       html += '<div class="exception-detail">' + ex.detail + '</div>';
+      if (ex.audit) html += '<div class="audit-meta">Criada em ' + ex.audit.created + ' por ' + ex.audit.by + ' · <span class="audit-meta-ref">' + ex.audit.ref + '</span></div>';
       html += '<div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showEditExceptionForm(\'' + ccKey + '\',\'' + ex.id + '\')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="showRemoveConfirm(\'' + ccKey + '\',\'' + ex.id + '\')">Remover exceção</button></div>';
       html += '</div>';
     });
@@ -1216,6 +1221,7 @@ function saveException(ccKey, flow, isEdit) {
       existing.conditions = condCopy;
       existing.actions = actCopy;
       existing.detail = detail;
+      existing.audit = {ref: existing.audit?.ref || 'EXC-2026-03-' + String(Date.now()).slice(-4), created: '26/03/2026', by: 'Você (editado)'};
     }
     showToast('Exceção do CC "' + cc.name + '" atualizada com sucesso.', 'success');
   } else {
@@ -1226,7 +1232,8 @@ function saveException(ccKey, flow, isEdit) {
       detail: detail,
       id: newId,
       conditions: condCopy,
-      actions: actCopy
+      actions: actCopy,
+      audit: {ref: 'EXC-2026-03-' + String(Date.now()).slice(-4), created: '26/03/2026', by: 'Você'}
     });
     showToast('Exceção criada para CC "' + cc.name + '" no fluxo "' + flow + '".', 'success');
   }

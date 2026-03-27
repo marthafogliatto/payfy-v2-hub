@@ -299,6 +299,10 @@ a:hover { text-decoration: underline; }
 /* Inline form transition */
 .inline-form { animation: fadeSlideIn 0.3s ease; }
 @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Audit metadata */
+.audit-meta { font-size: 11px; color: var(--gray-400); margin-top: var(--spacing-xs); padding-top: var(--spacing-xs); border-top: 1px solid rgba(0,0,0,0.05); }
+.audit-meta-ref { font-family: 'SF Mono', Monaco, monospace; color: var(--info-blue); font-weight: 500; }
 </style>
 </head>
 <body>
@@ -491,13 +495,13 @@ const teamsData = {
   comercial: { name: 'Comercial', cc: 'Vendas', responsible: 'Maria Oliveira', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
     approvals: [{level:1,name:'Maria Oliveira',min:'R$ 0',color:'#F97316'},{level:2,name:'Carlos Santos',min:'R$ 2.000',color:'#EA580C'},{level:3,name:'André Costa',min:'R$ 10.000',color:'#C2410C'}],
     members: [{name:'Ana Silva',email:'ana.silva@payfy.com'},{name:'Bruno Costa',email:'bruno.costa@payfy.com'},{name:'Carla Dias',email:'carla.dias@payfy.com'},{name:'Daniel Lima',email:'daniel.lima@payfy.com'}],
-    exceptions: [{flow:'Reembolsos',detail:'Sem limite de reembolso viagem (geral: R$ 3.000)',id:'com-reemb',conditions:[{field:'Categoria',op:'igual a',value:'Viagem'}],actions:['Aprovar automaticamente']}],
+    exceptions: [{flow:'Reembolsos',detail:'Sem limite de reembolso viagem (geral: R$ 3.000)',id:'com-reemb',conditions:[{field:'Categoria',op:'igual a',value:'Viagem'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0011',created:'17/03/2026',by:'Sandra F.'}}],
     ruleSource: 'geral', vacation: []
   },
   mkt_digital: { name: 'Marketing Digital', cc: 'Marketing', responsible: 'Francisco Duarte', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
     approvals: [{level:1,name:'Francisco Duarte',min:'R$ 0',color:'#F97316'},{level:2,name:'Ana Paula',min:'R$ 3.000',color:'#EA580C'}],
     members: [{name:'Fernanda Rocha',email:'fernanda.r@payfy.com'},{name:'Gabriel Santos',email:'gabriel.s@payfy.com'},{name:'Helena Vieira',email:'helena.v@payfy.com'}],
-    exceptions: [{flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente']}],
+    exceptions: [{flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0010',created:'16/03/2026',by:'Francisco D.'}}],
     ruleSource: 'cc', ccName: 'Marketing', vacation: []
   },
   engenharia: { name: 'Engenharia', cc: 'Produto', responsible: 'João Mendes', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
@@ -529,11 +533,11 @@ const teamsData = {
     approvals: [{level:1,name:'André Costa (CEO)',min:'R$ 0',color:'#F97316'},{level:2,name:'Camila Vieira (CFO)',min:'R$ 5.000',color:'#EA580C'},{level:3,name:'Conselho',min:'R$ 50.000',color:'#C2410C'}],
     members: [{name:'André Costa',email:'andre.c@payfy.com'},{name:'Carlos Mendes',email:'carlos.m@payfy.com'},{name:'Camila Vieira',email:'camila.v@payfy.com'},{name:'Marcos Miranda',email:'marcos.m@payfy.com'}],
     exceptions: [
-      {flow:'Solicitações',detail:'CFO aprova acima de R$ 5.000 (geral: gestor aprova acima de R$ 500)',id:'dir-sol',conditions:[{field:'Valor',op:'maior que',value:'R$ 5.000'}],actions:['Escalar para Camila Vieira (CFO)']},
-      {flow:'Reembolsos',detail:'Sem limite mensal (geral: R$ 3.000)',id:'dir-reemb',conditions:[{field:'Valor',op:'maior que',value:'R$ 0'}],actions:['Aprovar automaticamente']}
+      {flow:'Solicitações',detail:'CFO aprova acima de R$ 5.000 (geral: gestor aprova acima de R$ 500)',id:'dir-sol',conditions:[{field:'Valor',op:'maior que',value:'R$ 5.000'}],actions:['Escalar para Camila Vieira (CFO)'],audit:{ref:'EXC-2026-03-0008',created:'15/03/2026',by:'Martha P.'}},
+      {flow:'Reembolsos',detail:'Sem limite mensal (geral: R$ 3.000)',id:'dir-reemb',conditions:[{field:'Valor',op:'maior que',value:'R$ 0'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0009',created:'15/03/2026',by:'Martha P.'}}
     ],
     ruleSource: 'geral',
-    vacation: [{person:'André Costa',start:'01/04/2026',end:'15/04/2026',sameSubstitute:true,substitute:'Camila Vieira',responsibilities:['Aprovar despesas (Nível 1)','Aprovar reembolsos','Aprovar solicitações de cartão']}]
+    vacation: [{person:'André Costa',start:'01/04/2026',end:'15/04/2026',sameSubstitute:true,substitute:'Camila Vieira',responsibilities:['Aprovar despesas (Nível 1)','Aprovar reembolsos','Aprovar solicitações de cartão'],audit:{ref:'COB-2026-03-0003',created:'25/03/2026',by:'Sandra F.'}}]
   }
 };
 
@@ -605,6 +609,7 @@ function openSlideover(teamKey) {
     t.exceptions.forEach(function(ex) {
       h += '<div class="exception-block" id="exc-' + ex.id + '"><div class="exception-header"><div class="exception-flow"><span>' + ex.flow + '</span><span class="exception-badge">Exceção Time</span></div></div>';
       h += '<div class="exception-detail">' + ex.detail + '</div>';
+      if (ex.audit) h += '<div class="audit-meta">Criada em ' + ex.audit.created + ' por ' + ex.audit.by + ' · <span class="audit-meta-ref">' + ex.audit.ref + '</span></div>';
       h += '<div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showEditExceptionForm(\'' + teamKey + '\',\'' + ex.id + '\')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="showRemoveConfirm(\'' + teamKey + '\',\'' + ex.id + '\')">Remover exceção</button></div></div>';
     });
     h += '<div class="explanatory-text">Exceções deste time substituem inteiramente a regra do CC/empresa para o fluxo correspondente.</div>';
@@ -624,6 +629,7 @@ function openSlideover(teamKey) {
           h += '<div class="vacation-delegation"><span>' + resp + '</span><span class="vacation-delegation-arrow">→</span><span><strong>' + v.substitute + '</strong></span></div>';
         });
       }
+      if (v.audit) h += '<div class="audit-meta">Configurada em ' + v.audit.created + ' por ' + v.audit.by + ' · <span class="audit-meta-ref">' + v.audit.ref + '</span></div>';
       h += '<div style="display:flex;gap:var(--spacing-sm);margin-top:var(--spacing-sm);">';
       h += '<button class="btn btn-secondary btn-sm" onclick="showVacationForm(\'' + teamKey + '\')">Editar</button>';
       h += '<button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="endVacation(\'' + teamKey + '\',' + idx + ')">Encerrar cobertura</button>';
@@ -900,11 +906,11 @@ function saveException(teamKey, flow, isEdit) {
 
   if (isEdit) {
     var exc = t.exceptions.find(function(e) { return e.flow === flow; });
-    if (exc) { exc.conditions = conditions; exc.actions = actions; exc.detail = summary; }
+    if (exc) { exc.conditions = conditions; exc.actions = actions; exc.detail = summary; exc.audit = {ref: exc.audit?.ref || 'EXC-2026-03-' + String(Date.now()).slice(-4), created: '26/03/2026', by: 'Você (editado)'}; }
     showToast('Exceção atualizada.', 'success');
   } else {
     var newId = teamKey + '-' + flow.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
-    t.exceptions.push({ flow: flow, detail: summary, id: newId, conditions: conditions, actions: actions });
+    t.exceptions.push({ flow: flow, detail: summary, id: newId, conditions: conditions, actions: actions, audit: {ref: 'EXC-2026-03-' + String(Date.now()).slice(-4), created: '26/03/2026', by: 'Você'} });
     showToast('Exceção criada para ' + flow + ' no Time ' + t.name + '.', 'success');
   }
 
@@ -1033,7 +1039,7 @@ function saveVacation(teamKey) {
   var checks = document.querySelectorAll('.vacRespCheck:checked');
   var resps = Array.from(checks).map(function(c) { return c.dataset.resp; });
 
-  t.vacation.push({ person: person, start: start, end: end, sameSubstitute: same, substitute: subst, responsibilities: resps });
+  t.vacation.push({ person: person, start: start, end: end, sameSubstitute: same, substitute: subst, responsibilities: resps, audit: {ref: 'COB-2026-03-' + String(Date.now()).slice(-4), created: '26/03/2026', by: 'Você'} });
   showToast('Cobertura de férias configurada para ' + person + '. ' + resps.length + ' responsabilidade(s) delegada(s).', 'success');
   openSlideover(teamKey);
 }

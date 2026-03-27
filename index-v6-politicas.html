@@ -1746,6 +1746,17 @@ a:hover { text-decoration: underline; }
   white-space: nowrap;
   border: 0;
 }
+
+/* Audit metadata */
+.audit-meta { font-size: 11px; color: var(--gray-400); margin-top: var(--spacing-xs); display: flex; align-items: center; gap: var(--spacing-sm); }
+.audit-meta-ref { font-family: 'SF Mono', Monaco, monospace; color: var(--info-blue); font-weight: 500; }
+.audit-meta-link { color: var(--gray-400); cursor: pointer; }
+.audit-meta-link:hover { color: var(--info-blue); text-decoration: underline; }
+.audit-detail { display: none; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--spacing-sm) var(--spacing-md); margin-top: var(--spacing-xs); font-size: 12px; color: var(--gray-600); animation: fadeSlideIn 0.3s ease; }
+.audit-detail.show { display: block; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.timeline-ref { font-family: 'SF Mono', Monaco, monospace; font-size: 11px; color: var(--info-blue); font-weight: 500; margin-left: var(--spacing-sm); }
+.timeline-impact { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); }
 </style>
 </head>
 <body>
@@ -1988,6 +1999,8 @@ a:hover { text-decoration: underline; }
                 <div class="rule-item">🤖 Valor ≤ R$ 2.000 → Auto-aprovação (recomendação)</div>
                 <div class="rule-item">🤖 Valor &gt; R$ 2.000 → Escalar para gestor direto</div>
               </div>
+              <div class="audit-meta">Última edição: 20/03/2026 por André A. · <span class="audit-meta-ref">POL-2026-03-0015</span> <button class="audit-meta-link" onclick="this.nextElementSibling.classList.toggle('show')">[ver histórico]</button></div>
+              <div class="audit-detail">15/03/2026 — Limite alterado de R$ 1.500 para R$ 2.000 por André A.<br>01/03/2026 — Regra criada por Matheus R.</div>
               <div class="rule-group rule-group-flag">
                 <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
                 <div class="rule-item">🚩 Valor divergente do histórico (&gt;2x média) → Escalar para admin</div>
@@ -2048,6 +2061,7 @@ a:hover { text-decoration: underline; }
                 <div class="rule-item">🤖 Comprovante obrigatório acima de R$ 50</div>
                 <div class="rule-item">🤖 Categorização automática por MCC (Merchant Category Code)</div>
               </div>
+              <div class="audit-meta">Última edição: 20/03/2026 por André A. · <span class="audit-meta-ref">POL-2026-03-0016</span></div>
               <div class="rule-group rule-group-flag">
                 <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
                 <div class="rule-item">🚩 Gasto fora do horário comercial → Alertar gestor</div>
@@ -2103,6 +2117,7 @@ a:hover { text-decoration: underline; }
                 <div class="rule-item">🤖 Limite mensal por colaborador: R$ 3.000</div>
                 <div class="rule-item">🤖 Prazo de submissão: 30 dias após gasto</div>
               </div>
+              <div class="audit-meta">Última edição: 28/02/2026 por Martha P. · <span class="audit-meta-ref">POL-2026-02-0008</span></div>
               <div class="rule-group rule-group-flag">
                 <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
                 <div class="rule-item">🚩 Comprovante AI-generated detectado → Escalar para admin</div>
@@ -2157,6 +2172,7 @@ a:hover { text-decoration: underline; }
                 <div class="rule-item">🤖 Hospedagem: até R$ 500/noite (nacionais), R$ 1.200/noite (internacionais)</div>
                 <div class="rule-item">🤖 Antecedência mínima de 7 dias para aprovação</div>
               </div>
+              <div class="audit-meta">Última edição: 10/03/2026 por André A. · <span class="audit-meta-ref">POL-2026-03-0010</span></div>
               <div class="rule-group rule-group-flag">
                 <div class="rule-group-header"><span class="rule-group-badge badge-flag">FLAG · Override automático</span></div>
                 <div class="rule-item">🚩 Viagem sem aprovação prévia → Bloquear reembolso</div>
@@ -2203,6 +2219,7 @@ a:hover { text-decoration: underline; }
                   <th>Trigger</th>
                   <th>Ação</th>
                   <th>Status</th>
+                  <th>Auditoria</th>
                 </tr>
               </thead>
               <tbody>
@@ -2214,6 +2231,7 @@ a:hover { text-decoration: underline; }
                   <td>Valor ≤ R$ 2.000</td>
                   <td>Auto-aprovar</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0015</span></td>
                 </tr>
                 <tr onclick="openSlideover('solicitacoes')">
                   <td><strong>Solicitações</strong></td>
@@ -2223,6 +2241,7 @@ a:hover { text-decoration: underline; }
                   <td>Valor &gt; R$ 2.000</td>
                   <td>Escalar gestor</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0015</span></td>
                 </tr>
                 <tr onclick="openSlideover('solicitacoes')">
                   <td><strong>Solicitações</strong></td>
@@ -2232,6 +2251,7 @@ a:hover { text-decoration: underline; }
                   <td>Sempre</td>
                   <td>Preencher campos</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0015</span></td>
                 </tr>
                 <tr onclick="openSlideover('solicitacoes')">
                   <td><strong>Solicitações</strong></td>
@@ -2241,6 +2261,7 @@ a:hover { text-decoration: underline; }
                   <td>&gt;2x média</td>
                   <td>Escalar admin</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0017</span></td>
                 </tr>
                 <tr onclick="openSlideover('solicitacoes')">
                   <td><strong>Solicitações</strong></td>
@@ -2250,6 +2271,7 @@ a:hover { text-decoration: underline; }
                   <td>1ª compra</td>
                   <td>Alertar gestor</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0017</span></td>
                 </tr>
                 <tr onclick="openSlideover('solicitacoes')">
                   <td><strong>Solicitações</strong></td>
@@ -2259,6 +2281,7 @@ a:hover { text-decoration: underline; }
                   <td>Cargo = Diretor</td>
                   <td>Auto-aprovar</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0018</span></td>
                 </tr>
                 <tr onclick="openSlideover('cartao')">
                   <td><strong>Despesas Cartão</strong></td>
@@ -2268,6 +2291,7 @@ a:hover { text-decoration: underline; }
                   <td>Valor &gt; R$ 50</td>
                   <td>Exigir comprovante</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0016</span></td>
                 </tr>
                 <tr onclick="openSlideover('cartao')">
                   <td><strong>Despesas Cartão</strong></td>
@@ -2277,6 +2301,7 @@ a:hover { text-decoration: underline; }
                   <td>Sempre</td>
                   <td>Categorizar</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0016</span></td>
                 </tr>
                 <tr onclick="openSlideover('cartao')">
                   <td><strong>Despesas Cartão</strong></td>
@@ -2286,6 +2311,7 @@ a:hover { text-decoration: underline; }
                   <td>Fora horário</td>
                   <td>Alertar gestor</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0019</span></td>
                 </tr>
                 <tr onclick="openSlideover('cartao')">
                   <td><strong>Despesas Cartão</strong></td>
@@ -2295,6 +2321,7 @@ a:hover { text-decoration: underline; }
                   <td>Duplicata</td>
                   <td>Bloquear</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-03-0019</span></td>
                 </tr>
                 <tr onclick="openSlideover('cartao')">
                   <td><strong>Despesas Cartão</strong></td>
@@ -2304,6 +2331,7 @@ a:hover { text-decoration: underline; }
                   <td>Valor &gt; R$ 200</td>
                   <td>Exigir NF-e</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">POL-2026-02-0008</span></td>
                 </tr>
                 <tr>
                   <td><strong>Solicitações</strong></td>
@@ -2313,6 +2341,7 @@ a:hover { text-decoration: underline; }
                   <td>Valor ≤ R$ 10.000</td>
                   <td>Auto-aprovar</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">EXC-2026-03-0012</span></td>
                 </tr>
                 <tr>
                   <td><strong>Solicitações</strong></td>
@@ -2322,10 +2351,11 @@ a:hover { text-decoration: underline; }
                   <td>Valor &gt; R$ 5.000</td>
                   <td>Escalar CFO</td>
                   <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><span class="audit-meta-ref">EXC-2026-03-0008</span></td>
                 </tr>
               </tbody>
             </table>
-            <div class="table-footer">22 regras totais · 8 Agent · 10 Flags · 4 Confidencial · 3 exceções de time</div>
+            <div class="table-footer">22 regras totais · 8 Agent · 10 Flags · 4 Confidencial · 3 exceções · Último audit: POL-2026-03-0019</div>
           </div>
 
           <!-- Mobile cards -->
@@ -2672,13 +2702,14 @@ a:hover { text-decoration: underline; }
             <div class="timeline-card">
               <div class="timeline-header">
                 <div>
-                  <span class="timeline-version">v3</span>
+                  <span class="timeline-version">v3</span><span class="timeline-ref">POL-2026-03-0015</span>
                   <span class="status-badge status-active" style="margin-left:var(--spacing-sm);">Ativa</span>
                 </div>
                 <span class="timeline-date">20/03/2026 · 14:32</span>
               </div>
               <div class="timeline-author">Por Carlos M. (CPO)</div>
               <div class="timeline-desc">Adicionadas flags Brasil (NF-e, CNPJ) e regras de VR/VA per diem CLT. Ajuste nos limites de auto-aprovação.</div>
+              <div class="timeline-impact">Impacto: 8 times · 6 centros de custo afetados</div>
               <div class="diff-block">
                 <div class="diff-added">+ NF-e obrigatória acima de R$ 200</div>
                 <div class="diff-added">+ Validação CNPJ ativo na Receita Federal</div>
@@ -2695,11 +2726,12 @@ a:hover { text-decoration: underline; }
             <div class="timeline-dot"></div>
             <div class="timeline-card">
               <div class="timeline-header">
-                <span class="timeline-version">v2</span>
+                <span class="timeline-version">v2</span><span class="timeline-ref">POL-2026-03-0010</span>
                 <span class="timeline-date">10/03/2026 · 09:15</span>
               </div>
               <div class="timeline-author">Por André C. (CEO)</div>
               <div class="timeline-desc">Configuração do Policy Agent em modo Recomendação. Adicionadas regras de viagem e exceções para Diretoria.</div>
+              <div class="timeline-impact">Impacto: 5 times · 4 centros de custo afetados</div>
               <div class="diff-block">
                 <div class="diff-added">+ Policy Agent: modo Recomendação ativado</div>
                 <div class="diff-added">+ Regras de viagem: classe econômica obrigatória</div>
@@ -2716,7 +2748,7 @@ a:hover { text-decoration: underline; }
             <div class="timeline-dot"></div>
             <div class="timeline-card">
               <div class="timeline-header">
-                <span class="timeline-version">v1</span>
+                <span class="timeline-version">v1</span><span class="timeline-ref">POL-2026-03-0001</span>
                 <span class="timeline-date">01/03/2026 · 16:45</span>
               </div>
               <div class="timeline-author">Por Matheus R. (Tech Lead)</div>
