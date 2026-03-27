@@ -162,6 +162,8 @@ a:hover { text-decoration: underline; }
 .page-header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-md); margin-bottom: var(--spacing-sm); }
 .page-title { font-size: 28px; font-weight: 700; color: var(--gray-900); line-height: 1.2; }
 
+.page-subtitle { font-size: 14px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+
 /* Buttons */
 .btn {
   display: inline-flex;
@@ -441,6 +443,12 @@ a:hover { text-decoration: underline; }
 }
 
 /* Team cards */
+.teams-container { display: flex; flex-direction: column; gap: var(--spacing-xs); }
+.teams-container.scrollable { max-height: 240px; overflow-y: auto; padding-right: var(--spacing-xs); }
+.teams-container.scrollable::-webkit-scrollbar { width: 4px; }
+.teams-container.scrollable::-webkit-scrollbar-track { background: var(--gray-100); border-radius: 2px; }
+.teams-container.scrollable::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+
 .team-card {
   display: flex;
   align-items: center;
@@ -449,11 +457,21 @@ a:hover { text-decoration: underline; }
   background: var(--gray-50);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-sm);
+  cursor: pointer;
+  transition: all 0.15s;
 }
+.team-card:hover { border-color: var(--primary-orange); background: var(--primary-orange-light); }
 
 .team-card-name { font-size: 13px; font-weight: 500; color: var(--gray-700); }
-.team-card-count { font-size: 12px; color: var(--gray-500); }
+.team-card-count {
+  font-size: 12px;
+  color: var(--gray-500);
+  background: var(--white);
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
 
 /* Integration */
 .integration-card {
@@ -759,7 +777,10 @@ a:hover { text-decoration: underline; }
     <div class="content-wrapper">
       <div class="page-header">
         <div class="page-header-top">
-          <h1 class="page-title">Centros de Custo</h1>
+          <div>
+            <h1 class="page-title">Centros de Custo</h1>
+            <div class="page-subtitle" id="pageSubtitle"></div>
+          </div>
           <button class="btn btn-primary" onclick="showToast('Funcionalidade de criação em desenvolvimento.','info')">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 010-2h4V3a1 1 0 011-1z"/></svg>
             Novo Centro de Custo
@@ -769,16 +790,19 @@ a:hover { text-decoration: underline; }
 
       <!-- Search & Filters -->
       <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Buscar centros de custo..." aria-label="Buscar centros de custo">
-        <select class="filter-select" aria-label="Filtrar por status">
-          <option>Todos os status</option>
-          <option>Ativo</option>
-          <option>Desativado</option>
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar centros de custo..." aria-label="Buscar centros de custo" oninput="renderTable()">
+        <select class="filter-select" id="filterStatus" aria-label="Filtrar por status" onchange="renderTable()">
+          <option value="">Todos os status</option>
+          <option value="ativo">Ativo</option>
+          <option value="desativado">Desativado</option>
         </select>
-        <select class="filter-select" aria-label="Filtrar por política">
-          <option>Todas as políticas</option>
-          <option>Padrão</option>
-          <option>Com exceções</option>
+        <select class="filter-select" id="filterPolicy" aria-label="Filtrar por política" onchange="renderTable()">
+          <option value="">Todas as políticas</option>
+          <option value="padrao">Padrão</option>
+          <option value="excecao">Com exceções</option>
+        </select>
+        <select class="filter-select" id="filterCC" aria-label="Filtrar por centro de custo" onchange="renderTable()">
+          <option value="">Todos os CCs</option>
         </select>
       </div>
 
@@ -795,67 +819,13 @@ a:hover { text-decoration: underline; }
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
-            <tr onclick="openSlideover('vendas')">
-              <td><strong>Vendas</strong></td>
-              <td>Maria O.</td>
-              <td>2 times</td>
-              <td><span class="erp-badge"><span class="erp-dot active"></span>SAP</span></td>
-              <td><span class="policy-badge policy-default">Padrão</span></td>
-              <td><span class="status-badge status-active">Ativo</span></td>
-            </tr>
-            <tr onclick="openSlideover('marketing')">
-              <td><strong>Marketing</strong></td>
-              <td>Francisco D.</td>
-              <td>2 times</td>
-              <td><span class="erp-badge"><span class="erp-dot active"></span>SAP</span></td>
-              <td><span class="policy-badge policy-exception">2 exceções</span></td>
-              <td><span class="status-badge status-active">Ativo</span></td>
-            </tr>
-            <tr onclick="openSlideover('produto')">
-              <td><strong>Produto</strong></td>
-              <td>João M.</td>
-              <td>1 time</td>
-              <td><span class="erp-badge"><span class="erp-dot active"></span>SAP</span></td>
-              <td><span class="policy-badge policy-default">Padrão</span></td>
-              <td><span class="status-badge status-active">Ativo</span></td>
-            </tr>
-            <tr onclick="openSlideover('administrativo')">
-              <td><strong>Administrativo</strong></td>
-              <td>Camila V.</td>
-              <td>3 times</td>
-              <td><span class="erp-badge"><span class="erp-dot active"></span>Totvs</span></td>
-              <td><span class="policy-badge policy-default">Padrão</span></td>
-              <td><span class="status-badge status-active">Ativo</span></td>
-            </tr>
-            <tr onclick="openSlideover('operacoes')">
-              <td><strong>Operações</strong></td>
-              <td>Sandra F.</td>
-              <td>1 time</td>
-              <td><span class="erp-badge"><span class="erp-dot active"></span>SAP</span></td>
-              <td><span class="policy-badge policy-default">Padrão</span></td>
-              <td><span class="status-badge status-active">Ativo</span></td>
-            </tr>
-            <tr onclick="openSlideover('internacional')">
-              <td><strong>Internacional</strong></td>
-              <td>Marcos M.</td>
-              <td>1 time</td>
-              <td><span class="erp-badge"><span class="erp-dot active"></span>SAP</span></td>
-              <td><span class="policy-badge policy-exception">1 exceção</span></td>
-              <td><span class="status-badge status-active">Ativo</span></td>
-            </tr>
+          <tbody id="tableBody">
           </tbody>
         </table>
       </div>
 
       <!-- Mobile cards -->
-      <div class="mobile-cards">
-        <div class="mobile-card" onclick="openSlideover('vendas')"><div class="mobile-card-title">Vendas</div><div class="mobile-card-detail">Maria O. · 2 times · <span class="policy-badge policy-default">Padrão</span> · <span class="status-badge status-active">Ativo</span></div></div>
-        <div class="mobile-card" onclick="openSlideover('marketing')"><div class="mobile-card-title">Marketing</div><div class="mobile-card-detail">Francisco D. · 2 times · <span class="policy-badge policy-exception">2 exceções</span> · <span class="status-badge status-active">Ativo</span></div></div>
-        <div class="mobile-card" onclick="openSlideover('produto')"><div class="mobile-card-title">Produto</div><div class="mobile-card-detail">João M. · 1 time · <span class="policy-badge policy-default">Padrão</span> · <span class="status-badge status-active">Ativo</span></div></div>
-        <div class="mobile-card" onclick="openSlideover('administrativo')"><div class="mobile-card-title">Administrativo</div><div class="mobile-card-detail">Camila V. · 3 times · <span class="policy-badge policy-default">Padrão</span> · <span class="status-badge status-active">Ativo</span></div></div>
-        <div class="mobile-card" onclick="openSlideover('operacoes')"><div class="mobile-card-title">Operações</div><div class="mobile-card-detail">Sandra F. · 1 time · <span class="policy-badge policy-default">Padrão</span> · <span class="status-badge status-active">Ativo</span></div></div>
-        <div class="mobile-card" onclick="openSlideover('internacional')"><div class="mobile-card-title">Internacional</div><div class="mobile-card-detail">Marcos M. · 1 time · <span class="policy-badge policy-exception">1 exceção</span> · <span class="status-badge status-active">Ativo</span></div></div>
+      <div class="mobile-cards" id="mobileCards">
       </div>
     </div>
   </main>
@@ -903,43 +873,26 @@ a:hover { text-decoration: underline; }
 </div>
 
 <script>
-// CC data
+// CC data — 18 centros de custo
 const ccData = {
-  vendas: { name: 'Vendas', responsible: 'Maria Oliveira', approvers: ['Maria Oliveira','Carlos Santos'],
-    teams: [{name:'Comercial',members:12},{name:'Pré-vendas',members:4}],
-    erp: {name:'SAP',desc:'SAP Business One',code:'CC-001',status:'Ativo'},
-    exceptions: []
-  },
-  marketing: { name: 'Marketing', responsible: 'Francisco Duarte', approvers: ['Francisco Duarte','Ana Paula'],
-    teams: [{name:'Marketing Digital',members:8},{name:'Branding',members:3}],
-    erp: {name:'SAP',desc:'SAP Business One',code:'CC-002',status:'Ativo'},
-    exceptions: [
-      {flow:'Solicitações',detail:'Limite auto-aprovação: R$ 5.000 (geral: R$ 2.000)',id:'mkt-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 5.000'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0005',created:'12/03/2026',by:'Francisco D.'}},
-      {flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0006',created:'12/03/2026',by:'Francisco D.'}}
-    ]
-  },
-  produto: { name: 'Produto', responsible: 'João Mendes', approvers: ['João Mendes'],
-    teams: [{name:'Engenharia',members:15}],
-    erp: {name:'SAP',desc:'SAP Business One',code:'CC-003',status:'Ativo'},
-    exceptions: []
-  },
-  administrativo: { name: 'Administrativo', responsible: 'Camila Vieira', approvers: ['Camila Vieira','Sandra Ferreira'],
-    teams: [{name:'Financeiro',members:6},{name:'RH',members:4},{name:'Jurídico',members:3}],
-    erp: {name:'Totvs',desc:'Totvs Protheus',code:'CC-004',status:'Ativo'},
-    exceptions: []
-  },
-  operacoes: { name: 'Operações', responsible: 'Sandra Ferreira', approvers: ['Sandra Ferreira'],
-    teams: [{name:'Operações',members:10}],
-    erp: {name:'SAP',desc:'SAP Business One',code:'CC-005',status:'Ativo'},
-    exceptions: []
-  },
-  internacional: { name: 'Internacional', responsible: 'Marcos Miranda', approvers: ['Marcos Miranda','André Costa'],
-    teams: [{name:'Comércio Exterior',members:7}],
-    erp: {name:'SAP',desc:'SAP Business One',code:'CC-006',status:'Ativo'},
-    exceptions: [
-      {flow:'Solicitações',detail:'Limite auto-aprovação: R$ 10.000 (geral: R$ 2.000)',id:'int-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 10.000'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0012',created:'18/03/2026',by:'André A.'}}
-    ]
-  }
+  vendas: { name:'Vendas', responsible:'Maria Oliveira', approvers:['Maria Oliveira','Carlos Santos'], teams:[{name:'Vendas Inbound',members:8},{name:'Vendas Outbound',members:10},{name:'Vendas Enterprise',members:6},{name:'Vendas PME',members:12},{name:'Pré-vendas',members:5},{name:'Vendas Canal',members:4},{name:'Inside Sales',members:9},{name:'Vendas Governo',members:3},{name:'Comercial',members:12},{name:'Pré-vendas B2B',members:4}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-001',status:'Ativo'}, exceptions:[{flow:'Reembolsos',detail:'Reembolso de viagem sem limite (geral: R$ 3.000)',id:'vnd-reemb',conditions:[{field:'Categoria',op:'igual a',value:'Viagem'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0020',created:'10/03/2026',by:'Maria O.'}}] },
+  marketing: { name:'Marketing', responsible:'Francisco Duarte', approvers:['Francisco Duarte','Ana Paula'], teams:[{name:'Growth',members:7},{name:'Conteúdo',members:5},{name:'Performance',members:6},{name:'Branding',members:4},{name:'Eventos',members:8},{name:'Marketing Produto',members:5},{name:'Social Media',members:4},{name:'CRM Marketing',members:3},{name:'Marketing Digital',members:8}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-002',status:'Ativo'}, exceptions:[{flow:'Solicitações',detail:'Limite auto-aprovação: R$ 5.000 (geral: R$ 2.000)',id:'mkt-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 5.000'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0005',created:'12/03/2026',by:'Francisco D.'}},{flow:'Despesas de Cartão',detail:'Sem comprovante até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0006',created:'12/03/2026',by:'Francisco D.'}}] },
+  produto: { name:'Produto', responsible:'João Mendes', approvers:['João Mendes'], teams:[{name:'Product Discovery',members:6},{name:'Product Growth',members:5},{name:'Product Platform',members:4},{name:'Design',members:7},{name:'UX Research',members:3}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-003',status:'Ativo'}, exceptions:[] },
+  engenharia: { name:'Engenharia', responsible:'Lucas Ferreira', approvers:['Lucas Ferreira','João Mendes'], teams:[{name:'Frontend',members:10},{name:'Backend',members:12},{name:'Mobile',members:8},{name:'DevOps',members:5},{name:'QA',members:7},{name:'Platform',members:6},{name:'Data Engineering',members:5},{name:'SRE',members:4},{name:'Engenharia IA',members:6}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-004',status:'Ativo'}, exceptions:[{flow:'Solicitações',detail:'SaaS auto-aprovado até R$ 5.000 (geral: R$ 2.000)',id:'eng-sol',conditions:[{field:'Categoria',op:'igual a',value:'SaaS'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0025',created:'14/03/2026',by:'Lucas F.'}}] },
+  administrativo: { name:'Administrativo', responsible:'Camila Vieira', approvers:['Camila Vieira','Sandra Ferreira'], teams:[{name:'Administrativo Geral',members:5},{name:'Compras',members:4},{name:'Patrimônio',members:3},{name:'Recepção',members:6}], erp:{name:'Totvs',desc:'Totvs Protheus',code:'CC-005',status:'Ativo'}, exceptions:[] },
+  financeiro: { name:'Financeiro', responsible:'Roberto Alves', approvers:['Roberto Alves','Camila Vieira'], teams:[{name:'Contabilidade',members:5},{name:'Tesouraria',members:3},{name:'FP&A',members:4},{name:'Fiscal',members:4},{name:'Financeiro',members:6},{name:'Contas a Pagar',members:3}], erp:{name:'Totvs',desc:'Totvs Protheus',code:'CC-006',status:'Ativo'}, exceptions:[] },
+  rh: { name:'RH', responsible:'Sandra Ferreira', approvers:['Sandra Ferreira'], teams:[{name:'Recrutamento',members:6},{name:'Treinamento',members:4},{name:'People Ops',members:5},{name:'DP',members:4},{name:'RH',members:4}], erp:{name:'Totvs',desc:'Totvs Protheus',code:'CC-007',status:'Ativo'}, exceptions:[] },
+  operacoes: { name:'Operações', responsible:'Ricardo Lopes', approvers:['Ricardo Lopes','Sandra Ferreira'], teams:[{name:'Logística',members:8},{name:'Facilities',members:5},{name:'Frotas',members:4},{name:'Supply Chain',members:6},{name:'Almoxarifado',members:3},{name:'Operações',members:10}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-008',status:'Ativo'}, exceptions:[] },
+  juridico: { name:'Jurídico', responsible:'Ana Pereira', approvers:['Ana Pereira','Camila Vieira'], teams:[{name:'Contratos',members:4},{name:'Compliance',members:3},{name:'Jurídico',members:3}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-009',status:'Ativo'}, exceptions:[] },
+  cs: { name:'Customer Success', responsible:'Beatriz Souza', approvers:['Beatriz Souza','Maria Oliveira'], teams:[{name:'Onboarding',members:6},{name:'Ongoing CS',members:8},{name:'Enterprise CS',members:5},{name:'Renovações',members:4},{name:'Expansão',members:5}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-010',status:'Ativo'}, exceptions:[] },
+  suporte: { name:'Suporte', responsible:'Felipe Santos', approvers:['Felipe Santos'], teams:[{name:'Suporte N1',members:12},{name:'Suporte N2',members:8},{name:'Suporte Enterprise',members:5},{name:'Suporte Técnico',members:6}], erp:{name:'Totvs',desc:'Totvs Protheus',code:'CC-011',status:'Ativo'}, exceptions:[] },
+  data: { name:'Data & Analytics', responsible:'Gabriela Costa', approvers:['Gabriela Costa','Lucas Ferreira'], teams:[{name:'BI',members:4},{name:'Data Science',members:5},{name:'Analytics',members:4},{name:'Data Ops',members:3}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-012',status:'Ativo'}, exceptions:[{flow:'Solicitações',detail:'Ferramentas de dados auto-aprovadas até R$ 8.000',id:'data-sol',conditions:[{field:'Categoria',op:'igual a',value:'Ferramentas'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0030',created:'16/03/2026',by:'Gabriela C.'}}] },
+  infra: { name:'Infraestrutura', responsible:'Thiago Nunes', approvers:['Thiago Nunes'], teams:[{name:'Cloud',members:5},{name:'Redes',members:4},{name:'Infra On-Prem',members:3}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-013',status:'Ativo'}, exceptions:[] },
+  seguranca: { name:'Segurança da Informação', responsible:'Marcos Miranda', approvers:['Marcos Miranda','Thiago Nunes'], teams:[{name:'AppSec',members:4},{name:'SOC',members:5}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-014',status:'Ativo'}, exceptions:[] },
+  latam: { name:'Internacional — LATAM', responsible:'Pedro Henrique', approvers:['Pedro Henrique','Marcos Miranda'], teams:[{name:'LATAM Comercial',members:8},{name:'LATAM Suporte',members:5},{name:'LATAM Ops',members:4}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-015',status:'Ativo'}, exceptions:[{flow:'Solicitações',detail:'Auto-aprovação até R$ 15.000 (geral: R$ 2.000)',id:'latam-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 15.000'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0035',created:'18/03/2026',by:'Pedro H.'}},{flow:'Viagens',detail:'Hospedagem até R$ 1.500/noite (geral: R$ 500)',id:'latam-viag',conditions:[{field:'Categoria',op:'igual a',value:'Hospedagem'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0036',created:'18/03/2026',by:'Pedro H.'}}] },
+  europa: { name:'Internacional — Europa', responsible:'Carolina Lima', approvers:['Carolina Lima','André Costa'], teams:[{name:'Europa Comercial',members:6},{name:'Europa Suporte',members:4},{name:'Europa Ops',members:3}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-016',status:'Ativo'}, exceptions:[{flow:'Solicitações',detail:'Auto-aprovação até R$ 20.000 (geral: R$ 2.000)',id:'eur-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 20.000'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0037',created:'18/03/2026',by:'Carolina L.'}}] },
+  eua: { name:'Internacional — EUA', responsible:'Daniel Araújo', approvers:['Daniel Araújo','André Costa'], teams:[{name:'EUA Comercial',members:7},{name:'EUA Suporte',members:5},{name:'EUA Enterprise',members:4},{name:'EUA Ops',members:3}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-017',status:'Ativo'}, exceptions:[{flow:'Solicitações',detail:'Auto-aprovação até R$ 25.000 (geral: R$ 2.000)',id:'eua-sol',conditions:[{field:'Valor',op:'menor que',value:'R$ 25.000'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0038',created:'18/03/2026',by:'Daniel A.'}},{flow:'Viagens',detail:'Hospedagem até R$ 2.500/noite (geral: R$ 500)',id:'eua-viag',conditions:[{field:'Categoria',op:'igual a',value:'Hospedagem'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0039',created:'18/03/2026',by:'Daniel A.'}}] },
+  diretoria: { name:'Diretoria', responsible:'André Costa', approvers:['André Costa','Camila Vieira'], teams:[{name:'C-Level',members:5},{name:'Board',members:3},{name:'Diretoria',members:5}], erp:{name:'SAP',desc:'SAP Business One',code:'CC-018',status:'Ativo'}, exceptions:[{flow:'Solicitações',detail:'CFO aprova tudo, sem limite',id:'dir-sol',conditions:[{field:'Valor',op:'maior que',value:'R$ 0'}],actions:['Escalar para Camila Vieira (CFO)'],audit:{ref:'EXC-2026-03-0040',created:'19/03/2026',by:'André C.'}}] }
 };
 
 const generalRules = [
@@ -966,6 +919,90 @@ let tempConditions = [];
 let tempActions = [];
 let builderCCKey = null;
 let builderFlow = null;
+
+// ========== Dynamic Rendering ==========
+
+function getShortName(fullName) {
+  const parts = fullName.split(' ');
+  if (parts.length < 2) return fullName;
+  return parts[0] + ' ' + parts[parts.length - 1][0] + '.';
+}
+
+function getFilteredCCs() {
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  const statusFilter = document.getElementById('filterStatus').value;
+  const policyFilter = document.getElementById('filterPolicy').value;
+  const ccFilter = document.getElementById('filterCC').value;
+
+  return Object.entries(ccData).filter(([key, cc]) => {
+    // Search filter
+    if (search && !cc.name.toLowerCase().includes(search) && !cc.responsible.toLowerCase().includes(search)) {
+      return false;
+    }
+    // Status filter
+    if (statusFilter === 'ativo' && cc.erp.status !== 'Ativo') return false;
+    if (statusFilter === 'desativado' && cc.erp.status === 'Ativo') return false;
+    // Policy filter
+    if (policyFilter === 'padrao' && cc.exceptions.length > 0) return false;
+    if (policyFilter === 'excecao' && cc.exceptions.length === 0) return false;
+    // CC filter
+    if (ccFilter && ccFilter !== key) return false;
+    return true;
+  });
+}
+
+function renderTable() {
+  const filtered = getFilteredCCs();
+  const tbody = document.getElementById('tableBody');
+  const mobileCards = document.getElementById('mobileCards');
+
+  // Table rows
+  let tableHtml = '';
+  let mobileHtml = '';
+
+  filtered.forEach(([key, cc]) => {
+    const teamCount = cc.teams.length;
+    const teamLabel = teamCount === 1 ? '1 time' : teamCount + ' times';
+    const shortName = getShortName(cc.responsible);
+    const excCount = cc.exceptions.length;
+    const policyClass = excCount > 0 ? 'policy-exception' : 'policy-default';
+    const policyLabel = excCount > 0 ? (excCount === 1 ? '1 exceção' : excCount + ' exceções') : 'Padrão';
+
+    tableHtml += '<tr onclick="openSlideover(\'' + key + '\')">';
+    tableHtml += '<td><strong>' + cc.name + '</strong></td>';
+    tableHtml += '<td>' + shortName + '</td>';
+    tableHtml += '<td>' + teamLabel + '</td>';
+    tableHtml += '<td><span class="erp-badge"><span class="erp-dot active"></span>' + cc.erp.name + '</span></td>';
+    tableHtml += '<td><span class="policy-badge ' + policyClass + '">' + policyLabel + '</span></td>';
+    tableHtml += '<td><span class="status-badge status-active">' + cc.erp.status + '</span></td>';
+    tableHtml += '</tr>';
+
+    mobileHtml += '<div class="mobile-card" onclick="openSlideover(\'' + key + '\')"><div class="mobile-card-title">' + cc.name + '</div><div class="mobile-card-detail">' + shortName + ' · ' + teamLabel + ' · <span class="policy-badge ' + policyClass + '">' + policyLabel + '</span> · <span class="status-badge status-active">' + cc.erp.status + '</span></div></div>';
+  });
+
+  tbody.innerHTML = tableHtml;
+  mobileCards.innerHTML = mobileHtml;
+}
+
+function renderSubtitle() {
+  const totalCCs = Object.keys(ccData).length;
+  const withExceptions = Object.values(ccData).filter(cc => cc.exceptions.length > 0).length;
+  document.getElementById('pageSubtitle').textContent = totalCCs + ' centros de custo · ' + withExceptions + ' com exceções';
+}
+
+function populateCCFilter() {
+  const select = document.getElementById('filterCC');
+  // Clear existing options except the first
+  while (select.options.length > 1) select.remove(1);
+  Object.entries(ccData).forEach(([key, cc]) => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = cc.name;
+    select.appendChild(opt);
+  });
+}
+
+// ========== Slide-over ==========
 
 function openSlideover(ccKey) {
   currentCC = ccKey;
@@ -1015,11 +1052,16 @@ function openSlideover(ccKey) {
   html += '</div></div>';
 
   // Times
-  html += '<div class="so-section"><div class="so-section-title">Times</div>';
+  const totalMembers = cc.teams.reduce((sum, t) => sum + t.members, 0);
+  html += '<div class="so-section"><div class="so-section-title">Times <span style="font-size:12px;font-weight:400;color:var(--gray-400);">(' + cc.teams.length + ' times · ' + totalMembers + ' membros)</span></div>';
+  html += '<div class="teams-container' + (cc.teams.length > 5 ? ' scrollable' : '') + '">';
   cc.teams.forEach(t => {
-    html += '<div class="team-card"><div class="team-card-name">' + t.name + '</div><div class="team-card-count">' + t.members + ' membros</div></div>';
+    html += '<div class="team-card" onclick="showToast(\'Navegação para time ' + t.name.replace(/'/g, "\\'") + ' em desenvolvimento.\',\'info\')">';
+    html += '<div class="team-card-name">' + t.name + '</div>';
+    html += '<div class="team-card-count">' + t.members + ' membros</div>';
+    html += '</div>';
   });
-  html += '</div>';
+  html += '</div></div>';
 
   // Integração
   html += '<div class="so-section"><div class="so-section-title">Integração ERP</div><div class="integration-card">';
@@ -1238,8 +1280,10 @@ function saveException(ccKey, flow, isEdit) {
     showToast('Exceção criada para CC "' + cc.name + '" no fluxo "' + flow + '".', 'success');
   }
 
-  // Re-render the slideover
+  // Re-render the slideover and table
   openSlideover(ccKey);
+  renderTable();
+  renderSubtitle();
 }
 
 function showEditExceptionForm(ccKey, excId) {
@@ -1266,8 +1310,10 @@ function showRemoveConfirm(ccKey, excId) {
     if (idx !== -1) cc.exceptions.splice(idx, 1);
     closeModal('removeConfirmModal');
     showToast('Exceção removida. CC "' + cc.name + '" voltou para regra padrão neste fluxo.', 'success');
-    // Re-render slideover
+    // Re-render slideover and table
     openSlideover(ccKey);
+    renderTable();
+    renderSubtitle();
   });
 
   openModal('removeConfirmModal');
@@ -1330,6 +1376,13 @@ function trapFocus(element) {
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeSlideover(); closeConfirm(); closeSidebars(); closeModal('removeConfirmModal'); }
+});
+
+// ========== Initialize ==========
+document.addEventListener('DOMContentLoaded', function() {
+  populateCCFilter();
+  renderSubtitle();
+  renderTable();
 });
 </script>
 </body>

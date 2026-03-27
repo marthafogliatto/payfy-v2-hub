@@ -116,6 +116,7 @@ a:hover { text-decoration: underline; }
 
 .status-badge { display: inline-flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-2xl); font-size: 12px; font-weight: 600; }
 .status-active { background: var(--success-green-light); color: var(--success-green); }
+.status-inactive { background: var(--gray-100); color: var(--gray-500); }
 .policy-badge { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-2xl); font-size: 12px; font-weight: 600; }
 .policy-default { background: var(--gray-100); color: var(--gray-500); }
 .policy-exception { background: var(--scope-time-bg); color: var(--scope-time-text); }
@@ -303,6 +304,11 @@ a:hover { text-decoration: underline; }
 /* Audit metadata */
 .audit-meta { font-size: 11px; color: var(--gray-400); margin-top: var(--spacing-xs); padding-top: var(--spacing-xs); border-top: 1px solid rgba(0,0,0,0.05); }
 .audit-meta-ref { font-family: 'SF Mono', Monaco, monospace; color: var(--info-blue); font-weight: 500; }
+
+/* Sortable headers */
+.data-table th.sortable { cursor: pointer; user-select: none; }
+.data-table th.sortable:hover { color: var(--gray-700); }
+.sort-indicator { font-size: 10px; margin-left: 2px; }
 </style>
 </head>
 <body>
@@ -361,7 +367,10 @@ a:hover { text-decoration: underline; }
     <div class="content-wrapper">
       <div class="page-header">
         <div class="page-header-top">
-          <h1 class="page-title">Times</h1>
+          <div>
+            <h1 class="page-title">Times</h1>
+            <span id="teamCounter" style="font-size:14px;color:var(--gray-500);font-weight:400;"></span>
+          </div>
           <button class="btn btn-primary" onclick="showToast('Funcionalidade de criação em desenvolvimento.','info')">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 010-2h4V3a1 1 0 011-1z"/></svg>
             Novo Time
@@ -370,36 +379,31 @@ a:hover { text-decoration: underline; }
       </div>
 
       <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Buscar times..." aria-label="Buscar times">
-        <select class="filter-select" aria-label="Filtrar por centro de custo">
-          <option>Todos os CCs</option><option>Vendas</option><option>Marketing</option><option>Produto</option><option>Administrativo</option><option>Operações</option><option>Internacional</option>
+        <input type="text" class="search-input" placeholder="Buscar times..." aria-label="Buscar times" oninput="searchQuery=this.value;currentPage=1;renderTable()">
+        <select class="filter-select" id="ccFilter" aria-label="Filtrar por centro de custo" onchange="filterCC=this.value==='Todos os CCs'?'':this.value;currentPage=1;renderTable()">
+          <option>Todos os CCs</option>
         </select>
-        <select class="filter-select" aria-label="Filtrar por política">
+        <select class="filter-select" aria-label="Filtrar por política" onchange="filterPolicy=this.value==='Todas as políticas'?'':this.value==='Padrão'?'padrao':'excecoes';currentPage=1;renderTable()">
           <option>Todas as políticas</option><option>Padrão</option><option>Com exceções</option>
         </select>
       </div>
 
       <div class="table-container">
         <table class="data-table" aria-label="Times">
-          <thead><tr><th>Nome</th><th>Centro de Custo</th><th>Responsável</th><th>Membros</th><th>Política</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr onclick="openSlideover('comercial')"><td><strong>Comercial</strong></td><td>Vendas</td><td>Maria O.</td><td>12</td><td><span class="policy-badge policy-exception">1 exceção</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-            <tr onclick="openSlideover('mkt_digital')"><td><strong>Marketing Digital</strong></td><td>Marketing</td><td>Francisco D.</td><td>8</td><td><span class="policy-badge policy-exception">1 exceção</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-            <tr onclick="openSlideover('engenharia')"><td><strong>Engenharia</strong></td><td>Produto</td><td>João M.</td><td>15</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-            <tr onclick="openSlideover('financeiro')"><td><strong>Financeiro</strong></td><td>Administrativo</td><td>Camila V.</td><td>6</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-            <tr onclick="openSlideover('rh')"><td><strong>RH</strong></td><td>Administrativo</td><td>Sandra F.</td><td>4</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-            <tr onclick="openSlideover('operacoes_t')"><td><strong>Operações</strong></td><td>Operações</td><td>Ricardo L.</td><td>10</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-            <tr onclick="openSlideover('juridico')"><td><strong>Jurídico</strong></td><td>Administrativo</td><td>Ana P.</td><td>3</td><td><span class="policy-badge policy-default">Padrão</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-            <tr onclick="openSlideover('diretoria')"><td><strong>Diretoria</strong></td><td>Administrativo</td><td>André C.</td><td>5</td><td><span class="policy-badge policy-exception">2 exceções</span></td><td><span class="status-badge status-active">Ativo</span></td></tr>
-          </tbody>
+          <thead><tr>
+            <th class="sortable" onclick="sortBy('name')">Nome <span class="sort-indicator" id="sort-name">▲</span></th>
+            <th class="sortable" onclick="sortBy('cc')">Centro de Custo <span class="sort-indicator" id="sort-cc"></span></th>
+            <th class="sortable" onclick="sortBy('responsible')">Responsável <span class="sort-indicator" id="sort-responsible"></span></th>
+            <th class="sortable" onclick="sortBy('members')">Membros <span class="sort-indicator" id="sort-members"></span></th>
+            <th class="sortable" onclick="sortBy('exceptions')">Política <span class="sort-indicator" id="sort-exceptions"></span></th>
+            <th>Status</th>
+          </tr></thead>
+          <tbody id="teamsTableBody"></tbody>
         </table>
+        <div id="pagination" style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-md) var(--spacing-lg);border-top:1px solid var(--border);background:var(--gray-50);"></div>
       </div>
 
-      <div class="mobile-cards">
-        <div class="mobile-card" onclick="openSlideover('comercial')"><div class="mobile-card-title">Comercial</div><div class="mobile-card-detail">Vendas · Maria O. · 12 · <span class="policy-badge policy-exception">1 exceção</span></div></div>
-        <div class="mobile-card" onclick="openSlideover('mkt_digital')"><div class="mobile-card-title">Marketing Digital</div><div class="mobile-card-detail">Marketing · Francisco D. · 8 · <span class="policy-badge policy-exception">1 exceção</span></div></div>
-        <div class="mobile-card" onclick="openSlideover('diretoria')"><div class="mobile-card-title">Diretoria</div><div class="mobile-card-detail">Administrativo · André C. · 5 · <span class="policy-badge policy-exception">2 exceções</span></div></div>
-      </div>
+      <div class="mobile-cards" id="mobileCardsArea"></div>
     </div>
   </main>
 </div>
@@ -491,45 +495,114 @@ a:hover { text-decoration: underline; }
 </div>
 
 <script>
-const teamsData = {
-  comercial: { name: 'Comercial', cc: 'Vendas', responsible: 'Maria Oliveira', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
+// ========= NAME POOL =========
+const namePool = [
+  'Maria Oliveira','Francisco Duarte','João Mendes','Camila Vieira','Sandra Ferreira','Ricardo Lopes','Ana Pereira','André Costa',
+  'Beatriz Souza','Carlos Santos','Daniela Lima','Eduardo Ramos','Fernanda Rocha','Gabriel Santos','Helena Vieira','Igor Pereira',
+  'Julia Martins','Kevin Alves','Laura Ribeiro','Matheus Ferreira','Natália Souza','Otávio Lima','Paula Ramos','Renato Gomes',
+  'Simone Torres','Thiago Nunes','Ulisses Barros','Vanessa Cruz','Wagner Pinto','Xiomara Dias','Yuri Cardoso','Zélia Monteiro',
+  'Adriana Campos','Bruno Costa','Carla Dias','Daniel Lima','Elisa Fonseca','Felipe Araujo','Gustavo Teixeira','Isabela Martins',
+  'Larissa Cunha','Marcelo Ribas','Nicole Freitas','Pedro Azevedo','Rafaela Borges','Samuel Correia','Tatiana Moura','Vicente Nascimento'
+];
+
+const memberNamePool = [
+  'Ana Silva','Bruno Costa','Carla Dias','Daniel Lima','Elisa Fonseca','Felipe Araujo','Gustavo Teixeira','Isabela Martins',
+  'Jorge Almeida','Karina Pires','Leonardo Braga','Monica Leal','Nelson Viana','Olívia Prado','Patrick Rocha','Quésia Matos',
+  'Rafael Duarte','Sabrina Neves','Tiago Amorim','Ursula Brito','Vinícius Melo','Wanda Castro','Xavier Gomes','Yasmin Torres',
+  'Zilda Farias','Amanda Reis','Bernardo Luz','Cecília Maia','Diego Tavares','Eduarda Santana','Fábio Coelho','Giovana Lira',
+  'Hugo Barbosa','Ingrid Pacheco','Joaquim Andrade','Letícia Nogueira','Marcos Miranda','Nathalia Figueiredo','Oscar Pimentel','Priscila Aguiar',
+  'Roberto Mendonça','Silvia Batista','Tomás Barreto','Valentina Cunha','Wesley Franco','Alice Macedo','Breno Siqueira','Clara Rezende',
+  'Davi Carvalho','Estela Rangel','Fernando Lopes','Graziela Teixeira','Heitor Sampaio','Iara Domingues','Julio Moreira','Kelly Dantas'
+];
+
+function seededRandom(seed) {
+  var x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+function makeEmail(name) {
+  var parts = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z ]/g,'').split(' ');
+  return parts[0] + '.' + parts[parts.length-1] + '@payfy.com';
+}
+
+function generateMembers(seed, count) {
+  var members = [];
+  var used = {};
+  for (var i = 0; i < count; i++) {
+    var idx = Math.floor(seededRandom(seed + i * 7) * memberNamePool.length);
+    var attempts = 0;
+    while (used[idx] && attempts < memberNamePool.length) { idx = (idx + 1) % memberNamePool.length; attempts++; }
+    used[idx] = true;
+    var n = memberNamePool[idx];
+    members.push({name: n, email: makeEmail(n)});
+  }
+  return members;
+}
+
+// ========= CC → TEAMS MAPPING =========
+const ccTeamsMap = {
+  'Vendas': ['Vendas Inbound','Vendas Outbound','Vendas Enterprise','Vendas PME','Pré-vendas','Vendas Canal','Inside Sales','Vendas Governo','Comercial','Pré-vendas B2B'],
+  'Marketing': ['Growth','Conteúdo','Performance','Branding','Eventos','Marketing Produto','Social Media','CRM Marketing','Marketing Digital'],
+  'Engenharia': ['Frontend','Backend','Mobile','DevOps','QA','Platform','Data Engineering','SRE','Engenharia IA'],
+  'Produto': ['Product Discovery','Product Growth','Product Platform','Design','UX Research'],
+  'Administrativo': ['Administrativo Geral','Compras','Patrimônio','Recepção'],
+  'Financeiro': ['Contabilidade','Tesouraria','FP&A','Fiscal','Financeiro','Contas a Pagar'],
+  'RH': ['Recrutamento','Treinamento','People Ops','DP','RH'],
+  'Operações': ['Logística','Facilities','Frotas','Supply Chain','Almoxarifado','Operações'],
+  'Jurídico': ['Contratos','Compliance','Jurídico'],
+  'Customer Success': ['Onboarding','Ongoing CS','Enterprise CS','Renovações','Expansão'],
+  'Suporte': ['Suporte N1','Suporte N2','Suporte Enterprise','Suporte Técnico'],
+  'Data & Analytics': ['BI','Data Science','Analytics','Data Ops'],
+  'Infraestrutura': ['Cloud','Redes','Infra On-Prem'],
+  'Segurança da Informação': ['AppSec','SOC'],
+  'Internacional — LATAM': ['LATAM Comercial','LATAM Suporte','LATAM Ops'],
+  'Internacional — Europa': ['Europa Comercial','Europa Suporte','Europa Ops'],
+  'Internacional — EUA': ['EUA Comercial','EUA Suporte','EUA Enterprise','EUA Ops'],
+  'Diretoria': ['C-Level','Board','Diretoria']
+};
+
+const allCCs = Object.keys(ccTeamsMap);
+
+// ========= ORIGINAL 8 TEAMS (preserved exactly) =========
+const originalTeams = [
+  { id: 'comercial', name: 'Comercial', cc: 'Vendas', responsible: 'Maria Oliveira', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
     approvals: [{level:1,name:'Maria Oliveira',min:'R$ 0',color:'#F97316'},{level:2,name:'Carlos Santos',min:'R$ 2.000',color:'#EA580C'},{level:3,name:'André Costa',min:'R$ 10.000',color:'#C2410C'}],
     members: [{name:'Ana Silva',email:'ana.silva@payfy.com'},{name:'Bruno Costa',email:'bruno.costa@payfy.com'},{name:'Carla Dias',email:'carla.dias@payfy.com'},{name:'Daniel Lima',email:'daniel.lima@payfy.com'}],
     exceptions: [{flow:'Reembolsos',detail:'Sem limite de reembolso viagem (geral: R$ 3.000)',id:'com-reemb',conditions:[{field:'Categoria',op:'igual a',value:'Viagem'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0011',created:'17/03/2026',by:'Sandra F.'}}],
-    ruleSource: 'geral', vacation: []
+    ruleSource: 'geral', vacation: [], status: 'Ativo'
   },
-  mkt_digital: { name: 'Marketing Digital', cc: 'Marketing', responsible: 'Francisco Duarte', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
+  { id: 'mkt_digital', name: 'Marketing Digital', cc: 'Marketing', responsible: 'Francisco Duarte', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
     approvals: [{level:1,name:'Francisco Duarte',min:'R$ 0',color:'#F97316'},{level:2,name:'Ana Paula',min:'R$ 3.000',color:'#EA580C'}],
     members: [{name:'Fernanda Rocha',email:'fernanda.r@payfy.com'},{name:'Gabriel Santos',email:'gabriel.s@payfy.com'},{name:'Helena Vieira',email:'helena.v@payfy.com'}],
     exceptions: [{flow:'Despesas de Cartão',detail:'Sem comprovante obrigatório até R$ 200 (geral: R$ 50)',id:'mkt-desp',conditions:[{field:'Valor',op:'menor que',value:'R$ 200'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0010',created:'16/03/2026',by:'Francisco D.'}}],
-    ruleSource: 'cc', ccName: 'Marketing', vacation: []
+    ruleSource: 'cc', ccName: 'Marketing', vacation: [], status: 'Ativo'
   },
-  engenharia: { name: 'Engenharia', cc: 'Produto', responsible: 'João Mendes', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
+  { id: 'engenharia', name: 'Engenharia', cc: 'Engenharia', responsible: 'João Mendes', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
     approvals: [{level:1,name:'João Mendes',min:'R$ 0',color:'#F97316'},{level:2,name:'André Costa',min:'R$ 5.000',color:'#EA580C'}],
     members: [{name:'Igor Pereira',email:'igor.p@payfy.com'},{name:'Julia Martins',email:'julia.m@payfy.com'},{name:'Kevin Alves',email:'kevin.a@payfy.com'},{name:'Laura Ribeiro',email:'laura.r@payfy.com'},{name:'Matheus Ferreira',email:'matheus.f@payfy.com'}],
-    exceptions: [], ruleSource: 'geral', vacation: []
+    exceptions: [], ruleSource: 'geral', vacation: [], status: 'Ativo'
   },
-  financeiro: { name: 'Financeiro', cc: 'Administrativo', responsible: 'Camila Vieira', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
+  { id: 'financeiro', name: 'Financeiro', cc: 'Financeiro', responsible: 'Camila Vieira', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
     approvals: [{level:1,name:'Camila Vieira',min:'R$ 0',color:'#F97316'}],
     members: [{name:'Natália Souza',email:'natalia.s@payfy.com'},{name:'Otávio Lima',email:'otavio.l@payfy.com'}],
-    exceptions: [], ruleSource: 'geral', vacation: []
+    exceptions: [], ruleSource: 'geral', vacation: [], status: 'Ativo'
   },
-  rh: { name: 'RH', cc: 'Administrativo', responsible: 'Sandra Ferreira', payments: ['Reembolso','Pix'], paymentOff: ['Cartão','Boleto'],
+  { id: 'rh', name: 'RH', cc: 'RH', responsible: 'Sandra Ferreira', payments: ['Reembolso','Pix'], paymentOff: ['Cartão','Boleto'],
     approvals: [{level:1,name:'Sandra Ferreira',min:'R$ 0',color:'#F97316'}],
     members: [{name:'Paula Ramos',email:'paula.r@payfy.com'},{name:'Renato Gomes',email:'renato.g@payfy.com'}],
-    exceptions: [], ruleSource: 'geral', vacation: []
+    exceptions: [], ruleSource: 'geral', vacation: [], status: 'Ativo'
   },
-  operacoes_t: { name: 'Operações', cc: 'Operações', responsible: 'Ricardo Lopes', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
+  { id: 'operacoes_t', name: 'Operações', cc: 'Operações', responsible: 'Ricardo Lopes', payments: ['Cartão','Reembolso','Pix'], paymentOff: ['Boleto'],
     approvals: [{level:1,name:'Ricardo Lopes',min:'R$ 0',color:'#F97316'},{level:2,name:'Sandra Ferreira',min:'R$ 3.000',color:'#EA580C'}],
     members: [{name:'Simone Torres',email:'simone.t@payfy.com'},{name:'Thiago Nunes',email:'thiago.n@payfy.com'}],
-    exceptions: [], ruleSource: 'geral', vacation: []
+    exceptions: [], ruleSource: 'geral', vacation: [], status: 'Ativo'
   },
-  juridico: { name: 'Jurídico', cc: 'Administrativo', responsible: 'Ana Pereira', payments: ['Reembolso'], paymentOff: ['Cartão','Pix','Boleto'],
+  { id: 'juridico', name: 'Jurídico', cc: 'Jurídico', responsible: 'Ana Pereira', payments: ['Reembolso'], paymentOff: ['Cartão','Pix','Boleto'],
     approvals: [{level:1,name:'Ana Pereira',min:'R$ 0',color:'#F97316'}],
     members: [{name:'Ulisses Barros',email:'ulisses.b@payfy.com'},{name:'Vanessa Cruz',email:'vanessa.c@payfy.com'}],
-    exceptions: [], ruleSource: 'geral', vacation: []
+    exceptions: [], ruleSource: 'geral', vacation: [], status: 'Ativo'
   },
-  diretoria: { name: 'Diretoria', cc: 'Administrativo', responsible: 'André Costa', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
+  { id: 'diretoria', name: 'Diretoria', cc: 'Diretoria', responsible: 'André Costa', payments: ['Cartão','Reembolso','Pix','Boleto'], paymentOff: [],
     approvals: [{level:1,name:'André Costa (CEO)',min:'R$ 0',color:'#F97316'},{level:2,name:'Camila Vieira (CFO)',min:'R$ 5.000',color:'#EA580C'},{level:3,name:'Conselho',min:'R$ 50.000',color:'#C2410C'}],
     members: [{name:'André Costa',email:'andre.c@payfy.com'},{name:'Carlos Mendes',email:'carlos.m@payfy.com'},{name:'Camila Vieira',email:'camila.v@payfy.com'},{name:'Marcos Miranda',email:'marcos.m@payfy.com'}],
     exceptions: [
@@ -537,10 +610,171 @@ const teamsData = {
       {flow:'Reembolsos',detail:'Sem limite mensal (geral: R$ 3.000)',id:'dir-reemb',conditions:[{field:'Valor',op:'maior que',value:'R$ 0'}],actions:['Aprovar automaticamente'],audit:{ref:'EXC-2026-03-0009',created:'15/03/2026',by:'Martha P.'}}
     ],
     ruleSource: 'geral',
-    vacation: [{person:'André Costa',start:'01/04/2026',end:'15/04/2026',sameSubstitute:true,substitute:'Camila Vieira',responsibilities:['Aprovar despesas (Nível 1)','Aprovar reembolsos','Aprovar solicitações de cartão'],audit:{ref:'COB-2026-03-0003',created:'25/03/2026',by:'Sandra F.'}}]
+    vacation: [{person:'André Costa',start:'01/04/2026',end:'15/04/2026',sameSubstitute:true,substitute:'Camila Vieira',responsibilities:['Aprovar despesas (Nível 1)','Aprovar reembolsos','Aprovar solicitações de cartão'],audit:{ref:'COB-2026-03-0003',created:'25/03/2026',by:'Sandra F.'}}],
+    status: 'Ativo'
   }
-};
+];
 
+// Map original team names for dedup
+const originalNameSet = new Set(originalTeams.map(function(t){ return t.name; }));
+
+// ========= EXCEPTION TEMPLATES =========
+const exceptionTemplates = [
+  {flow:'Solicitações',detail:'Auto-aprovação até R$ 500',conditions:[{field:'Valor',op:'menor que',value:'R$ 500'}],actions:['Aprovar automaticamente']},
+  {flow:'Solicitações',detail:'Auto-aprovação até R$ 1.000',conditions:[{field:'Valor',op:'menor que',value:'R$ 1.000'}],actions:['Aprovar automaticamente']},
+  {flow:'Solicitações',detail:'Auto-aprovação até R$ 5.000',conditions:[{field:'Valor',op:'menor que',value:'R$ 5.000'}],actions:['Aprovar automaticamente']},
+  {flow:'Solicitações',detail:'Auto-aprovação até R$ 10.000',conditions:[{field:'Valor',op:'menor que',value:'R$ 10.000'}],actions:['Aprovar automaticamente']},
+  {flow:'Solicitações',detail:'Auto-aprovação até R$ 50.000',conditions:[{field:'Valor',op:'menor que',value:'R$ 50.000'}],actions:['Aprovar automaticamente']},
+  {flow:'Reembolsos',detail:'Sem limite mensal de reembolso',conditions:[{field:'Valor',op:'maior que',value:'R$ 0'}],actions:['Aprovar automaticamente']},
+  {flow:'Reembolsos',detail:'Limite mensal R$ 10.000 (geral: R$ 3.000)',conditions:[{field:'Valor',op:'menor que',value:'R$ 10.000'}],actions:['Aprovar automaticamente']},
+  {flow:'Despesas de Cartão',detail:'Auto-aprovação SaaS até R$ 2.000',conditions:[{field:'Categoria',op:'igual a',value:'SaaS'}],actions:['Aprovar automaticamente']},
+  {flow:'Despesas de Cartão',detail:'Auto-aprovação Viagem até R$ 5.000',conditions:[{field:'Categoria',op:'igual a',value:'Viagem'}],actions:['Aprovar automaticamente']},
+  {flow:'Despesas de Cartão',detail:'Auto-aprovação Alimentação até R$ 500',conditions:[{field:'Categoria',op:'igual a',value:'Alimentação'}],actions:['Aprovar automaticamente']},
+  {flow:'Solicitações',detail:'CFO aprova acima de R$ 20.000',conditions:[{field:'Valor',op:'maior que',value:'R$ 20.000'}],actions:['Escalar para Camila Vieira (CFO)']},
+  {flow:'Solicitações',detail:'Diretor aprova acima de R$ 15.000',conditions:[{field:'Valor',op:'maior que',value:'R$ 15.000'}],actions:['Escalar para André Costa']},
+  {flow:'Viagens',detail:'Agent desativado — aprovação manual obrigatória',conditions:[{field:'Valor',op:'maior que',value:'R$ 0'}],actions:['Bloquear']},
+  {flow:'Viagens',detail:'Classe executiva permitida acima de 6h de voo',conditions:[{field:'Categoria',op:'igual a',value:'Viagem Internacional'}],actions:['Aprovar automaticamente']},
+  {flow:'Despesas de Cartão',detail:'Merchant iFood bloqueado',conditions:[{field:'Merchant',op:'igual a',value:'iFood'}],actions:['Bloquear']},
+  {flow:'Despesas de Cartão',detail:'Merchant AWS permitido sem limite',conditions:[{field:'Merchant',op:'igual a',value:'AWS'}],actions:['Aprovar automaticamente']},
+  {flow:'Reembolsos',detail:'Reembolso viagem sem comprovante até R$ 100',conditions:[{field:'Categoria',op:'igual a',value:'Viagem'},{field:'Valor',op:'menor que',value:'R$ 100'}],actions:['Aprovar automaticamente']},
+  {flow:'Solicitações',detail:'Auto-aprovação até R$ 3.000',conditions:[{field:'Valor',op:'menor que',value:'R$ 3.000'}],actions:['Aprovar automaticamente']},
+  {flow:'Despesas de Cartão',detail:'Sem comprovante até R$ 150',conditions:[{field:'Valor',op:'menor que',value:'R$ 150'}],actions:['Aprovar automaticamente']},
+  {flow:'Viagens',detail:'Hospedagem até R$ 800/noite (geral: R$ 500)',conditions:[{field:'Categoria',op:'igual a',value:'Hospedagem'}],actions:['Aprovar automaticamente']}
+];
+
+const auditAuthors = ['Sandra F.','Martha P.','Francisco D.','Camila V.','André C.','João M.','Ricardo L.','Ana P.','Beatriz S.','Carlos S.'];
+
+// ========= GENERATE 92 NEW TEAMS =========
+const allPayments = ['Cartão','Reembolso','Pix','Boleto'];
+const approvalColors = ['#F97316','#EA580C','#C2410C'];
+const thresholds = ['R$ 0','R$ 1.000','R$ 2.000','R$ 3.000','R$ 5.000','R$ 10.000','R$ 15.000','R$ 20.000'];
+
+// Teams that will be inactive
+const inactiveTeams = new Set(['Patrimônio','Recepção','Infra On-Prem','Board']);
+
+// Teams with exceptions distribution:
+// ~30 with 1, ~10 with 2, ~5 with 3
+const teamsWithExc1 = new Set([
+  'Vendas Inbound','Vendas Outbound','Vendas Enterprise','Pré-vendas','Inside Sales','Vendas Governo',
+  'Growth','Performance','Branding','Marketing Produto',
+  'Frontend','Backend','Mobile','QA',
+  'Product Discovery','Design',
+  'Contabilidade','Tesouraria','FP&A',
+  'Recrutamento','Treinamento',
+  'Logística','Facilities',
+  'Contratos','Compliance',
+  'Onboarding','Enterprise CS',
+  'Suporte N1','Suporte Enterprise',
+  'BI'
+]);
+const teamsWithExc2 = new Set([
+  'Vendas PME','Vendas Canal','Pré-vendas B2B',
+  'DevOps','Platform','Data Engineering',
+  'Product Growth','Product Platform',
+  'Ongoing CS','Renovações'
+]);
+const teamsWithExc3 = new Set([
+  'C-Level','SRE','Expansão','EUA Enterprise','Contas a Pagar'
+]);
+
+function generateTeam(teamName, cc, seed) {
+  var id = teamName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/_+$/,'');
+  var respIdx = Math.floor(seededRandom(seed) * namePool.length);
+  var responsible = namePool[respIdx];
+  var memberCount = 3 + Math.floor(seededRandom(seed + 1) * 13);
+  var members = generateMembers(seed + 100, memberCount);
+
+  // Payments
+  var payCount = 1 + Math.floor(seededRandom(seed + 2) * 4);
+  var shuffled = allPayments.slice();
+  // Fisher-Yates with seed
+  for (var i = shuffled.length - 1; i > 0; i--) {
+    var j = Math.floor(seededRandom(seed + 3 + i) * (i + 1));
+    var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+  }
+  var payments = shuffled.slice(0, payCount);
+  var paymentOff = allPayments.filter(function(p){ return payments.indexOf(p) === -1; });
+
+  // Approvals (1-3 levels)
+  var levelCount = 1 + Math.floor(seededRandom(seed + 4) * 3);
+  var approvals = [];
+  for (var lvl = 1; lvl <= levelCount; lvl++) {
+    var aName = namePool[Math.floor(seededRandom(seed + 5 + lvl) * namePool.length)];
+    approvals.push({level: lvl, name: aName, min: thresholds[Math.min(lvl - 1, thresholds.length - 1) * 2], color: approvalColors[Math.min(lvl - 1, 2)]});
+  }
+
+  // Exceptions
+  var exceptions = [];
+  var excCount = 0;
+  if (teamsWithExc1.has(teamName)) excCount = 1;
+  if (teamsWithExc2.has(teamName)) excCount = 2;
+  if (teamsWithExc3.has(teamName)) excCount = 3;
+
+  var usedFlows = {};
+  for (var e = 0; e < excCount; e++) {
+    var tplIdx = Math.floor(seededRandom(seed + 20 + e * 3) * exceptionTemplates.length);
+    var attempts = 0;
+    while (usedFlows[exceptionTemplates[tplIdx].flow] && attempts < exceptionTemplates.length) {
+      tplIdx = (tplIdx + 1) % exceptionTemplates.length;
+      attempts++;
+    }
+    var tpl = exceptionTemplates[tplIdx];
+    usedFlows[tpl.flow] = true;
+    var refNum = String(1000 + Math.floor(seededRandom(seed + 30 + e) * 9000));
+    var day = String(1 + Math.floor(seededRandom(seed + 40 + e) * 25)).padStart(2,'0');
+    var month = String(1 + Math.floor(seededRandom(seed + 50 + e) * 3)).padStart(2,'0');
+    exceptions.push({
+      flow: tpl.flow,
+      detail: tpl.detail,
+      id: id + '-exc-' + e,
+      conditions: JSON.parse(JSON.stringify(tpl.conditions)),
+      actions: tpl.actions.slice(),
+      audit: {
+        ref: 'EXC-2026-' + month + '-' + refNum,
+        created: day + '/' + month + '/2026',
+        by: auditAuthors[Math.floor(seededRandom(seed + 60 + e) * auditAuthors.length)]
+      }
+    });
+  }
+
+  // CC-level rules for Marketing teams
+  var ruleSource = 'geral';
+  var ccName = undefined;
+  if (cc === 'Marketing') { ruleSource = 'cc'; ccName = 'Marketing'; }
+
+  var status = inactiveTeams.has(teamName) ? 'Desativado' : 'Ativo';
+
+  return {
+    id: id,
+    name: teamName,
+    cc: cc,
+    responsible: responsible,
+    payments: payments,
+    paymentOff: paymentOff,
+    approvals: approvals,
+    members: members,
+    exceptions: exceptions,
+    ruleSource: ruleSource,
+    ccName: ccName,
+    vacation: [],
+    status: status
+  };
+}
+
+// Build allTeams array
+var allTeams = originalTeams.slice();
+var seedCounter = 1;
+
+allCCs.forEach(function(cc) {
+  ccTeamsMap[cc].forEach(function(teamName) {
+    // Skip if it's one of the original 8
+    if (originalNameSet.has(teamName)) return;
+    allTeams.push(generateTeam(teamName, cc, seedCounter));
+    seedCounter += 100;
+  });
+});
+
+// ========= GENERAL / CC RULES =========
 const generalRules = [
   {icon:'🤖',text:'Auto-aprovação até R$ 2.000',source:'geral'},
   {icon:'💳',text:'Comprovante obrigatório acima de R$ 50',source:'geral'},
@@ -557,13 +791,144 @@ const ccRules = {
   ]
 };
 
-function openSlideover(teamKey) {
-  currentTeamKey = teamKey;
-  const t = teamsData[teamKey];
+// ========= PAGINATION, SEARCH, FILTER, SORT STATE =========
+let currentPage = 1;
+const PAGE_SIZE = 20;
+let searchQuery = '';
+let filterCC = '';
+let filterPolicy = '';
+let sortCol = 'name';
+let sortDir = 'asc';
+
+function getFilteredTeams() {
+  var result = allTeams;
+  if (searchQuery) {
+    var q = searchQuery.toLowerCase();
+    result = result.filter(function(t) {
+      return t.name.toLowerCase().indexOf(q) !== -1 || t.cc.toLowerCase().indexOf(q) !== -1 || t.responsible.toLowerCase().indexOf(q) !== -1;
+    });
+  }
+  if (filterCC) result = result.filter(function(t){ return t.cc === filterCC; });
+  if (filterPolicy === 'padrao') result = result.filter(function(t){ return t.exceptions.length === 0; });
+  if (filterPolicy === 'excecoes') result = result.filter(function(t){ return t.exceptions.length > 0; });
+
+  result.sort(function(a, b) {
+    var va, vb;
+    if (sortCol === 'name') { va = a.name; vb = b.name; }
+    else if (sortCol === 'cc') { va = a.cc; vb = b.cc; }
+    else if (sortCol === 'responsible') { va = a.responsible; vb = b.responsible; }
+    else if (sortCol === 'members') { va = a.members.length; vb = b.members.length; }
+    else if (sortCol === 'exceptions') { va = a.exceptions.length; vb = b.exceptions.length; }
+    else { va = a.name; vb = b.name; }
+    if (typeof va === 'string') return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    return sortDir === 'asc' ? va - vb : vb - va;
+  });
+  return result;
+}
+
+function updateSortIndicators() {
+  ['name','cc','responsible','members','exceptions'].forEach(function(col) {
+    var el = document.getElementById('sort-' + col);
+    if (el) el.textContent = sortCol === col ? (sortDir === 'asc' ? '▲' : '▼') : '';
+  });
+}
+
+function renderTable() {
+  var filtered = getFilteredTeams();
+  var total = filtered.length;
+  var totalPages = Math.ceil(total / PAGE_SIZE);
+  if (currentPage > totalPages) currentPage = totalPages || 1;
+  var start = (currentPage - 1) * PAGE_SIZE;
+  var page = filtered.slice(start, start + PAGE_SIZE);
+
+  // Render tbody
+  var tbody = document.getElementById('teamsTableBody');
+  tbody.innerHTML = page.map(function(t) {
+    var excBadge = t.exceptions.length ?
+      '<span class="policy-badge policy-exception">' + t.exceptions.length + ' exceç' + (t.exceptions.length > 1 ? 'ões' : 'ão') + '</span>' :
+      '<span class="policy-badge policy-default">Padrão</span>';
+    var statusBadge = t.status === 'Ativo' ?
+      '<span class="status-badge status-active">Ativo</span>' :
+      '<span class="status-badge status-inactive">Desativado</span>';
+    var rParts = t.responsible.split(' ');
+    var shortResp = rParts[0] + ' ' + (rParts[1] ? rParts[1].charAt(0) + '.' : '');
+    return '<tr onclick="openSlideover(\'' + t.id + '\')"><td><strong>' + t.name + '</strong></td><td>' + t.cc + '</td><td>' + shortResp + '</td><td>' + t.members.length + '</td><td>' + excBadge + '</td><td>' + statusBadge + '</td></tr>';
+  }).join('');
+
+  // Render pagination
+  var pag = document.getElementById('pagination');
+  if (total === 0) {
+    pag.innerHTML = '<span style="font-size:13px;color:var(--gray-500);">Nenhum time encontrado</span>';
+  } else {
+    var pagHtml = '<span style="font-size:13px;color:var(--gray-500);">Mostrando ' + (start + 1) + '–' + Math.min(start + PAGE_SIZE, total) + ' de ' + total + ' times</span><div style="display:flex;gap:var(--spacing-xs);">';
+    pagHtml += '<button class="btn btn-ghost btn-sm" onclick="goPage(' + (currentPage - 1) + ')"' + (currentPage <= 1 ? ' disabled' : '') + '>&larr;</button>';
+    for (var i = 1; i <= totalPages; i++) {
+      if (i <= 3 || i >= totalPages - 1 || Math.abs(i - currentPage) <= 1) {
+        pagHtml += '<button class="btn btn-sm ' + (i === currentPage ? 'btn-primary' : 'btn-ghost') + '" onclick="goPage(' + i + ')">' + i + '</button>';
+      } else if ((i === 4 && currentPage > 5) || (i === totalPages - 2 && currentPage < totalPages - 4)) {
+        pagHtml += '<span style="padding:0 var(--spacing-xs);color:var(--gray-400);">…</span>';
+      }
+    }
+    pagHtml += '<button class="btn btn-ghost btn-sm" onclick="goPage(' + (currentPage + 1) + ')"' + (currentPage >= totalPages ? ' disabled' : '') + '>&rarr;</button></div>';
+    pag.innerHTML = pagHtml;
+  }
+
+  // Update counter in header
+  var excCount = allTeams.filter(function(t){ return t.exceptions.length > 0; }).length;
+  document.getElementById('teamCounter').textContent = allTeams.length + ' times · ' + excCount + ' com exceções';
+
+  // Update sort indicators
+  updateSortIndicators();
+
+  // Mobile cards: show top 3 teams with most exceptions
+  var topExc = allTeams.slice().sort(function(a,b){ return b.exceptions.length - a.exceptions.length; }).slice(0, 3);
+  document.getElementById('mobileCardsArea').innerHTML = topExc.map(function(t) {
+    return '<div class="mobile-card" onclick="openSlideover(\'' + t.id + '\')"><div class="mobile-card-title">' + t.name + '</div><div class="mobile-card-detail">' + t.cc + ' · ' + t.responsible.split(' ')[0] + ' · ' + t.members.length + ' · <span class="policy-badge policy-exception">' + t.exceptions.length + ' exceções</span></div></div>';
+  }).join('');
+}
+
+function goPage(p) {
+  var filtered = getFilteredTeams();
+  var totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderTable();
+}
+
+function sortBy(col) {
+  if (sortCol === col) {
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortCol = col;
+    sortDir = 'asc';
+  }
+  currentPage = 1;
+  renderTable();
+}
+
+// Populate CC filter
+(function() {
+  var ccFilter = document.getElementById('ccFilter');
+  allCCs.forEach(function(cc) {
+    var opt = document.createElement('option');
+    opt.value = cc;
+    opt.textContent = cc;
+    ccFilter.appendChild(opt);
+  });
+})();
+
+// ========= SLIDE-OVER =========
+let currentTeamKey = null;
+
+function openSlideover(teamId) {
+  currentTeamKey = teamId;
+  var t = allTeams.find(function(team){ return team.id === teamId; });
+  if (!t) return;
+
   document.getElementById('soTitle').textContent = t.name;
   document.getElementById('soSubtitle').textContent = 'Centro de Custo: ' + t.cc;
 
-  let h = '';
+  var h = '';
 
   // Vacation banner at TOP
   if (t.vacation && t.vacation.length > 0) {
@@ -604,16 +969,16 @@ function openSlideover(teamKey) {
   // Exceptions
   h += '<div><div class="so-label">Exceções deste Time</div>';
   if (t.exceptions.length === 0) {
-    h += '<div class="empty-state">Este time segue a política do CC ' + t.cc + ' / empresa.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showCreateExceptionForm(\'' + teamKey + '\')">Criar exceção →</button></div></div>';
+    h += '<div class="empty-state">Este time segue a política do CC ' + t.cc + ' / empresa.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showCreateExceptionForm(\'' + teamId + '\')">Criar exceção →</button></div></div>';
   } else {
     t.exceptions.forEach(function(ex) {
       h += '<div class="exception-block" id="exc-' + ex.id + '"><div class="exception-header"><div class="exception-flow"><span>' + ex.flow + '</span><span class="exception-badge">Exceção Time</span></div></div>';
       h += '<div class="exception-detail">' + ex.detail + '</div>';
       if (ex.audit) h += '<div class="audit-meta">Criada em ' + ex.audit.created + ' por ' + ex.audit.by + ' · <span class="audit-meta-ref">' + ex.audit.ref + '</span></div>';
-      h += '<div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showEditExceptionForm(\'' + teamKey + '\',\'' + ex.id + '\')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="showRemoveConfirm(\'' + teamKey + '\',\'' + ex.id + '\')">Remover exceção</button></div></div>';
+      h += '<div class="exception-actions"><button class="btn btn-secondary btn-sm" onclick="showEditExceptionForm(\'' + teamId + '\',\'' + ex.id + '\')">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="showRemoveConfirm(\'' + teamId + '\',\'' + ex.id + '\')">Remover exceção</button></div></div>';
     });
     h += '<div class="explanatory-text">Exceções deste time substituem inteiramente a regra do CC/empresa para o fluxo correspondente.</div>';
-    h += '<button class="btn btn-ghost btn-sm" style="margin-top:var(--spacing-sm);" onclick="showCreateExceptionForm(\'' + teamKey + '\')">+ Nova exceção</button>';
+    h += '<button class="btn btn-ghost btn-sm" style="margin-top:var(--spacing-sm);" onclick="showCreateExceptionForm(\'' + teamId + '\')">+ Nova exceção</button>';
   }
   h += '<div id="exceptionFormArea"></div>';
   h += '</div></div>';
@@ -631,12 +996,12 @@ function openSlideover(teamKey) {
       }
       if (v.audit) h += '<div class="audit-meta">Configurada em ' + v.audit.created + ' por ' + v.audit.by + ' · <span class="audit-meta-ref">' + v.audit.ref + '</span></div>';
       h += '<div style="display:flex;gap:var(--spacing-sm);margin-top:var(--spacing-sm);">';
-      h += '<button class="btn btn-secondary btn-sm" onclick="showVacationForm(\'' + teamKey + '\')">Editar</button>';
-      h += '<button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="endVacation(\'' + teamKey + '\',' + idx + ')">Encerrar cobertura</button>';
+      h += '<button class="btn btn-secondary btn-sm" onclick="showVacationForm(\'' + teamId + '\')">Editar</button>';
+      h += '<button class="btn btn-ghost btn-sm" style="color:var(--danger-red);" onclick="endVacation(\'' + teamId + '\',' + idx + ')">Encerrar cobertura</button>';
       h += '</div></div>';
     });
   } else {
-    h += '<div class="empty-state">Nenhuma cobertura ativa no momento.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showVacationForm(\'' + teamKey + '\')">+ Configurar cobertura</button></div></div>';
+    h += '<div class="empty-state">Nenhuma cobertura ativa no momento.<div style="margin-top:var(--spacing-sm);"><button class="btn btn-secondary btn-sm" onclick="showVacationForm(\'' + teamId + '\')">+ Configurar cobertura</button></div></div>';
   }
   h += '<div id="vacationFormArea"></div>';
   h += '</div>';
@@ -721,8 +1086,6 @@ document.addEventListener('keydown', function(e) {
 
 // ========= EXCEPTION FLOW =========
 
-let currentTeamKey = null;
-
 const allFlows = ['Solicitações','Despesas de Cartão','Reembolsos','Viagens'];
 
 const defaultRules = {
@@ -732,9 +1095,13 @@ const defaultRules = {
   'Viagens': 'Quando viagem ocorre → Classe econômica obrigatória. Hospedagem até R$ 500/noite. Antecedência 7 dias.'
 };
 
-function showCreateExceptionForm(teamKey) {
-  currentTeamKey = teamKey;
-  var t = teamsData[teamKey];
+function getTeamById(teamId) {
+  return allTeams.find(function(team){ return team.id === teamId; });
+}
+
+function showCreateExceptionForm(teamId) {
+  currentTeamKey = teamId;
+  var t = getTeamById(teamId);
   var existingFlows = t.exceptions.map(function(e) { return e.flow; });
 
   var container = document.getElementById('exceptionFormArea');
@@ -752,7 +1119,7 @@ function showCreateExceptionForm(teamKey) {
   h += '</div>';
   h += '<div style="display:flex;gap:var(--spacing-sm);margin-top:var(--spacing-md);">';
   h += '<button class="btn btn-primary btn-sm" onclick="proceedToWorkflowBuilder()">Continuar</button>';
-  h += '<button class="btn btn-ghost btn-sm" onclick="openSlideover(\'' + teamKey + '\')">Cancelar</button>';
+  h += '<button class="btn btn-ghost btn-sm" onclick="openSlideover(\'' + teamId + '\')">Cancelar</button>';
   h += '</div></div>';
 
   container.innerHTML = h;
@@ -764,9 +1131,9 @@ function proceedToWorkflowBuilder() {
   showWorkflowBuilder(currentTeamKey, selected.value, null);
 }
 
-function showWorkflowBuilder(teamKey, flow, existingException) {
-  currentTeamKey = teamKey;
-  var t = teamsData[teamKey];
+function showWorkflowBuilder(teamId, flow, existingException) {
+  currentTeamKey = teamId;
+  var t = getTeamById(teamId);
   var scopeLabel = 'Exceção Time';
   var scopeClass = 'exception-badge';
 
@@ -809,8 +1176,8 @@ function showWorkflowBuilder(teamKey, flow, existingException) {
   // Buttons
   var saveLabel = existingException ? 'Salvar alterações' : 'Salvar exceção';
   h += '<div style="display:flex;gap:var(--spacing-sm);">';
-  h += '<button class="btn btn-primary btn-sm" onclick="saveException(\'' + teamKey + '\',\'' + flow + '\',' + (existingException ? 'true' : 'false') + ')">' + saveLabel + '</button>';
-  h += '<button class="btn btn-secondary btn-sm" onclick="openSlideover(\'' + teamKey + '\')">Cancelar</button>';
+  h += '<button class="btn btn-primary btn-sm" onclick="saveException(\'' + teamId + '\',\'' + flow + '\',' + (existingException ? 'true' : 'false') + ')">' + saveLabel + '</button>';
+  h += '<button class="btn btn-secondary btn-sm" onclick="openSlideover(\'' + teamId + '\')">Cancelar</button>';
   h += '</div></div>';
 
   container.innerHTML = h;
@@ -885,8 +1252,8 @@ function updateAction(idx, val) {
   }
 }
 
-function saveException(teamKey, flow, isEdit) {
-  var t = teamsData[teamKey];
+function saveException(teamId, flow, isEdit) {
+  var t = getTeamById(teamId);
   // Gather conditions from DOM
   var condEls = document.querySelectorAll('#conditionsArea .wb-condition');
   var conditions = Array.from(condEls).map(function(el) {
@@ -906,25 +1273,26 @@ function saveException(teamKey, flow, isEdit) {
 
   if (isEdit) {
     var exc = t.exceptions.find(function(e) { return e.flow === flow; });
-    if (exc) { exc.conditions = conditions; exc.actions = actions; exc.detail = summary; exc.audit = {ref: exc.audit?.ref || 'EXC-2026-03-' + String(Date.now()).slice(-4), created: '26/03/2026', by: 'Você (editado)'}; }
+    if (exc) { exc.conditions = conditions; exc.actions = actions; exc.detail = summary; exc.audit = {ref: exc.audit?.ref || 'EXC-2026-03-' + String(Date.now()).slice(-4), created: '27/03/2026', by: 'Você (editado)'}; }
     showToast('Exceção atualizada.', 'success');
   } else {
-    var newId = teamKey + '-' + flow.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
-    t.exceptions.push({ flow: flow, detail: summary, id: newId, conditions: conditions, actions: actions, audit: {ref: 'EXC-2026-03-' + String(Date.now()).slice(-4), created: '26/03/2026', by: 'Você'} });
+    var newId = teamId + '-' + flow.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
+    t.exceptions.push({ flow: flow, detail: summary, id: newId, conditions: conditions, actions: actions, audit: {ref: 'EXC-2026-03-' + String(Date.now()).slice(-4), created: '27/03/2026', by: 'Você'} });
     showToast('Exceção criada para ' + flow + ' no Time ' + t.name + '.', 'success');
   }
 
-  openSlideover(teamKey);
+  openSlideover(teamId);
+  renderTable();
 }
 
-function showEditExceptionForm(teamKey, excId) {
-  var t = teamsData[teamKey];
+function showEditExceptionForm(teamId, excId) {
+  var t = getTeamById(teamId);
   var exc = t.exceptions.find(function(e) { return e.id === excId; });
-  if (exc) showWorkflowBuilder(teamKey, exc.flow, exc);
+  if (exc) showWorkflowBuilder(teamId, exc.flow, exc);
 }
 
-function showRemoveConfirm(teamKey, excId) {
-  var t = teamsData[teamKey];
+function showRemoveConfirm(teamId, excId) {
+  var t = getTeamById(teamId);
   var exc = t.exceptions.find(function(e) { return e.id === excId; });
   if (!exc) return;
 
@@ -933,16 +1301,17 @@ function showRemoveConfirm(teamKey, excId) {
     t.exceptions = t.exceptions.filter(function(e) { return e.id !== excId; });
     showToast('Exceção removida. ' + t.name + ' agora usa a regra padrão.', 'success');
     closeModal('removeConfirmModal');
-    openSlideover(teamKey);
+    openSlideover(teamId);
+    renderTable();
   };
   openModal('removeConfirmModal');
 }
 
 // ========= VACATION FLOW =========
 
-function showVacationForm(teamKey) {
-  currentTeamKey = teamKey;
-  var t = teamsData[teamKey];
+function showVacationForm(teamId) {
+  currentTeamKey = teamId;
+  var t = getTeamById(teamId);
 
   // Get approvers/managers
   var approvers = t.approvals.map(function(a) { return a.name; });
@@ -980,8 +1349,8 @@ function showVacationForm(teamKey) {
 
   // Buttons
   h += '<div style="display:flex;gap:var(--spacing-sm);">';
-  h += '<button class="btn btn-primary btn-sm" onclick="saveVacation(\'' + teamKey + '\')">Salvar cobertura</button>';
-  h += '<button class="btn btn-secondary btn-sm" onclick="openSlideover(\'' + teamKey + '\')">Cancelar</button>';
+  h += '<button class="btn btn-primary btn-sm" onclick="saveVacation(\'' + teamId + '\')">Salvar cobertura</button>';
+  h += '<button class="btn btn-secondary btn-sm" onclick="openSlideover(\'' + teamId + '\')">Cancelar</button>';
   h += '</div></div>';
 
   container.innerHTML = h;
@@ -1027,8 +1396,8 @@ function updateVacationPreview() {
 
 function formatDate(d) { if (!d) return ''; var parts = d.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
 
-function saveVacation(teamKey) {
-  var t = teamsData[teamKey];
+function saveVacation(teamId) {
+  var t = getTeamById(teamId);
   var person = document.getElementById('vacPerson').value;
   var start = formatDate(document.getElementById('vacStart').value);
   var end = formatDate(document.getElementById('vacEnd').value);
@@ -1039,23 +1408,26 @@ function saveVacation(teamKey) {
   var checks = document.querySelectorAll('.vacRespCheck:checked');
   var resps = Array.from(checks).map(function(c) { return c.dataset.resp; });
 
-  t.vacation.push({ person: person, start: start, end: end, sameSubstitute: same, substitute: subst, responsibilities: resps, audit: {ref: 'COB-2026-03-' + String(Date.now()).slice(-4), created: '26/03/2026', by: 'Você'} });
+  t.vacation.push({ person: person, start: start, end: end, sameSubstitute: same, substitute: subst, responsibilities: resps, audit: {ref: 'COB-2026-03-' + String(Date.now()).slice(-4), created: '27/03/2026', by: 'Você'} });
   showToast('Cobertura de férias configurada para ' + person + '. ' + resps.length + ' responsabilidade(s) delegada(s).', 'success');
-  openSlideover(teamKey);
+  openSlideover(teamId);
 }
 
-function endVacation(teamKey, idx) {
-  var t = teamsData[teamKey];
+function endVacation(teamId, idx) {
+  var t = getTeamById(teamId);
   var v = t.vacation[idx];
   document.getElementById('removeConfirmText').innerHTML = 'Encerrar cobertura de <strong>' + v.person + '</strong>? As responsabilidades voltarão para ' + v.person + ' imediatamente.';
   document.getElementById('removeConfirmBtn').onclick = function() {
     t.vacation.splice(idx, 1);
     showToast('Cobertura encerrada.', 'success');
     closeModal('removeConfirmModal');
-    openSlideover(teamKey);
+    openSlideover(teamId);
   };
   openModal('removeConfirmModal');
 }
+
+// ========= INIT =========
+renderTable();
 </script>
 </body>
 </html>

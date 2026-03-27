@@ -122,7 +122,10 @@ a:hover { text-decoration: underline; }
 /* Table */
 .table-container { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-2xl); overflow-x: auto; box-shadow: var(--shadow-sm); }
 .data-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; }
-.data-table th { background: var(--gray-50); font-size: 12px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; padding: var(--spacing-md) var(--spacing-md); border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.data-table th { background: var(--gray-50); font-size: 12px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; padding: var(--spacing-md) var(--spacing-md); border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; cursor: pointer; user-select: none; }
+.data-table th:hover { color: var(--gray-700); }
+.data-table th .sort-arrow { font-size: 10px; margin-left: 4px; opacity: 0.4; }
+.data-table th.sort-active .sort-arrow { opacity: 1; color: var(--primary-orange); }
 .data-table td { padding: var(--spacing-md); font-size: 13px; color: var(--gray-700); border-bottom: 1px solid var(--border); vertical-align: middle; height: 56px; }
 .data-table tbody tr { cursor: pointer; transition: background 0.15s; }
 .data-table tbody tr:hover td { background: var(--gray-50); }
@@ -145,7 +148,34 @@ a:hover { text-decoration: underline; }
 .status-badge { display: inline-flex; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-2xl); font-size: 12px; font-weight: 600; }
 .status-pending { background: var(--warning-yellow-light); color: var(--warning-yellow); }
 .status-approved { background: var(--success-green-light); color: var(--success-green); }
+.status-rejected { background: var(--danger-red-light); color: var(--danger-red); }
 .status-auto { background: var(--gray-100); color: var(--gray-500); }
+
+/* Pagination */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--gray-500);
+  background: var(--white);
+  border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+}
+.pagination-info { font-weight: 500; }
+.pagination-nav { display: flex; align-items: center; gap: var(--spacing-xs); }
+.page-btn {
+  min-width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--white); color: var(--gray-600);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: all 0.15s;
+}
+.page-btn:hover:not(:disabled) { background: var(--gray-50); border-color: var(--gray-300); }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.page-btn.active { background: var(--primary-orange); color: var(--white); border-color: var(--primary-orange); }
 
 /* Slide-over */
 .slideover-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
@@ -279,7 +309,7 @@ a:hover { text-decoration: underline; }
   .sidebar-backdrop.active { display: block; }
   .slideover { width: 100%; right: -100%; }
 }
-@media (max-width: 768px) { .content-wrapper { padding: var(--spacing-md); padding-top: 60px; } .page-header-top { flex-direction: column; } .filters-bar { flex-direction: column; } .table-container { display: none; } .mobile-cards { display: block !important; } .detail-grid { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .content-wrapper { padding: var(--spacing-md); padding-top: 60px; } .page-header-top { flex-direction: column; } .filters-bar { flex-direction: column; } .table-container { display: none; } .mobile-cards { display: block !important; } .detail-grid { grid-template-columns: 1fr; } .pagination-bar { flex-direction: column; gap: var(--spacing-sm); } }
 @media (max-width: 480px) { body { font-size: 16px; } .page-title { font-size: 24px; } }
 
 /* Audit Trail */
@@ -343,46 +373,42 @@ a:hover { text-decoration: underline; }
         <div class="agent-mini-left">
           <span class="agent-mini-dot"></span>
           <strong>Policy Agent</strong>
-          <span style="color:var(--gray-500);">Modo: Recomendação · 12 pendentes de revisão</span>
+          <span id="bannerStats" style="color:var(--gray-500);">Modo: Recomendação · carregando...</span>
         </div>
         <a href="index-v6-politicas.html" style="font-size:13px;font-weight:600;">Configurar →</a>
       </div>
 
       <!-- Filters -->
       <div class="filters-bar">
-        <input type="text" class="search-input" placeholder="Buscar despesas..." aria-label="Buscar despesas">
-        <select class="filter-select" aria-label="Status"><option>Todos os status</option><option>Pendente</option><option>Aprovada</option><option>Rejeitada</option><option>Auto-aprovada</option></select>
-        <select class="filter-select" aria-label="Recomendação Agent"><option>Todas recomendações</option><option>Aprovação recomendada</option><option>Requer revisão</option><option>Rejeição recomendada</option><option>Auto-aprovadas</option></select>
-        <select class="filter-select" aria-label="Flags"><option>Todas</option><option>Com flags</option><option>Sem flags</option></select>
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar por fornecedor ou usuário..." aria-label="Buscar despesas" oninput="applyFilters()">
+        <select class="filter-select" id="filterStatus" aria-label="Status" onchange="applyFilters()"><option value="">Todos os status</option><option value="Pendente">Pendente</option><option value="Aprovada">Aprovada</option><option value="Rejeitada">Rejeitada</option><option value="Auto-aprovada">Auto-aprovada</option></select>
+        <select class="filter-select" id="filterRec" aria-label="Recomendação Agent" onchange="applyFilters()"><option value="">Todas recomendações</option><option value="approve">Aprovação recomendada</option><option value="review">Requer revisão</option><option value="reject">Rejeição recomendada</option><option value="auto">Auto-aprovadas</option></select>
+        <select class="filter-select" id="filterFlags" aria-label="Flags" onchange="applyFilters()"><option value="">Todas</option><option value="com">Com flags</option><option value="sem">Sem flags</option></select>
       </div>
 
       <!-- Table -->
       <div class="table-container">
         <table class="data-table" aria-label="Despesas">
-          <thead><tr><th>Fornecedor</th><th>Data</th><th>Usuário</th><th>Tipo</th><th>Valor</th><th>Recomendação</th><th>Conf.</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr onclick="openSlideover(0)"><td>iFood</td><td>18/03/2026</td><td>Maria O.</td><td>Cartão</td><td>R$ 87,50</td><td><span class="rec-badge rec-approve">Aprovar</span></td><td class="confidence">98%</td><td><span class="status-badge status-approved">Aprovada</span></td></tr>
-            <tr onclick="openSlideover(1)"><td>Uber</td><td>17/03/2026</td><td>João M.</td><td>Cartão</td><td>R$ 234,00</td><td><span class="rec-badge rec-approve">Aprovar</span></td><td class="confidence">95%</td><td><span class="status-badge status-pending">Pendente</span></td></tr>
-            <tr class="row-reject" onclick="openSlideover(2)"><td><span class="flag-icon">⚑</span>Rest. Fasano</td><td>15/03/2026</td><td>André C.</td><td>Reembolso</td><td>R$ 4.500,00</td><td><span class="rec-badge rec-review">Revisar</span></td><td class="confidence">62%</td><td><span class="status-badge status-pending">Pendente</span></td></tr>
-            <tr onclick="openSlideover(3)"><td>Decolar</td><td>14/03/2026</td><td>Francisco D.</td><td>Pix</td><td>R$ 8.750,00</td><td><span class="rec-badge rec-review">Revisar</span></td><td class="confidence">58%</td><td><span class="status-badge status-pending">Pendente</span></td></tr>
-            <tr class="row-reject" onclick="openSlideover(4)"><td><span class="flag-icon">⚑</span>Magazine Luiza</td><td>13/03/2026</td><td>Sandra F.</td><td>Cartão</td><td>R$ 1.200,00</td><td><span class="rec-badge rec-reject">Rejeitar</span></td><td class="confidence">89%</td><td><span class="status-badge status-pending">Pendente</span></td></tr>
-            <tr class="row-auto" onclick="openSlideover(5)"><td>Padaria Real</td><td>19/03/2026</td><td>Camila V.</td><td>Cartão</td><td>R$ 32,00</td><td><span class="rec-badge rec-auto">Auto</span></td><td class="confidence">99%</td><td><span class="status-badge status-auto">Auto-aprovada</span></td></tr>
-            <tr onclick="openSlideover(6)"><td>99</td><td>18/03/2026</td><td>Ricardo L.</td><td>Cartão</td><td>R$ 45,90</td><td><span class="rec-badge rec-approve">Aprovar</span></td><td class="confidence">97%</td><td><span class="status-badge status-pending">Pendente</span></td></tr>
-            <tr onclick="openSlideover(7)"><td>Azul</td><td>16/03/2026</td><td>Ana P.</td><td>Pix</td><td>R$ 2.340,00</td><td><span class="rec-badge rec-approve">Aprovar</span></td><td class="confidence">91%</td><td><span class="status-badge status-pending">Pendente</span></td></tr>
-            <tr onclick="openSlideover(8)"><td><span class="flag-icon">⚑</span>Posto Shell</td><td>12/03/2026</td><td>Marcos M.</td><td>Reembolso</td><td>R$ 890,00</td><td><span class="rec-badge rec-review">Revisar</span></td><td class="confidence">55%</td><td><span class="status-badge status-pending">Pendente</span></td></tr>
-            <tr class="row-auto" onclick="openSlideover(9)"><td>Uber</td><td>20/03/2026</td><td>João M.</td><td>Cartão</td><td>R$ 67,00</td><td><span class="rec-badge rec-auto">Auto</span></td><td class="confidence">99%</td><td><span class="status-badge status-auto">Auto-aprovada</span></td></tr>
-            <tr onclick="openSlideover(10)"><td>Hotel Ibis</td><td>11/03/2026</td><td>Francisco D.</td><td>Reembolso</td><td>R$ 1.850,00</td><td><span class="rec-badge rec-approve">Aprovar</span></td><td class="confidence">88%</td><td><span class="status-badge status-approved">Aprovada</span></td></tr>
-            <tr class="row-reject" onclick="openSlideover(11)"><td><span class="flag-icon">⚑</span>iFood</td><td>19/03/2026</td><td>Sandra F.</td><td>Cartão</td><td>R$ 156,00</td><td><span class="rec-badge rec-reject">Rejeitar</span></td><td class="confidence">82%</td><td><span class="status-badge status-pending">Pendente</span></td></tr>
-          </tbody>
+          <thead><tr>
+            <th onclick="sortBy('vendor')">Fornecedor <span class="sort-arrow" id="sort-vendor">↕</span></th>
+            <th onclick="sortBy('date')">Data <span class="sort-arrow" id="sort-date">↕</span></th>
+            <th onclick="sortBy('user')">Usuário <span class="sort-arrow" id="sort-user">↕</span></th>
+            <th>Tipo</th>
+            <th onclick="sortBy('value')">Valor <span class="sort-arrow" id="sort-value">↕</span></th>
+            <th>Recomendação</th>
+            <th onclick="sortBy('conf')">Conf. <span class="sort-arrow" id="sort-conf">↕</span></th>
+            <th>Status</th>
+          </tr></thead>
+          <tbody id="tableBody"></tbody>
         </table>
+        <div class="pagination-bar">
+          <div class="pagination-info" id="paginationInfo"></div>
+          <div class="pagination-nav" id="paginationNav"></div>
+        </div>
       </div>
 
       <!-- Mobile cards -->
-      <div class="mobile-cards">
-        <div class="mobile-card" onclick="openSlideover(0)"><div class="mobile-card-title">iFood — R$ 87,50</div><div class="mobile-card-detail">Maria O. · 18/03 · <span class="rec-badge rec-approve">Aprovar</span> 98%</div></div>
-        <div class="mobile-card" onclick="openSlideover(2)"><div class="mobile-card-title">⚑ Rest. Fasano — R$ 4.500,00</div><div class="mobile-card-detail">André C. · 15/03 · <span class="rec-badge rec-review">Revisar</span> 62%</div></div>
-        <div class="mobile-card" onclick="openSlideover(4)"><div class="mobile-card-title">⚑ Magazine Luiza — R$ 1.200,00</div><div class="mobile-card-detail">Sandra F. · 13/03 · <span class="rec-badge rec-reject">Rejeitar</span> 89%</div></div>
-      </div>
+      <div class="mobile-cards" id="mobileCards"></div>
     </div>
   </main>
 </div>
@@ -398,24 +424,429 @@ a:hover { text-decoration: underline; }
 </div>
 
 <script>
-const expenses = [
-  { vendor:'iFood', date:'18/03/2026', user:'Maria Oliveira', type:'Cartão', value:'R$ 87,50', rec:'approve', conf:98, status:'Aprovada', rationale:'Aprovação recomendada (98%) — Valor dentro do limite para categoria Alimentação (R$ 87,50 < R$ 1.000). Fornecedor com histórico positivo. Comprovante presente e válido.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'12.345.678/0001-90', cc:'Vendas', team:'Comercial', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0342', decision: 'Aprovação automática', datetime: '18/03/2026 às 09:14:22', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 87,50 · Categoria: Alimentação · Fornecedor: iFood · CNPJ: válido · Comprovante: presente' } },
-  { vendor:'Uber', date:'17/03/2026', user:'João Mendes', type:'Cartão', value:'R$ 234,00', rec:'approve', conf:95, status:'Pendente', rationale:'Aprovação recomendada (95%) — Transporte dentro do padrão habitual do usuário. Categoria Transporte confirmada pelo MCC.', rule:'Categorização automática por MCC', flags:[], scope:'geral', cnpj:'08.744.210/0001-60', cc:'Produto', team:'Engenharia', cat:'Transporte', audit: { ref: 'AUD-2026-03-0345', decision: 'Recomendação de aprovação', datetime: '17/03/2026 às 11:02:45', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 234,00 · Categoria: Transporte · Fornecedor: Uber · CNPJ: válido · Comprovante: via app' } },
-  { vendor:'Restaurante Fasano', date:'15/03/2026', user:'André Costa', type:'Reembolso', value:'R$ 4.500,00', rec:'review', conf:62, status:'Pendente', rationale:'Revisão necessária (62%) — Valor acima do limite habitual para este usuário em categoria Alimentação. Reembolso acima de R$ 1.000 exige aprovação dupla. Comprovante sem detalhamento de itens.', rule:'Reembolso > R$ 1.000 → Aprovação dupla', flags:['VALOR ACIMA DO LIMITE'], scope:'time', scopeName:'Time Diretoria', cnpj:'33.456.789/0001-22', cc:'Administrativo', team:'Diretoria', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0298', decision: 'Escalado para revisão', datetime: '15/03/2026 às 14:55:30', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 4.500,00 · Categoria: Alimentação · Fornecedor: Fasano · CNPJ: válido · Comprovante: presente', contested: { by: 'Sandra Ferreira', date: '16/03/2026 às 10:22', reason: 'Avaliação incorreta do Agent', comment: 'Valor fora do padrão para este fornecedor. Fasano tem preço médio de R$ 350 por pessoa, e a despesa foi para 2 pessoas — está dentro do esperado.' } } },
-  { vendor:'Decolar', date:'14/03/2026', user:'Francisco Duarte', type:'Pix', value:'R$ 8.750,00', rec:'review', conf:58, status:'Pendente', rationale:'Revisão necessária (58%) — Valor elevado para viagem. Antecedência da viagem não confirmada. Requer aprovação do gestor.', rule:'Viagens > R$ 5.000 → Escalar gestor', flags:[], scope:'geral', cnpj:'10.200.300/0001-50', cc:'Marketing', team:'Marketing Digital', cat:'Viagens', audit: { ref: 'AUD-2026-03-0289', decision: 'Escalado para revisão', datetime: '14/03/2026 às 10:30:12', executor: 'Policy Agent v2.1', approvedBy: 'Carlos Santos em 14/03/2026 às 16:45', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 8.750,00 · Categoria: Viagens · Fornecedor: Decolar · CNPJ: válido · Comprovante: presente' } },
-  { vendor:'Magazine Luiza', date:'13/03/2026', user:'Sandra Ferreira', type:'Cartão', value:'R$ 1.200,00', rec:'reject', conf:89, status:'Pendente', rationale:'Rejeição recomendada (89%) — Recibo duplicado detectado. Este comprovante já foi enviado na despesa #4521 de 10/03/2026.', rule:'Flag: Recibo duplicado → Bloquear', flags:['RECIBO DUPLICADO'], scope:'geral', cnpj:'47.960.950/0001-21', cc:'Operações', team:'Operações', cat:'Material de escritório', audit: { ref: 'AUD-2026-03-0301', decision: 'Rejeição recomendada', datetime: '13/03/2026 às 08:15:44', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 1.200,00 · Categoria: Material · Fornecedor: Magazine Luiza · CNPJ: válido · Comprovante: duplicado (match #4521)' } },
-  { vendor:'Padaria Real', date:'19/03/2026', user:'Camila Vieira', type:'Cartão', value:'R$ 32,00', rec:'auto', conf:99, status:'Auto-aprovada', rationale:'Auto-aprovado (99%) — Valor abaixo do limite de auto-aprovação (R$ 32 < R$ 2.000). Fornecedor recorrente. Sem flags ativas.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'22.333.444/0001-55', cc:'Administrativo', team:'Financeiro', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0350', decision: 'Aprovação automática', datetime: '19/03/2026 às 07:45:10', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 32,00 · Categoria: Alimentação · Fornecedor: Padaria Real · CNPJ: válido · Comprovante: não exigido (< R$ 50)' } },
-  { vendor:'99', date:'18/03/2026', user:'Ricardo Lopes', type:'Cartão', value:'R$ 45,90', rec:'approve', conf:97, status:'Pendente', rationale:'Aprovação recomendada (97%) — Transporte urbano dentro do padrão. MCC confirmado como transporte.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'16.789.000/0001-77', cc:'Operações', team:'Operações', cat:'Transporte', audit: { ref: 'AUD-2026-03-0352', decision: 'Recomendação de aprovação', datetime: '18/03/2026 às 08:30:15', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 45,90 · Categoria: Transporte · Fornecedor: 99 · CNPJ: válido · Comprovante: via app' } },
-  { vendor:'Azul', date:'16/03/2026', user:'Ana Pereira', type:'Pix', value:'R$ 2.340,00', rec:'approve', conf:91, status:'Pendente', rationale:'Aprovação recomendada (91%) — Passagem aérea nacional em classe econômica. Antecedência de 14 dias. Dentro dos padrões.', rule:'Viagens nacionais — classe econômica', flags:[], scope:'geral', cnpj:'09.296.295/0001-60', cc:'Administrativo', team:'Jurídico', cat:'Viagens', audit: { ref: 'AUD-2026-03-0354', decision: 'Recomendação de aprovação', datetime: '16/03/2026 às 09:12:33', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 2.340,00 · Categoria: Viagens · Fornecedor: Azul · CNPJ: válido · Comprovante: presente' } },
-  { vendor:'Posto Shell', date:'12/03/2026', user:'Marcos Miranda', type:'Reembolso', value:'R$ 890,00', rec:'review', conf:55, status:'Pendente', rationale:'Revisão necessária (55%) — CNPJ do fornecedor com situação irregular na Receita Federal. Recomenda-se verificação antes da aprovação.', rule:'Flag: CNPJ inativo → Bloquear', flags:['CNPJ INATIVO'], scope:'geral', cnpj:'55.666.777/0001-88', cc:'Internacional', team:'Comércio Exterior', cat:'Combustível', audit: { ref: 'AUD-2026-03-0356', decision: 'Escalado para revisão', datetime: '12/03/2026 às 14:20:05', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 890,00 · Categoria: Combustível · Fornecedor: Posto Shell · CNPJ: inativo · Comprovante: presente' } },
-  { vendor:'Uber', date:'20/03/2026', user:'João Mendes', type:'Cartão', value:'R$ 67,00', rec:'auto', conf:99, status:'Auto-aprovada', rationale:'Auto-aprovado (99%) — Transporte recorrente, valor dentro do limite.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', cnpj:'08.744.210/0001-60', cc:'Produto', team:'Engenharia', cat:'Transporte', audit: { ref: 'AUD-2026-03-0357', decision: 'Aprovação automática', datetime: '20/03/2026 às 07:55:18', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 67,00 · Categoria: Transporte · Fornecedor: Uber · CNPJ: válido · Comprovante: via app' } },
-  { vendor:'Hotel Ibis', date:'11/03/2026', user:'Francisco Duarte', type:'Reembolso', value:'R$ 1.850,00', rec:'approve', conf:88, status:'Aprovada', rationale:'Aprovação recomendada (88%) — Hospedagem dentro do limite diário (R$ 370/noite × 5 noites). NF-e presente. Comprovante válido.', rule:'Hospedagem nacional até R$ 500/noite', flags:[], scope:'geral', cnpj:'07.100.200/0001-99', cc:'Marketing', team:'Marketing Digital', cat:'Hospedagem', audit: { ref: 'AUD-2026-03-0358', decision: 'Recomendação de aprovação', datetime: '11/03/2026 às 10:45:50', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 1.850,00 · Categoria: Hospedagem · Fornecedor: Hotel Ibis · CNPJ: válido · Comprovante: NF-e presente' } },
-  { vendor:'iFood', date:'19/03/2026', user:'Sandra Ferreira', type:'Cartão', value:'R$ 156,00', rec:'reject', conf:82, status:'Pendente', rationale:'Rejeição recomendada (82%) — Gasto realizado no domingo. Sem justificativa de trabalho no fim de semana. Valor acima do padrão habitual do usuário para alimentação.', rule:'Flag: Gasto fora de horário', flags:['FIM DE SEMANA'], scope:'geral', cnpj:'12.345.678/0001-90', cc:'Operações', team:'Operações', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0360', decision: 'Rejeição recomendada', datetime: '19/03/2026 às 11:05:33', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 156,00 · Categoria: Alimentação · Fornecedor: iFood · CNPJ: válido · Comprovante: presente · Flag: fim de semana' } }
+/* =========================================================
+   DATA: 12 original expenses + 78 generated = 90 total
+   ========================================================= */
+
+const originalExpenses = [
+  { vendor:'iFood', date:'18/03/2026', user:'Maria Oliveira', type:'Cartão', value:8750, rec:'approve', conf:98, status:'Aprovada', rationale:'Aprovação recomendada (98%) — Valor dentro do limite para categoria Alimentação (R$ 87,50 < R$ 1.000). Fornecedor com histórico positivo. Comprovante presente e válido.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', scopeName:'', cnpj:'12.345.678/0001-90', cc:'Vendas', team:'Comercial', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0342', decision: 'Aprovação automática', datetime: '18/03/2026 às 09:14:22', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 87,50 · Categoria: Alimentação · Fornecedor: iFood · CNPJ: válido · Comprovante: presente' } },
+  { vendor:'Uber', date:'17/03/2026', user:'João Mendes', type:'Cartão', value:23400, rec:'approve', conf:95, status:'Pendente', rationale:'Aprovação recomendada (95%) — Transporte dentro do padrão habitual do usuário. Categoria Transporte confirmada pelo MCC.', rule:'Categorização automática por MCC', flags:[], scope:'geral', scopeName:'', cnpj:'08.744.210/0001-60', cc:'Produto', team:'Engenharia', cat:'Transporte', audit: { ref: 'AUD-2026-03-0345', decision: 'Recomendação de aprovação', datetime: '17/03/2026 às 11:02:45', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 234,00 · Categoria: Transporte · Fornecedor: Uber · CNPJ: válido · Comprovante: via app' } },
+  { vendor:'Restaurante Fasano', date:'15/03/2026', user:'André Costa', type:'Reembolso', value:450000, rec:'review', conf:62, status:'Pendente', rationale:'Revisão necessária (62%) — Valor acima do limite habitual para este usuário em categoria Alimentação. Reembolso acima de R$ 1.000 exige aprovação dupla. Comprovante sem detalhamento de itens.', rule:'Reembolso > R$ 1.000 → Aprovação dupla', flags:['VALOR ACIMA DO LIMITE'], scope:'time', scopeName:'Time Diretoria', cnpj:'33.456.789/0001-22', cc:'Administrativo', team:'Diretoria', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0298', decision: 'Escalado para revisão', datetime: '15/03/2026 às 14:55:30', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 4.500,00 · Categoria: Alimentação · Fornecedor: Fasano · CNPJ: válido · Comprovante: presente', contested: { by: 'Sandra Ferreira', date: '16/03/2026 às 10:22', reason: 'Avaliação incorreta do Agent', comment: 'Valor fora do padrão para este fornecedor. Fasano tem preço médio de R$ 350 por pessoa, e a despesa foi para 2 pessoas — está dentro do esperado.' } } },
+  { vendor:'Decolar', date:'14/03/2026', user:'Francisco Duarte', type:'Pix', value:875000, rec:'review', conf:58, status:'Pendente', rationale:'Revisão necessária (58%) — Valor elevado para viagem. Antecedência da viagem não confirmada. Requer aprovação do gestor.', rule:'Viagens > R$ 5.000 → Escalar gestor', flags:[], scope:'geral', scopeName:'', cnpj:'10.200.300/0001-50', cc:'Marketing', team:'Marketing Digital', cat:'Viagens', audit: { ref: 'AUD-2026-03-0289', decision: 'Escalado para revisão', datetime: '14/03/2026 às 10:30:12', executor: 'Policy Agent v2.1', approvedBy: 'Carlos Santos em 14/03/2026 às 16:45', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 8.750,00 · Categoria: Viagens · Fornecedor: Decolar · CNPJ: válido · Comprovante: presente' } },
+  { vendor:'Magazine Luiza', date:'13/03/2026', user:'Sandra Ferreira', type:'Cartão', value:120000, rec:'reject', conf:89, status:'Pendente', rationale:'Rejeição recomendada (89%) — Recibo duplicado detectado. Este comprovante já foi enviado na despesa #4521 de 10/03/2026.', rule:'Flag: Recibo duplicado → Bloquear', flags:['RECIBO DUPLICADO'], scope:'geral', scopeName:'', cnpj:'47.960.950/0001-21', cc:'Operações', team:'Operações', cat:'Material de escritório', audit: { ref: 'AUD-2026-03-0301', decision: 'Rejeição recomendada', datetime: '13/03/2026 às 08:15:44', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 1.200,00 · Categoria: Material · Fornecedor: Magazine Luiza · CNPJ: válido · Comprovante: duplicado (match #4521)' } },
+  { vendor:'Padaria Real', date:'19/03/2026', user:'Camila Vieira', type:'Cartão', value:3200, rec:'auto', conf:99, status:'Auto-aprovada', rationale:'Auto-aprovado (99%) — Valor abaixo do limite de auto-aprovação (R$ 32 < R$ 2.000). Fornecedor recorrente. Sem flags ativas.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', scopeName:'', cnpj:'22.333.444/0001-55', cc:'Administrativo', team:'Financeiro', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0350', decision: 'Aprovação automática', datetime: '19/03/2026 às 07:45:10', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 32,00 · Categoria: Alimentação · Fornecedor: Padaria Real · CNPJ: válido · Comprovante: não exigido (< R$ 50)' } },
+  { vendor:'99', date:'18/03/2026', user:'Ricardo Lopes', type:'Cartão', value:4590, rec:'approve', conf:97, status:'Pendente', rationale:'Aprovação recomendada (97%) — Transporte urbano dentro do padrão. MCC confirmado como transporte.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', scopeName:'', cnpj:'16.789.000/0001-77', cc:'Operações', team:'Operações', cat:'Transporte', audit: { ref: 'AUD-2026-03-0352', decision: 'Recomendação de aprovação', datetime: '18/03/2026 às 08:30:15', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 45,90 · Categoria: Transporte · Fornecedor: 99 · CNPJ: válido · Comprovante: via app' } },
+  { vendor:'Azul', date:'16/03/2026', user:'Ana Pereira', type:'Pix', value:234000, rec:'approve', conf:91, status:'Pendente', rationale:'Aprovação recomendada (91%) — Passagem aérea nacional em classe econômica. Antecedência de 14 dias. Dentro dos padrões.', rule:'Viagens nacionais — classe econômica', flags:[], scope:'geral', scopeName:'', cnpj:'09.296.295/0001-60', cc:'Administrativo', team:'Jurídico', cat:'Viagens', audit: { ref: 'AUD-2026-03-0354', decision: 'Recomendação de aprovação', datetime: '16/03/2026 às 09:12:33', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 2.340,00 · Categoria: Viagens · Fornecedor: Azul · CNPJ: válido · Comprovante: presente' } },
+  { vendor:'Posto Shell', date:'12/03/2026', user:'Marcos Miranda', type:'Reembolso', value:89000, rec:'review', conf:55, status:'Pendente', rationale:'Revisão necessária (55%) — CNPJ do fornecedor com situação irregular na Receita Federal. Recomenda-se verificação antes da aprovação.', rule:'Flag: CNPJ inativo → Bloquear', flags:['CNPJ INATIVO'], scope:'geral', scopeName:'', cnpj:'55.666.777/0001-88', cc:'Internacional', team:'Comércio Exterior', cat:'Combustível', audit: { ref: 'AUD-2026-03-0356', decision: 'Escalado para revisão', datetime: '12/03/2026 às 14:20:05', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 890,00 · Categoria: Combustível · Fornecedor: Posto Shell · CNPJ: inativo · Comprovante: presente' } },
+  { vendor:'Uber', date:'20/03/2026', user:'João Mendes', type:'Cartão', value:6700, rec:'auto', conf:99, status:'Auto-aprovada', rationale:'Auto-aprovado (99%) — Transporte recorrente, valor dentro do limite.', rule:'Auto-aprovação ≤ R$ 2.000', flags:[], scope:'geral', scopeName:'', cnpj:'08.744.210/0001-60', cc:'Produto', team:'Engenharia', cat:'Transporte', audit: { ref: 'AUD-2026-03-0357', decision: 'Aprovação automática', datetime: '20/03/2026 às 07:55:18', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 67,00 · Categoria: Transporte · Fornecedor: Uber · CNPJ: válido · Comprovante: via app' } },
+  { vendor:'Hotel Ibis', date:'11/03/2026', user:'Francisco Duarte', type:'Reembolso', value:185000, rec:'approve', conf:88, status:'Aprovada', rationale:'Aprovação recomendada (88%) — Hospedagem dentro do limite diário (R$ 370/noite × 5 noites). NF-e presente. Comprovante válido.', rule:'Hospedagem nacional até R$ 500/noite', flags:[], scope:'geral', scopeName:'', cnpj:'07.100.200/0001-99', cc:'Marketing', team:'Marketing Digital', cat:'Hospedagem', audit: { ref: 'AUD-2026-03-0358', decision: 'Recomendação de aprovação', datetime: '11/03/2026 às 10:45:50', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 1.850,00 · Categoria: Hospedagem · Fornecedor: Hotel Ibis · CNPJ: válido · Comprovante: NF-e presente' } },
+  { vendor:'iFood', date:'19/03/2026', user:'Sandra Ferreira', type:'Cartão', value:15600, rec:'reject', conf:82, status:'Pendente', rationale:'Rejeição recomendada (82%) — Gasto realizado no domingo. Sem justificativa de trabalho no fim de semana. Valor acima do padrão habitual do usuário para alimentação.', rule:'Flag: Gasto fora de horário', flags:['FIM DE SEMANA'], scope:'geral', scopeName:'', cnpj:'12.345.678/0001-90', cc:'Operações', team:'Operações', cat:'Alimentação', audit: { ref: 'AUD-2026-03-0360', decision: 'Rejeição recomendada', datetime: '19/03/2026 às 11:05:33', executor: 'Policy Agent v2.1', policyVersion: 'v3 — atualizada em 20/03/2026 por André A.', dataConsidered: 'Valor: R$ 156,00 · Categoria: Alimentação · Fornecedor: iFood · CNPJ: válido · Comprovante: presente · Flag: fim de semana' } }
 ];
 
+/* ---- GENERATION ENGINE ---- */
+const vendors = ['iFood','Uber','99','Rest. Fasano','Magazine Luiza','Decolar','Azul','GOL','Latam','Amazon AWS','Google Cloud','Slack','Notion','Figma','WeWork','Rappi','Padaria Real','Posto Shell','Localiza','Hotel Ibis','Marriott','Uber Eats','James Delivery','Mercado Livre','Kabum','Stone'];
+const categories = {
+  'iFood':'Alimentação','Uber':'Transporte','99':'Transporte','Rest. Fasano':'Alimentação',
+  'Magazine Luiza':'Material','Decolar':'Viagens','Azul':'Viagens','GOL':'Viagens','Latam':'Viagens',
+  'Amazon AWS':'SaaS','Google Cloud':'SaaS','Slack':'SaaS','Notion':'SaaS','Figma':'SaaS',
+  'WeWork':'Escritório','Rappi':'Alimentação','Padaria Real':'Alimentação','Posto Shell':'Combustível',
+  'Localiza':'Transporte','Hotel Ibis':'Hospedagem','Marriott':'Hospedagem',
+  'Uber Eats':'Alimentação','James Delivery':'Alimentação','Mercado Livre':'Material',
+  'Kabum':'Material','Stone':'Serviços'
+};
+const userPool = [
+  {name:'Lucas Andrade',team:'Engenharia',cc:'Produto'},{name:'Fernanda Souza',team:'Marketing Digital',cc:'Marketing'},
+  {name:'Rafael Torres',team:'Comercial',cc:'Vendas'},{name:'Beatriz Lima',team:'Financeiro',cc:'Administrativo'},
+  {name:'Gabriel Santos',team:'Operações',cc:'Operações'},{name:'Juliana Rocha',team:'Jurídico',cc:'Administrativo'},
+  {name:'Pedro Almeida',team:'Engenharia',cc:'Produto'},{name:'Carolina Dias',team:'RH',cc:'Administrativo'},
+  {name:'Thiago Barbosa',team:'Comercial',cc:'Vendas'},{name:'Amanda Cardoso',team:'Diretoria',cc:'Administrativo'},
+  {name:'Mateus Ferreira',team:'Marketing Digital',cc:'Marketing'},{name:'Isabela Gomes',team:'Financeiro',cc:'Administrativo'},
+  {name:'Diego Martins',team:'Engenharia',cc:'Produto'},{name:'Larissa Cunha',team:'Operações',cc:'Operações'},
+  {name:'Vinícius Ribeiro',team:'Comércio Exterior',cc:'Internacional'},{name:'Natália Araújo',team:'Comercial',cc:'Vendas'},
+  {name:'Bruno Nascimento',team:'Engenharia',cc:'Produto'},{name:'Mariana Teixeira',team:'RH',cc:'Administrativo'},
+  {name:'Felipe Costa',team:'Marketing Digital',cc:'Marketing'},{name:'Camila Ramos',team:'Jurídico',cc:'Administrativo'},
+  {name:'Rodrigo Nunes',team:'Operações',cc:'Operações'},{name:'Letícia Moreira',team:'Financeiro',cc:'Administrativo'},
+  {name:'Eduardo Silveira',team:'Diretoria',cc:'Administrativo'},{name:'Aline Vieira',team:'Comercial',cc:'Vendas'},
+  {name:'Henrique Monteiro',team:'Engenharia',cc:'Produto'},{name:'Priscila Oliveira',team:'RH',cc:'Administrativo'},
+  {name:'Daniel Mendes',team:'Comércio Exterior',cc:'Internacional'},{name:'Tatiana Lopes',team:'Marketing Digital',cc:'Marketing'},
+  {name:'Gustavo Pereira',team:'Operações',cc:'Operações'},{name:'Renata Castro',team:'Financeiro',cc:'Administrativo'},
+  {name:'Caio Barros',team:'Engenharia',cc:'Produto'},{name:'Débora Freitas',team:'Jurídico',cc:'Administrativo'},
+  {name:'Leandro Campos',team:'Comercial',cc:'Vendas'},{name:'Patrícia Santos',team:'Diretoria',cc:'Administrativo'},
+  {name:'Marcelo Pinto',team:'Marketing Digital',cc:'Marketing'},{name:'Vanessa Correia',team:'RH',cc:'Administrativo'},
+  {name:'Otávio Duarte',team:'Operações',cc:'Operações'},{name:'Bianca Melo',team:'Financeiro',cc:'Administrativo'},
+  {name:'Flávio Gonçalves',team:'Comércio Exterior',cc:'Internacional'},{name:'Simone Borges',team:'Engenharia',cc:'Produto'}
+];
+
+const flagTypes = ['RECIBO DUPLICADO','CNPJ INATIVO','FIM DE SEMANA','VALOR ACIMA DO LIMITE','MERCHANT PROIBIDO','COMPROVANTE AI-GENERATED'];
+const types = ['Cartão','Reembolso','Pix'];
+const rules = [
+  'Auto-aprovação ≤ R$ 2.000','Categorização automática por MCC','Reembolso > R$ 1.000 → Aprovação dupla',
+  'Viagens > R$ 5.000 → Escalar gestor','Flag: Recibo duplicado → Bloquear','Flag: CNPJ inativo → Bloquear',
+  'Flag: Gasto fora de horário','Hospedagem nacional até R$ 500/noite','SaaS — verificação de contrato',
+  'Viagens nacionais — classe econômica','Material acima de R$ 500 → Aprovação gestor','Combustível — limite mensal R$ 1.200'
+];
+const rationales = {
+  approve: [
+    'Aprovação recomendada — Valor dentro do limite para a categoria. Fornecedor com histórico positivo. Comprovante presente e válido.',
+    'Aprovação recomendada — Despesa recorrente dentro do padrão habitual do usuário. MCC confirmado.',
+    'Aprovação recomendada — Gasto dentro da política vigente. Documentação completa.',
+    'Aprovação recomendada — Fornecedor aprovado, valor compatível com histórico, sem anomalias detectadas.'
+  ],
+  review: [
+    'Revisão necessária — Valor acima do padrão habitual para este usuário nesta categoria. Requer verificação.',
+    'Revisão necessária — Dados do comprovante incompletos. Recomenda-se validação manual.',
+    'Revisão necessária — Primeira despesa com este fornecedor. Verificação de legitimidade recomendada.',
+    'Revisão necessária — Valor acima do limite da categoria, requer aprovação do gestor.'
+  ],
+  reject: [
+    'Rejeição recomendada — Flag ativa detectada. Despesa viola política vigente.',
+    'Rejeição recomendada — Comprovante com inconsistências. Dados não conferem.',
+    'Rejeição recomendada — Fornecedor fora da lista aprovada. Sem justificativa válida.',
+    'Rejeição recomendada — Despesa duplicada ou fora do horário permitido.'
+  ],
+  auto: [
+    'Auto-aprovado — Valor abaixo do limite de auto-aprovação. Fornecedor recorrente. Sem flags.',
+    'Auto-aprovado — Despesa dentro de todos os parâmetros de auto-aprovação. Sem necessidade de revisão.'
+  ]
+};
+
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function generateExpenses() {
+  const rng = seededRandom(42);
+  const pick = arr => arr[Math.floor(rng() * arr.length)];
+  const generated = [];
+
+  // Distribution targets: ~43 approve, ~19 review, ~11 reject, ~5 auto (among 78)
+  // (originals already have: 5 approve, 3 review, 2 reject, 2 auto = 12)
+  // Total targets: ~50 approve, ~22 review, ~13 reject, ~5 auto
+  const recDistribution = [];
+  for (let i = 0; i < 43; i++) recDistribution.push('approve');
+  for (let i = 0; i < 19; i++) recDistribution.push('review');
+  for (let i = 0; i < 11; i++) recDistribution.push('reject');
+  for (let i = 0; i < 5; i++) recDistribution.push('auto');
+  // Shuffle
+  for (let i = recDistribution.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [recDistribution[i], recDistribution[j]] = [recDistribution[j], recDistribution[i]];
+  }
+
+  // Flag indices (6-8 among 78, picking 7)
+  const flagIndices = new Set();
+  while (flagIndices.size < 7) {
+    flagIndices.add(Math.floor(rng() * 78));
+  }
+
+  const cnpjPool = [
+    '12.345.678/0001-90','08.744.210/0001-60','33.456.789/0001-22','10.200.300/0001-50',
+    '47.960.950/0001-21','22.333.444/0001-55','16.789.000/0001-77','09.296.295/0001-60',
+    '55.666.777/0001-88','07.100.200/0001-99','14.567.890/0001-33','18.234.567/0001-44',
+    '25.678.901/0001-66','31.456.789/0001-11','42.789.012/0001-22','53.012.345/0001-55',
+    '64.345.678/0001-88','75.678.901/0001-99','86.901.234/0001-01','97.234.567/0001-12'
+  ];
+
+  for (let i = 0; i < 78; i++) {
+    const rec = recDistribution[i];
+    const vendor = pick(vendors);
+    const cat = categories[vendor] || 'Outros';
+    const user = pick(userPool);
+    const day = Math.floor(rng() * 26) + 1;
+    const dayStr = String(day).padStart(2, '0');
+    const date = dayStr + '/03/2026';
+    const type = pick(types);
+
+    // Value ranges based on rec
+    let value;
+    if (rec === 'auto') {
+      value = Math.floor(rng() * 18000) + 1200; // R$12 to R$192
+    } else if (rec === 'approve') {
+      value = Math.floor(rng() * 350000) + 1200; // R$12 to R$3.512
+    } else if (rec === 'review') {
+      value = Math.floor(rng() * 2500000) + 50000; // R$500 to R$25.500
+    } else {
+      value = Math.floor(rng() * 3000000) + 15000; // R$150 to R$30.150
+    }
+
+    // Confidence ranges
+    let conf;
+    if (rec === 'auto') conf = Math.floor(rng() * 4) + 96; // 96-99
+    else if (rec === 'approve') conf = Math.floor(rng() * 20) + 78; // 78-97
+    else if (rec === 'review') conf = Math.floor(rng() * 18) + 52; // 52-69
+    else conf = Math.floor(rng() * 22) + 75; // 75-96
+
+    const flags = [];
+    if (flagIndices.has(i)) {
+      flags.push(pick(flagTypes));
+    }
+
+    // Status
+    let status;
+    if (rec === 'auto') {
+      status = 'Auto-aprovada';
+    } else if (rec === 'approve' && rng() < 0.25) {
+      status = 'Aprovada';
+    } else if (rec === 'reject' && rng() < 0.15) {
+      status = 'Rejeitada';
+    } else {
+      status = 'Pendente';
+    }
+
+    const scope = rng() < 0.15 ? 'time' : 'geral';
+    const teamNames = ['Time Diretoria','Time Engenharia','Time Comercial','Time Marketing'];
+    const scopeName = scope === 'time' ? pick(teamNames) : '';
+
+    const rationale_text = pick(rationales[rec]).replace('recomendada', 'recomendada (' + conf + '%)').replace('necessária', 'necessária (' + conf + '%)');
+
+    const audNum = String(400 + i).padStart(4, '0');
+    const hour = String(Math.floor(rng() * 14) + 7).padStart(2, '0');
+    const min = String(Math.floor(rng() * 60)).padStart(2, '0');
+    const sec = String(Math.floor(rng() * 60)).padStart(2, '0');
+
+    const decisionMap = {approve:'Recomendação de aprovação', review:'Escalado para revisão', reject:'Rejeição recomendada', auto:'Aprovação automática'};
+    const valStr = formatBRL(value);
+
+    generated.push({
+      vendor, date, user: user.name, type, value, rec, conf, status,
+      rationale: rationale_text,
+      rule: pick(rules),
+      flags, scope, scopeName,
+      cnpj: pick(cnpjPool),
+      cc: user.cc, team: user.team, cat,
+      audit: {
+        ref: 'AUD-2026-03-' + audNum,
+        decision: decisionMap[rec],
+        datetime: dayStr + '/03/2026 às ' + hour + ':' + min + ':' + sec,
+        executor: 'Policy Agent v2.1',
+        policyVersion: 'v3 — atualizada em 20/03/2026 por André A.',
+        dataConsidered: 'Valor: ' + valStr + ' · Categoria: ' + cat + ' · Fornecedor: ' + vendor + ' · CNPJ: ' + (flags.includes('CNPJ INATIVO') ? 'inativo' : 'válido') + ' · Comprovante: ' + (flags.includes('COMPROVANTE AI-GENERATED') ? 'suspeito' : 'presente')
+      }
+    });
+  }
+  return generated;
+}
+
+function formatBRL(cents) {
+  const val = (cents / 100).toFixed(2).replace('.', ',');
+  return 'R$ ' + val.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function parseBRLtoCents(str) {
+  return parseFloat(str.replace('R$ ', '').replace(/\./g, '').replace(',', '.')) * 100;
+}
+
+// Build full expenses array
+const expenses = originalExpenses.concat(generateExpenses());
+
+/* =========================================================
+   FILTERING, SORTING, PAGINATION
+   ========================================================= */
+let filteredExpenses = [...expenses];
+let currentPage = 1;
+const perPage = 25;
+let sortField = '';
+let sortDir = 0; // 0=none, 1=asc, -1=desc
+
+function parseDate(d) {
+  const [dd, mm, yyyy] = d.split('/');
+  return new Date(yyyy, mm - 1, dd);
+}
+
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  const statusF = document.getElementById('filterStatus').value;
+  const recF = document.getElementById('filterRec').value;
+  const flagsF = document.getElementById('filterFlags').value;
+
+  filteredExpenses = expenses.filter(e => {
+    if (search && !e.vendor.toLowerCase().includes(search) && !e.user.toLowerCase().includes(search)) return false;
+    if (statusF && e.status !== statusF) return false;
+    if (recF && e.rec !== recF) return false;
+    if (flagsF === 'com' && e.flags.length === 0) return false;
+    if (flagsF === 'sem' && e.flags.length > 0) return false;
+    return true;
+  });
+
+  if (sortField) applySortToFiltered();
+  currentPage = 1;
+  render();
+}
+
+function sortBy(field) {
+  // Toggle sort direction
+  if (sortField === field) {
+    sortDir = sortDir === 1 ? -1 : sortDir === -1 ? 0 : 1;
+  } else {
+    sortField = field;
+    sortDir = 1;
+  }
+  if (sortDir === 0) { sortField = ''; }
+
+  // Update header arrows
+  document.querySelectorAll('.data-table th').forEach(th => th.classList.remove('sort-active'));
+  const arrows = {vendor:'sort-vendor',date:'sort-date',user:'sort-user',value:'sort-value',conf:'sort-conf'};
+  if (sortField && arrows[sortField]) {
+    const el = document.getElementById(arrows[sortField]);
+    el.parentElement.classList.add('sort-active');
+    el.textContent = sortDir === 1 ? '↑' : '↓';
+  }
+  // Reset non-active arrows
+  Object.entries(arrows).forEach(([k,id]) => {
+    if (k !== sortField) document.getElementById(id).textContent = '↕';
+  });
+
+  if (sortField) applySortToFiltered();
+  else filteredExpenses = expenses.filter(e => filteredExpenses.includes(e)); // re-filter without sort
+  currentPage = 1;
+  render();
+}
+
+function applySortToFiltered() {
+  const d = sortDir;
+  filteredExpenses.sort((a, b) => {
+    let va, vb;
+    switch (sortField) {
+      case 'vendor': va = a.vendor.toLowerCase(); vb = b.vendor.toLowerCase(); return va < vb ? -d : va > vb ? d : 0;
+      case 'user': va = a.user.toLowerCase(); vb = b.user.toLowerCase(); return va < vb ? -d : va > vb ? d : 0;
+      case 'date': return d * (parseDate(a.date) - parseDate(b.date));
+      case 'value': return d * (a.value - b.value);
+      case 'conf': return d * (a.conf - b.conf);
+      default: return 0;
+    }
+  });
+}
+
+function render() {
+  renderTable();
+  renderPagination();
+  renderMobileCards();
+  updateCounters();
+}
+
+function renderTable() {
+  const start = (currentPage - 1) * perPage;
+  const page = filteredExpenses.slice(start, start + perPage);
+  const tbody = document.getElementById('tableBody');
+  let html = '';
+
+  page.forEach((e, i) => {
+    const idx = expenses.indexOf(e);
+    const hasFlags = e.flags.length > 0;
+    const isAuto = e.rec === 'auto';
+    const isReject = e.rec === 'reject' || hasFlags;
+    let rowClass = '';
+    if (isAuto) rowClass = 'row-auto';
+    else if (isReject) rowClass = 'row-reject';
+
+    const recBadgeClass = {approve:'rec-approve',review:'rec-review',reject:'rec-reject',auto:'rec-auto'}[e.rec];
+    const recLabel = {approve:'Aprovar',review:'Revisar',reject:'Rejeitar',auto:'Auto'}[e.rec];
+    const statusClass = {'Pendente':'status-pending','Aprovada':'status-approved','Rejeitada':'status-rejected','Auto-aprovada':'status-auto'}[e.status] || 'status-pending';
+    const valStr = formatBRL(e.value);
+
+    html += '<tr class="' + rowClass + '" onclick="openSlideover(' + idx + ')">';
+    html += '<td>' + (hasFlags ? '<span class="flag-icon">⚑</span>' : '') + e.vendor + '</td>';
+    html += '<td>' + e.date + '</td>';
+    html += '<td>' + e.user + '</td>';
+    html += '<td>' + e.type + '</td>';
+    html += '<td>' + valStr + '</td>';
+    html += '<td><span class="rec-badge ' + recBadgeClass + '">' + recLabel + '</span></td>';
+    html += '<td class="confidence">' + e.conf + '%</td>';
+    html += '<td><span class="status-badge ' + statusClass + '">' + e.status + '</span></td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+}
+
+function renderPagination() {
+  const total = filteredExpenses.length;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  const start = Math.min((currentPage - 1) * perPage + 1, total);
+  const end = Math.min(currentPage * perPage, total);
+
+  document.getElementById('paginationInfo').textContent = total > 0
+    ? 'Mostrando ' + start + '-' + end + ' de ' + total + ' despesas'
+    : 'Nenhuma despesa encontrada';
+
+  let nav = '';
+  nav += '<button class="page-btn" onclick="goToPage(' + (currentPage - 1) + ')" ' + (currentPage <= 1 ? 'disabled' : '') + '>←</button>';
+
+  // Show up to 7 page buttons
+  let pages = [];
+  if (totalPages <= 7) {
+    for (let p = 1; p <= totalPages; p++) pages.push(p);
+  } else {
+    pages.push(1);
+    if (currentPage > 3) pages.push('...');
+    for (let p = Math.max(2, currentPage - 1); p <= Math.min(totalPages - 1, currentPage + 1); p++) pages.push(p);
+    if (currentPage < totalPages - 2) pages.push('...');
+    pages.push(totalPages);
+  }
+
+  pages.forEach(p => {
+    if (p === '...') {
+      nav += '<span style="padding:0 4px;color:var(--gray-400);">...</span>';
+    } else {
+      nav += '<button class="page-btn' + (p === currentPage ? ' active' : '') + '" onclick="goToPage(' + p + ')">' + p + '</button>';
+    }
+  });
+
+  nav += '<button class="page-btn" onclick="goToPage(' + (currentPage + 1) + ')" ' + (currentPage >= totalPages ? 'disabled' : '') + '>→</button>';
+  document.getElementById('paginationNav').innerHTML = nav;
+}
+
+function renderMobileCards() {
+  const start = (currentPage - 1) * perPage;
+  const page = filteredExpenses.slice(start, start + perPage);
+  const container = document.getElementById('mobileCards');
+  let html = '';
+
+  page.forEach(e => {
+    const idx = expenses.indexOf(e);
+    const hasFlags = e.flags.length > 0;
+    const recBadgeClass = {approve:'rec-approve',review:'rec-review',reject:'rec-reject',auto:'rec-auto'}[e.rec];
+    const recLabel = {approve:'Aprovar',review:'Revisar',reject:'Rejeitar',auto:'Auto'}[e.rec];
+    const valStr = formatBRL(e.value);
+    const shortDate = e.date.substring(0, 5);
+
+    html += '<div class="mobile-card" onclick="openSlideover(' + idx + ')">';
+    html += '<div class="mobile-card-title">' + (hasFlags ? '⚑ ' : '') + e.vendor + ' — ' + valStr + '</div>';
+    html += '<div class="mobile-card-detail">' + e.user + ' · ' + shortDate + ' · <span class="rec-badge ' + recBadgeClass + '">' + recLabel + '</span> ' + e.conf + '%</div>';
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function updateCounters() {
+  const total = filteredExpenses.length;
+  const pending = filteredExpenses.filter(e => e.status === 'Pendente').length;
+  const withFlags = filteredExpenses.filter(e => e.flags.length > 0).length;
+
+  document.getElementById('bannerStats').textContent = 'Modo: Recomendação · ' + total + ' despesas · ' + pending + ' pendentes de revisão · ' + withFlags + ' com flags';
+}
+
+function goToPage(p) {
+  const totalPages = Math.ceil(filteredExpenses.length / perPage);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  render();
+  // Scroll to top of table
+  document.querySelector('.table-container').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
+/* =========================================================
+   SLIDE-OVER (preserved from original)
+   ========================================================= */
 function openSlideover(idx) {
   const e = expenses[idx];
-  document.getElementById('soTitle').textContent = e.vendor + ' — ' + e.value;
+  const valStr = formatBRL(e.value);
+  document.getElementById('soTitle').textContent = e.vendor + ' — ' + valStr;
   document.getElementById('soSubtitle').textContent = e.type + ' · ' + e.date;
 
   const recClass = {approve:'approve',review:'review',reject:'reject',auto:'approve'}[e.rec];
@@ -424,7 +855,7 @@ function openSlideover(idx) {
   let h = '';
 
   // Status progress
-  const isDone = e.status === 'Aprovada' || e.status === 'Auto-aprovada';
+  const isDone = e.status === 'Aprovada' || e.status === 'Auto-aprovada' || e.status === 'Rejeitada';
   h += '<div class="so-section"><div class="status-progress">';
   h += '<div class="progress-step done"></div><div class="progress-step done"></div>';
   h += '<div class="progress-step ' + (isDone ? 'done' : 'current') + '"></div>';
@@ -454,7 +885,7 @@ function openSlideover(idx) {
     h += '<div class="audit-block">';
     h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-sm);">';
     h += '<span class="audit-ref">' + a.ref + '</span>';
-    h += '<button class="audit-copy-btn" onclick="copyAudit(\'' + idx + '\')" aria-label="Copiar registro">📋</button>';
+    h += '<button class="audit-copy-btn" onclick="copyAudit(' + idx + ')" aria-label="Copiar registro">📋</button>';
     h += '</div>';
     h += '<div class="audit-row"><span class="audit-label">Decisão</span><span class="audit-value">' + a.decision + '</span></div>';
     h += '<div class="audit-row"><span class="audit-label">Data/hora</span><span class="audit-value">' + a.datetime + '</span></div>';
@@ -494,7 +925,7 @@ function openSlideover(idx) {
 
     // Contest button (for auto-approved or already-decided expenses)
     if (e.status !== 'Pendente') {
-      h += '<button class="btn btn-secondary btn-sm" style="margin-top:var(--spacing-sm);" onclick="showContestForm(\'' + idx + '\')" id="contestBtn-' + idx + '">Contestar decisão</button>';
+      h += '<button class="btn btn-secondary btn-sm" style="margin-top:var(--spacing-sm);" onclick="showContestForm(' + idx + ')" id="contestBtn-' + idx + '">Contestar decisão</button>';
       h += '<div id="contestForm-' + idx + '" style="display:none;"></div>';
     }
 
@@ -506,9 +937,9 @@ function openSlideover(idx) {
     h += '<div class="so-section"><div class="so-section-title">Feedback</div><div class="feedback-section">';
 
     if (e.rec === 'approve' || e.rec === 'review') {
-      h += '<div class="feedback-actions"><button class="btn btn-success btn-sm" onclick="agreeAction(\'' + idx + '\',\'aprovada\')">✓ Aprovar</button><button class="btn btn-danger-fill btn-sm" onclick="showOverride(\'' + idx + '\',\'rejeitada\')">✗ Rejeitar</button></div>';
+      h += '<div class="feedback-actions"><button class="btn btn-success btn-sm" onclick="agreeAction(' + idx + ',\'aprovada\')">✓ Aprovar</button><button class="btn btn-danger-fill btn-sm" onclick="showOverride(' + idx + ',\'rejeitada\')">✗ Rejeitar</button></div>';
     } else if (e.rec === 'reject') {
-      h += '<div class="feedback-actions"><button class="btn btn-success btn-sm" onclick="showOverride(\'' + idx + '\',\'aprovada\')">✓ Aprovar</button><button class="btn btn-danger-fill btn-sm" onclick="agreeAction(\'' + idx + '\',\'rejeitada\')">✗ Rejeitar</button></div>';
+      h += '<div class="feedback-actions"><button class="btn btn-success btn-sm" onclick="showOverride(' + idx + ',\'aprovada\')">✓ Aprovar</button><button class="btn btn-danger-fill btn-sm" onclick="agreeAction(' + idx + ',\'rejeitada\')">✗ Rejeitar</button></div>';
     }
 
     h += '<div class="feedback-thumbs">Análise correta? <button class="thumb-btn" onclick="showToast(\'Feedback positivo registrado.\',\'success\')" aria-label="Análise correta">👍</button><button class="thumb-btn" onclick="showToast(\'Obrigado pelo feedback.\',\'info\')" aria-label="Análise incorreta">👎</button></div>';
@@ -522,7 +953,7 @@ function openSlideover(idx) {
     h += '<label class="override-option"><input type="radio" name="override-' + idx + '" value="4"> Política não se aplica — caso é exceção legítima</label>';
     h += '</div>';
     h += '<textarea class="override-comment" placeholder="Comentário adicional (opcional)" aria-label="Comentário adicional"></textarea>';
-    h += '<button class="btn btn-primary btn-sm" id="confirmOverride-' + idx + '" onclick="confirmOverride(\'' + idx + '\')">Confirmar</button>';
+    h += '<button class="btn btn-primary btn-sm" id="confirmOverride-' + idx + '" onclick="confirmOverride(' + idx + ')">Confirmar</button>';
     h += '</div>';
 
     h += '</div></div>';
@@ -627,7 +1058,7 @@ function showContestForm(idx) {
     '<div class="contest-option"><input type="radio" name="contest-' + idx + '" value="Política não se aplica"> Política não se aplica</div>' +
     '<textarea class="contest-textarea" placeholder="Explique o que está errado"></textarea>' +
     '<div style="display:flex;gap:var(--spacing-sm);margin-top:var(--spacing-sm);">' +
-    '<button class="btn btn-primary btn-sm" onclick="submitContest(\'' + idx + '\')">Registrar contestação</button>' +
+    '<button class="btn btn-primary btn-sm" onclick="submitContest(' + idx + ')">Registrar contestação</button>' +
     '<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'contestForm-' + idx + '\').style.display=\'none\';document.getElementById(\'contestBtn-' + idx + '\').style.display=\'\';">Cancelar</button>' +
     '</div></div>';
 }
@@ -640,6 +1071,9 @@ function submitContest(idx) {
   document.getElementById('contestForm-' + idx).style.display = 'none';
   document.getElementById('contestBtn-' + idx).style.display = 'none';
 }
+
+/* ---- INIT ---- */
+applyFilters();
 </script>
 </body>
 </html>
