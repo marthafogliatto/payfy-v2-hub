@@ -537,9 +537,9 @@ function generateExpenses() {
     [recDistribution[i], recDistribution[j]] = [recDistribution[j], recDistribution[i]];
   }
 
-  // Flag indices (6-8 among 78, picking 7)
+  // Flag indices (3-4 among 78, picking 3 to keep total at 7 with originals' 4)
   const flagIndices = new Set();
-  while (flagIndices.size < 7) {
+  while (flagIndices.size < 3) {
     flagIndices.add(Math.floor(rng() * 78));
   }
 

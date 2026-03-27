@@ -2019,17 +2019,28 @@ a:hover { text-decoration: underline; }
 
               <!-- Exceptions summary -->
               <div class="exceptions-summary">
-                <div class="exceptions-summary-title">Exceções ativas (18)</div>
-                <div style="max-height:160px;overflow-y:auto;">
-                  <div class="exception-link"><a href="index-v6-centros-custo.html">CC Internacional — LATAM: auto-aprovação R$ 15.000</a><span class="exception-badge exception-badge-cc">Exceção CC</span></div>
-                  <div class="exception-link"><a href="index-v6-centros-custo.html">CC Internacional — Europa: auto-aprovação R$ 20.000</a><span class="exception-badge exception-badge-cc">Exceção CC</span></div>
-                  <div class="exception-link"><a href="index-v6-centros-custo.html">CC Internacional — EUA: auto-aprovação R$ 25.000</a><span class="exception-badge exception-badge-cc">Exceção CC</span></div>
-                  <div class="exception-link"><a href="index-v6-centros-custo.html">CC Marketing: auto-aprovação R$ 5.000</a><span class="exception-badge exception-badge-cc">Exceção CC</span></div>
-                  <div class="exception-link"><a href="index-v6-centros-custo.html">CC Diretoria: CFO aprova tudo</a><span class="exception-badge exception-badge-cc">Exceção CC</span></div>
-                  <div class="exception-link"><a href="index-v6-times.html">Time Diretoria: CFO aprova > R$ 5.000</a><span class="exception-badge exception-badge-time">Exceção Time</span></div>
-                  <div class="exception-link"><a href="index-v6-times.html">Time Vendas Enterprise: auto-aprovação R$ 8.000</a><span class="exception-badge exception-badge-time">Exceção Time</span></div>
-                  <div class="exception-link"><a href="index-v6-times.html">Time Inside Sales: auto-aprovação R$ 3.000</a><span class="exception-badge exception-badge-time">Exceção Time</span></div>
-                  <div class="exception-link" style="color:var(--gray-500);font-size:12px;">+ 10 outras exceções de times</div>
+                <div class="exceptions-summary-title">Exceções ativas (18) — agrupadas por CC</div>
+                <div style="max-height:240px;overflow-y:auto;">
+                  <details style="margin-bottom:var(--spacing-xs);">
+                    <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);padding:var(--spacing-xs) 0;list-style:none;display:flex;align-items:center;gap:var(--spacing-sm);"><span style="color:var(--gray-400);font-size:10px;">▶</span> CC Vendas <span class="exception-badge exception-badge-cc" style="font-size:10px;">3 times</span></summary>
+                    <div style="padding-left:var(--spacing-lg);"><div class="exception-link"><a href="index-v6-times.html">Vendas Enterprise: auto-aprovação R$ 8.000</a></div><div class="exception-link"><a href="index-v6-times.html">Inside Sales: auto-aprovação R$ 3.000</a></div><div class="exception-link"><a href="index-v6-times.html">Vendas Governo: CFO aprova > R$ 5.000</a></div></div>
+                  </details>
+                  <details style="margin-bottom:var(--spacing-xs);">
+                    <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);padding:var(--spacing-xs) 0;list-style:none;display:flex;align-items:center;gap:var(--spacing-sm);"><span style="color:var(--gray-400);font-size:10px;">▶</span> CC Marketing <span class="exception-badge exception-badge-cc" style="font-size:10px;">CC + 2 times</span></summary>
+                    <div style="padding-left:var(--spacing-lg);"><div class="exception-link"><a href="index-v6-centros-custo.html">CC Marketing: auto-aprovação R$ 5.000</a><span class="exception-badge exception-badge-cc">CC</span></div><div class="exception-link"><a href="index-v6-times.html">Growth: categoria Eventos auto-aprovada</a></div><div class="exception-link"><a href="index-v6-times.html">Performance: SaaS auto-aprovado R$ 3.000</a></div></div>
+                  </details>
+                  <details style="margin-bottom:var(--spacing-xs);">
+                    <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);padding:var(--spacing-xs) 0;list-style:none;display:flex;align-items:center;gap:var(--spacing-sm);"><span style="color:var(--gray-400);font-size:10px;">▶</span> CC Internacional <span class="exception-badge exception-badge-cc" style="font-size:10px;">3 CCs + 2 times</span></summary>
+                    <div style="padding-left:var(--spacing-lg);"><div class="exception-link"><a href="index-v6-centros-custo.html">CC LATAM: auto-aprovação R$ 15.000</a><span class="exception-badge exception-badge-cc">CC</span></div><div class="exception-link"><a href="index-v6-centros-custo.html">CC Europa: auto-aprovação R$ 20.000</a><span class="exception-badge exception-badge-cc">CC</span></div><div class="exception-link"><a href="index-v6-centros-custo.html">CC EUA: auto-aprovação R$ 25.000</a><span class="exception-badge exception-badge-cc">CC</span></div><div class="exception-link"><a href="index-v6-times.html">EUA Enterprise: auto-aprovação R$ 50.000</a></div><div class="exception-link"><a href="index-v6-times.html">LATAM Comercial: auto-aprovação R$ 10.000</a></div></div>
+                  </details>
+                  <details style="margin-bottom:var(--spacing-xs);">
+                    <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);padding:var(--spacing-xs) 0;list-style:none;display:flex;align-items:center;gap:var(--spacing-sm);"><span style="color:var(--gray-400);font-size:10px;">▶</span> CC Diretoria <span class="exception-badge exception-badge-cc" style="font-size:10px;">CC + 1 time</span></summary>
+                    <div style="padding-left:var(--spacing-lg);"><div class="exception-link"><a href="index-v6-centros-custo.html">CC Diretoria: CFO aprova tudo</a><span class="exception-badge exception-badge-cc">CC</span></div><div class="exception-link"><a href="index-v6-times.html">Time Diretoria: CFO aprova > R$ 5.000</a></div></div>
+                  </details>
+                  <details style="margin-bottom:var(--spacing-xs);">
+                    <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);padding:var(--spacing-xs) 0;list-style:none;display:flex;align-items:center;gap:var(--spacing-sm);"><span style="color:var(--gray-400);font-size:10px;">▶</span> CC Engenharia <span class="exception-badge exception-badge-cc" style="font-size:10px;">CC + 2 times</span></summary>
+                    <div style="padding-left:var(--spacing-lg);"><div class="exception-link"><a href="index-v6-centros-custo.html">CC Engenharia: SaaS auto-aprovado R$ 5.000</a><span class="exception-badge exception-badge-cc">CC</span></div><div class="exception-link"><a href="index-v6-times.html">DevOps: ferramentas auto-aprovadas R$ 8.000</a></div><div class="exception-link"><a href="index-v6-times.html">Engenharia IA: GPU/cloud auto-aprovado R$ 10.000</a></div></div>
+                  </details>
                 </div>
                 <div class="exceptions-count">18 exceções ativas · 82 CCs/times usando regra padrão</div>
               </div>
