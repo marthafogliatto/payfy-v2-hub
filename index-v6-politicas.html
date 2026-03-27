@@ -1757,6 +1757,97 @@ a:hover { text-decoration: underline; }
 @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 .timeline-ref { font-family: 'SF Mono', Monaco, monospace; font-size: 11px; color: var(--info-blue); font-weight: 500; margin-left: var(--spacing-sm); }
 .timeline-impact { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+
+/* Sub-tabs */
+.sub-tabs { display: flex; gap: var(--spacing-lg); margin-bottom: var(--spacing-lg); border-bottom: 1px solid var(--border); padding-bottom: var(--spacing-sm); }
+.sub-tab { background: none; border: none; font-size: 13px; font-weight: 500; color: var(--gray-500); padding: var(--spacing-sm) 0; border-bottom: 2px solid transparent; min-height: 44px; transition: all 0.2s; }
+.sub-tab:hover { color: var(--gray-700); }
+.sub-tab.active { color: var(--gray-900); border-bottom-color: var(--primary-orange); font-weight: 600; }
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+
+/* Compliance Dashboard */
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+.metric-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); }
+.metric-value { font-size: 28px; font-weight: 700; line-height: 1.2; }
+.metric-label { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+.dashboard-layout { display: grid; grid-template-columns: 3fr 2fr; gap: var(--spacing-lg); }
+@media (max-width: 900px) { .dashboard-layout { grid-template-columns: 1fr; } .metric-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .metric-grid { grid-template-columns: 1fr; } }
+
+.ranking-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.ranking-title { font-size: 14px; font-weight: 600; color: var(--gray-800); margin-bottom: var(--spacing-sm); }
+.ranking-item { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-xs) 0; border-bottom: 1px solid var(--gray-100); font-size: 13px; }
+.ranking-item:last-child { border-bottom: none; }
+.ranking-pos { width: 20px; font-weight: 600; color: var(--gray-400); }
+.ranking-name { flex: 1; color: var(--gray-700); }
+.ranking-count { font-weight: 600; color: var(--gray-800); margin-right: var(--spacing-sm); }
+.ranking-trend { font-size: 11px; font-weight: 600; padding: 2px var(--spacing-xs); border-radius: var(--radius-sm); }
+.trend-up { background: var(--danger-red-light); color: var(--danger-red); }
+.trend-down { background: var(--success-green-light); color: var(--success-green); }
+.trend-flat { background: var(--gray-100); color: var(--gray-500); }
+.ranking-detail { font-size: 11px; color: var(--gray-400); }
+
+/* Chart */
+.chart-container { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+.chart-title { font-size: 14px; font-weight: 600; color: var(--gray-800); margin-bottom: var(--spacing-md); }
+
+/* Custom rules */
+.custom-rule { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-sm); border-left: 3px solid var(--gray-300); }
+.custom-rule.rule-block { border-left-color: var(--danger-red); }
+.custom-rule.rule-escalate { border-left-color: var(--warning-yellow); }
+.custom-rule.rule-alert { border-left-color: var(--info-blue); }
+.custom-rule-name { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+.custom-rule-desc { font-size: 13px; color: var(--gray-600); margin-top: var(--spacing-xs); }
+.custom-rule-meta { font-size: 11px; color: var(--gray-400); margin-top: var(--spacing-sm); }
+.custom-rule-actions { display: none; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+.custom-rule:hover .custom-rule-actions { display: flex; }
+
+/* Violations feed */
+.violation-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-sm); display: flex; gap: var(--spacing-md); }
+.violation-indicator { width: 4px; border-radius: 2px; flex-shrink: 0; }
+.violation-indicator.v-block { background: #EF4444; }
+.violation-indicator.v-escalate { background: #F59E0B; }
+.violation-indicator.v-alert { background: var(--info-blue); }
+.violation-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.violation-type.vt-block { color: #EF4444; }
+.violation-type.vt-escalate { color: #F59E0B; }
+.violation-type.vt-alert { color: var(--info-blue); }
+.violation-time { font-size: 11px; color: var(--gray-400); margin-left: var(--spacing-sm); }
+.violation-desc { font-size: 14px; color: var(--gray-800); font-weight: 500; }
+.violation-rule { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+.violation-detail { font-size: 12px; color: var(--gray-500); }
+.violation-status { font-size: 12px; color: var(--gray-500); margin-top: var(--spacing-xs); }
+.violation-link { font-size: 12px; margin-top: var(--spacing-sm); }
+
+/* Audit trail */
+.audit-entry { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-bottom: var(--spacing-sm); }
+.audit-entry-header { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-xs); flex-wrap: wrap; }
+.audit-entry-icon { font-size: 16px; }
+.audit-entry-code { font-family: 'SF Mono', Monaco, monospace; font-size: 11px; color: var(--gray-500); }
+.audit-entry-type { font-size: 11px; font-weight: 600; color: var(--gray-500); }
+.audit-entry-time { font-size: 11px; color: var(--gray-400); margin-left: auto; }
+.audit-entry-desc { font-size: 14px; color: var(--gray-800); }
+.audit-entry-detail { font-size: 13px; color: var(--gray-600); margin-top: var(--spacing-xs); }
+.audit-entry-actions { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+
+/* Pagination shared */
+.pag-container { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-md) 0; font-size: 13px; color: var(--gray-500); flex-wrap: wrap; gap: var(--spacing-sm); }
+.pag-buttons { display: flex; gap: var(--spacing-xs); }
+
+/* Filters bar shared */
+.filters-row { display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); flex-wrap: wrap; }
+
+/* Stats bar */
+.stats-bar { font-size: 13px; color: var(--gray-500); margin-bottom: var(--spacing-md); padding: var(--spacing-sm) var(--spacing-md); background: var(--gray-50); border-radius: var(--radius-md); }
+
+/* New rule modal form */
+.form-row { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm); flex-wrap: wrap; }
+.form-row select, .form-row input { padding: var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 13px; font-family: inherit; min-height: 40px; }
+.form-row .kw { font-size: 13px; font-weight: 600; color: var(--info-blue); white-space: nowrap; }
+.scope-options { display: flex; flex-direction: column; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+.scope-option { display: flex; align-items: center; gap: var(--spacing-sm); font-size: 13px; }
+.scope-option input[type="radio"] { accent-color: var(--primary-orange); }
 </style>
 </head>
 <body>
@@ -2575,206 +2666,188 @@ a:hover { text-decoration: underline; }
            TAB: COMPLIANCE
            ============================================ -->
       <div class="tab-panel" id="tabCompliance" role="tabpanel" aria-labelledby="tabBtnCompliance">
-        <div class="compliance-grid">
-          <!-- Active Flags -->
-          <div class="compliance-card">
-            <div class="compliance-card-title">Flags Configuradas</div>
-            <div class="flag-toggle-item">
-              <div class="flag-toggle-info">
-                <div class="flag-toggle-name">Recibo duplicado</div>
-                <div class="flag-toggle-desc">Detecta comprovantes enviados mais de uma vez</div>
-              </div>
-              <span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-            <div class="flag-toggle-item">
-              <div class="flag-toggle-info">
-                <div class="flag-toggle-name">Valor divergente</div>
-                <div class="flag-toggle-desc">Gasto &gt;2x a média histórica do usuário</div>
-              </div>
-              <span class="flag-toggle-action" style="background:var(--warning-yellow-light);color:var(--warning-yellow);">Escalar</span>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-            <div class="flag-toggle-item">
-              <div class="flag-toggle-info">
-                <div class="flag-toggle-name">Gasto fora de horário</div>
-                <div class="flag-toggle-desc">Transação em horário não-comercial</div>
-              </div>
-              <span class="flag-toggle-action" style="background:var(--info-blue-light);color:var(--info-blue);">Alertar</span>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-            <div class="flag-toggle-item">
-              <div class="flag-toggle-info">
-                <div class="flag-toggle-name">Comprovante AI-generated</div>
-                <div class="flag-toggle-desc">Detecta comprovantes gerados por IA</div>
-              </div>
-              <span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Escalar</span>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-            <div class="flag-toggle-item">
-              <div class="flag-toggle-info">
-                <div class="flag-toggle-name">CNPJ inativo</div>
-                <div class="flag-toggle-desc">CNPJ do fornecedor com situação irregular</div>
-              </div>
-              <span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-            <div class="flag-toggle-item">
-              <div class="flag-toggle-info">
-                <div class="flag-toggle-name">Merchant proibido</div>
-                <div class="flag-toggle-desc">Fornecedor na lista negra da empresa</div>
-              </div>
-              <span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-            <div class="flag-toggle-item">
-              <div class="flag-toggle-info">
-                <div class="flag-toggle-name">Gasto acima de R$ 5.000</div>
-                <div class="flag-toggle-desc">Qualquer transação única acima deste valor</div>
-              </div>
-              <span class="flag-toggle-action" style="background:var(--warning-yellow-light);color:var(--warning-yellow);">Escalar</span>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-          </div>
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchSubTab('compliance',this,'compDashboard')">Dashboard</button>
+    <button class="sub-tab" onclick="switchSubTab('compliance',this,'compRegras')">Regras</button>
+    <button class="sub-tab" onclick="switchSubTab('compliance',this,'compViolacoes')">Violações</button>
+  </div>
 
-          <!-- Suggested Flags -->
-          <div class="compliance-card">
-            <div class="compliance-card-title">Sugestões do Agent</div>
-            <p style="font-size:13px;color:var(--gray-500);margin-bottom:var(--spacing-md);">Baseadas em 2.847 transações analisadas nos últimos 30 dias</p>
-
-            <div class="suggested-flag">
-              <div class="suggested-flag-info">
-                <div class="suggested-flag-pattern">Gastos recorrentes no mesmo merchant</div>
-                <div class="suggested-flag-detail">47 transações no iFood acima de R$ 100 por 23 usuários em 7 dias</div>
-              </div>
-              <div class="suggested-actions">
-                <button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button>
-                <button class="btn btn-ghost btn-sm">Ignorar</button>
-              </div>
-            </div>
-
-            <div class="suggested-flag">
-              <div class="suggested-flag-info">
-                <div class="suggested-flag-pattern">Gastos de fim de semana</div>
-                <div class="suggested-flag-detail">34 despesas em sábados/domingos nos últimos 30 dias sem justificativa</div>
-              </div>
-              <div class="suggested-actions">
-                <button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button>
-                <button class="btn btn-ghost btn-sm">Ignorar</button>
-              </div>
-            </div>
-
-            <div class="suggested-flag">
-              <div class="suggested-flag-info">
-                <div class="suggested-flag-pattern">Split de despesas</div>
-                <div class="suggested-flag-detail">11 pares de transações próximas ao limite que somadas excedem o teto</div>
-              </div>
-              <div class="suggested-actions">
-                <button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button>
-                <button class="btn btn-ghost btn-sm">Ignorar</button>
-              </div>
-            </div>
-
-            <div style="margin-top:var(--spacing-md);">
-              <div style="display:flex;align-items:center;gap:var(--spacing-sm);font-size:13px;color:var(--gray-500);">
-                Filtrar por tipo:
-                <select class="filter-select" aria-label="Filtrar por tipo de despesa">
-                  <option>Todas</option>
-                  <option>Solicitações</option>
-                  <option>Cartão</option>
-                  <option>Reembolso</option>
-                  <option>Viagem</option>
-                </select>
-              </div>
-            </div>
-          </div>
+  <!-- SUB: Dashboard -->
+  <div class="sub-panel active" id="compDashboard">
+    <div class="dashboard-layout">
+      <div>
+        <div class="metric-grid">
+          <div class="metric-card"><div class="metric-value" style="color:var(--success-green);">84.5%</div><div class="metric-label">Gastos dentro da política · últimos 90 dias</div></div>
+          <div class="metric-card"><div class="metric-value" style="color:var(--warning-yellow);">53.8%</div><div class="metric-label">Taxa de rejeição efetiva · rejeições recomendadas → rejeitadas</div></div>
+          <div class="metric-card"><div class="metric-value" style="color:var(--info-blue);">100%</div><div class="metric-label">Cobertura do Agent · transações avaliadas</div></div>
+          <div class="metric-card"><div class="metric-value" style="color:var(--success-green);">91.2%</div><div class="metric-label">Alinhamento Agent ↔ Revisor · concordância</div></div>
+        </div>
+        <!-- Trend chart -->
+        <div class="chart-container">
+          <div class="chart-title">Gastos dentro da política — últimos 6 meses</div>
+          <svg viewBox="0 0 600 200" width="100%" height="200" style="display:block;">
+            <defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E55A20" stop-opacity="0.2"/><stop offset="100%" stop-color="#E55A20" stop-opacity="0"/></linearGradient></defs>
+            <!-- Grid -->
+            <line x1="60" y1="20" x2="60" y2="170" stroke="#E5E7EB" stroke-width="1"/>
+            <line x1="60" y1="170" x2="580" y2="170" stroke="#E5E7EB" stroke-width="1"/>
+            <line x1="60" y1="110" x2="580" y2="110" stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="4"/>
+            <line x1="60" y1="50" x2="580" y2="50" stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="4"/>
+            <!-- Y labels -->
+            <text x="50" y="175" text-anchor="end" font-size="11" fill="#9CA3AF">75%</text>
+            <text x="50" y="115" text-anchor="end" font-size="11" fill="#9CA3AF">85%</text>
+            <text x="50" y="55" text-anchor="end" font-size="11" fill="#9CA3AF">95%</text>
+            <!-- X labels -->
+            <text x="147" y="190" text-anchor="middle" font-size="11" fill="#9CA3AF">Out</text>
+            <text x="234" y="190" text-anchor="middle" font-size="11" fill="#9CA3AF">Nov</text>
+            <text x="321" y="190" text-anchor="middle" font-size="11" fill="#9CA3AF">Dez</text>
+            <text x="408" y="190" text-anchor="middle" font-size="11" fill="#9CA3AF">Jan</text>
+            <text x="495" y="190" text-anchor="middle" font-size="11" fill="#9CA3AF">Fev</text>
+            <text x="580" y="190" text-anchor="middle" font-size="11" fill="#9CA3AF">Mar</text>
+            <!-- Fill area -->
+            <path d="M147,152 L234,140 L321,128 L408,116 L495,98 L580,77 L580,170 L147,170 Z" fill="url(#chartGrad)"/>
+            <!-- Line -->
+            <polyline points="147,152 234,140 321,128 408,116 495,98 580,77" fill="none" stroke="#E55A20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Dots -->
+            <circle cx="147" cy="152" r="4" fill="#E55A20"/><circle cx="234" cy="140" r="4" fill="#E55A20"/><circle cx="321" cy="128" r="4" fill="#E55A20"/><circle cx="408" cy="116" r="4" fill="#E55A20"/><circle cx="495" cy="98" r="4" fill="#E55A20"/><circle cx="580" cy="77" r="4" fill="white" stroke="#E55A20" stroke-width="2.5"/>
+            <!-- Value labels -->
+            <text x="147" y="145" text-anchor="middle" font-size="10" fill="#E55A20" font-weight="600">78%</text>
+            <text x="234" y="133" text-anchor="middle" font-size="10" fill="#E55A20" font-weight="600">79.5%</text>
+            <text x="321" y="121" text-anchor="middle" font-size="10" fill="#E55A20" font-weight="600">81%</text>
+            <text x="408" y="109" text-anchor="middle" font-size="10" fill="#E55A20" font-weight="600">82.3%</text>
+            <text x="495" y="91" text-anchor="middle" font-size="10" fill="#E55A20" font-weight="600">83.8%</text>
+            <text x="580" y="70" text-anchor="middle" font-size="10" fill="#E55A20" font-weight="600">84.5%</text>
+          </svg>
         </div>
       </div>
+      <div>
+        <div class="ranking-card"><div class="ranking-title">Departamentos com mais violações</div>
+          <div class="ranking-item"><span class="ranking-pos">1.</span><span class="ranking-name">Marketing</span><span class="ranking-count">12 violações</span><span class="ranking-trend trend-up">▲ +3</span></div>
+          <div class="ranking-item"><span class="ranking-pos">2.</span><span class="ranking-name">Comercial</span><span class="ranking-count">9 violações</span><span class="ranking-trend trend-down">▼ -2</span></div>
+          <div class="ranking-item"><span class="ranking-pos">3.</span><span class="ranking-name">Engenharia</span><span class="ranking-count">5 violações</span><span class="ranking-trend trend-flat">— 0</span></div>
+          <div class="ranking-item"><span class="ranking-pos">4.</span><span class="ranking-name">Administrativo</span><span class="ranking-count">3 violações</span><span class="ranking-trend trend-down">▼ -1</span></div>
+          <div class="ranking-item"><span class="ranking-pos">5.</span><span class="ranking-name">Diretoria</span><span class="ranking-count">2 violações</span><span class="ranking-trend trend-up">▲ +1</span></div>
+        </div>
+        <div class="ranking-card"><div class="ranking-title">Colaboradores com mais flags</div>
+          <div class="ranking-item"><span class="ranking-pos">1.</span><span class="ranking-name">João Mendes</span><span class="ranking-count">8 flags</span><span class="ranking-detail">Transporte (5), Alimentação (3)</span></div>
+          <div class="ranking-item"><span class="ranking-pos">2.</span><span class="ranking-name">Sandra Ferreira</span><span class="ranking-count">6 flags</span><span class="ranking-detail">Alimentação (4), Material (2)</span></div>
+          <div class="ranking-item"><span class="ranking-pos">3.</span><span class="ranking-name">Francisco Duarte</span><span class="ranking-count">5 flags</span><span class="ranking-detail">Hospedagem (3), Viagem (2)</span></div>
+          <div class="ranking-item"><span class="ranking-pos">4.</span><span class="ranking-name">Marcos Miranda</span><span class="ranking-count">4 flags</span><span class="ranking-detail">Combustível (4)</span></div>
+          <div class="ranking-item"><span class="ranking-pos">5.</span><span class="ranking-name">Ana Pereira</span><span class="ranking-count">3 flags</span><span class="ranking-detail">Viagem (2), Hospedagem (1)</span></div>
+        </div>
+        <div class="ranking-card"><div class="ranking-title">Categorias de risco</div>
+          <div class="ranking-item"><span class="ranking-pos">1.</span><span class="ranking-name">Alimentação > R$ 100</span><span class="ranking-count">23</span><span class="ranking-detail">R$ 4.200 total</span></div>
+          <div class="ranking-item"><span class="ranking-pos">2.</span><span class="ranking-name">Gasto fim de semana</span><span class="ranking-count">18</span><span class="ranking-detail">R$ 7.800 total</span></div>
+          <div class="ranking-item"><span class="ranking-pos">3.</span><span class="ranking-name">Hospedagem acima limite</span><span class="ranking-count">12</span><span class="ranking-detail">R$ 15.400 total</span></div>
+          <div class="ranking-item"><span class="ranking-pos">4.</span><span class="ranking-name">Transporte recorrente</span><span class="ranking-count">9</span><span class="ranking-detail">R$ 2.100 total</span></div>
+          <div class="ranking-item"><span class="ranking-pos">5.</span><span class="ranking-name">Fornecedor novo</span><span class="ranking-count">7</span><span class="ranking-detail">R$ 3.500 total</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUB: Regras -->
+  <div class="sub-panel" id="compRegras">
+    <!-- System Flags -->
+    <h3 style="font-size:16px;font-weight:600;color:var(--gray-800);margin-bottom:var(--spacing-md);">Flags do Sistema</h3>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--spacing-md);margin-bottom:var(--spacing-lg);">
+      <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Recibo duplicado</div><div class="flag-toggle-desc">Detecta comprovantes enviados mais de uma vez</div></div><span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Valor divergente</div><div class="flag-toggle-desc">Gasto >2x a média histórica do usuário</div></div><span class="flag-toggle-action" style="background:var(--warning-yellow-light);color:var(--warning-yellow);">Escalar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Gasto fora de horário</div><div class="flag-toggle-desc">Transação em horário não-comercial</div></div><span class="flag-toggle-action" style="background:var(--info-blue-light);color:var(--info-blue);">Alertar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Comprovante AI-generated</div><div class="flag-toggle-desc">Detecta comprovantes gerados por IA</div></div><span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Escalar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">CNPJ inativo 🇧🇷</div><div class="flag-toggle-desc">CNPJ do fornecedor com situação irregular</div></div><span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">Merchant proibido</div><div class="flag-toggle-desc">Fornecedor na lista negra da empresa</div></div><span class="flag-toggle-action" style="background:var(--danger-red-light);color:var(--danger-red);">Bloqueio</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="flag-toggle-item"><div class="flag-toggle-info"><div class="flag-toggle-name">NF-e ausente 🇧🇷</div><div class="flag-toggle-desc">Sem nota fiscal acima de R$ 200</div></div><span class="flag-toggle-action" style="background:var(--info-blue-light);color:var(--info-blue);">Alertar</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+    </div>
+
+    <!-- Custom Rules -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-md);"><h3 style="font-size:16px;font-weight:600;color:var(--gray-800);">Regras Personalizadas</h3><button class="btn btn-primary btn-sm" onclick="openModal('newRuleModal')">+ Nova Regra</button></div>
+
+    <div class="custom-rule rule-block"><div class="custom-rule-name">Bloqueio — Padaria da Esquina</div><div class="custom-rule-desc">Bloquear qualquer uso do cartão no fornecedor "Padaria da Esquina"</div><div class="custom-rule-meta">Criada por André A. em 15/03/2026 · Ativa</div><div class="custom-rule-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);">Desativar</button></div></div>
+    <div class="custom-rule rule-alert"><div class="custom-rule-name">Alerta — Gastos acima de R$ 500 em Alimentação</div><div class="custom-rule-desc">Alertar gestor quando colaborador gastar mais de R$ 500/mês em alimentação</div><div class="custom-rule-meta">Criada por Carlos M. em 10/03/2026 · Ativa</div><div class="custom-rule-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);">Desativar</button></div></div>
+    <div class="custom-rule rule-escalate"><div class="custom-rule-name">Escalar — Uber após 22h</div><div class="custom-rule-desc">Escalar para admin quando houver corrida de Uber/99 após as 22h</div><div class="custom-rule-meta">Criada por André A. em 01/03/2026 · Ativa</div><div class="custom-rule-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);">Desativar</button></div></div>
+    <div class="custom-rule rule-block"><div class="custom-rule-name">Bloqueio — Categoria proibida: Entretenimento</div><div class="custom-rule-desc">Bloquear despesas na categoria Entretenimento para todos exceto Diretoria</div><div class="custom-rule-meta">Criada por Carlos M. em 28/02/2026 · Ativa</div><div class="custom-rule-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);">Desativar</button></div></div>
+    <div class="custom-rule rule-alert"><div class="custom-rule-name">Alerta — Split de despesas</div><div class="custom-rule-desc">Alertar quando detectar 2+ despesas no mesmo fornecedor no mesmo dia totalizando mais que o limite</div><div class="custom-rule-meta">Criada por André A. em 20/02/2026 · Ativa</div><div class="custom-rule-actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-ghost btn-sm" style="color:var(--danger-red);">Desativar</button></div></div>
+
+    <!-- Agent Suggestions -->
+    <h3 style="font-size:16px;font-weight:600;color:var(--gray-800);margin-top:var(--spacing-lg);margin-bottom:var(--spacing-md);">Sugestões do Agent</h3>
+    <p style="font-size:13px;color:var(--gray-500);margin-bottom:var(--spacing-md);">Baseadas em 2.847 transações analisadas nos últimos 30 dias</p>
+
+    <div class="suggested-flag"><div class="suggested-flag-info"><div class="suggested-flag-pattern">Gastos recorrentes no mesmo merchant</div><div class="suggested-flag-detail">47 transações no iFood acima de R$ 100 por 23 usuários em 7 dias</div></div><div class="suggested-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+    <div class="suggested-flag"><div class="suggested-flag-info"><div class="suggested-flag-pattern">Gastos de fim de semana</div><div class="suggested-flag-detail">34 despesas em sábados/domingos nos últimos 30 dias sem justificativa</div></div><div class="suggested-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+    <div class="suggested-flag"><div class="suggested-flag-info"><div class="suggested-flag-pattern">Split de despesas</div><div class="suggested-flag-detail">11 pares de transações próximas ao limite que somadas excedem o teto</div></div><div class="suggested-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+    <div class="suggested-flag"><div class="suggested-flag-info"><div class="suggested-flag-pattern">Gastos em postos de combustível</div><div class="suggested-flag-detail">28 reembolsos de combustível nos últimos 30 dias sem placa do veículo</div></div><div class="suggested-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+    <div class="suggested-flag"><div class="suggested-flag-info"><div class="suggested-flag-pattern">Hospedagem acima do limite</div><div class="suggested-flag-detail">7 hospedagens acima de R$ 500/noite aprovadas como exceção nos últimos 60 dias</div></div><div class="suggested-actions"><button class="btn btn-primary btn-sm" onclick="showToast('Flag aplicada com sucesso.','success')">Aplicar</button><button class="btn btn-ghost btn-sm">Ignorar</button></div></div>
+  </div>
+
+  <!-- SUB: Violações -->
+  <div class="sub-panel" id="compViolacoes">
+    <div class="stats-bar" id="violationsStats">47 violações nos últimos 30 dias · 12 bloqueios · 23 alertas · 12 escalações</div>
+    <div class="filters-row">
+      <select class="filter-select" id="vfPeriod" onchange="renderViolations()" aria-label="Período"><option value="30">Últimos 30 dias</option><option value="7">Últimos 7 dias</option><option value="90">Últimos 90 dias</option></select>
+      <select class="filter-select" id="vfType" onchange="renderViolations()" aria-label="Tipo"><option value="">Todas</option><option value="block">Bloqueio</option><option value="escalate">Escalar</option><option value="alert">Alertar</option></select>
+      <select class="filter-select" id="vfCC" onchange="renderViolations()" aria-label="CC"><option value="">Todos os CCs</option><option>Marketing</option><option>Vendas</option><option>Engenharia</option><option>Administrativo</option><option>Operações</option><option>Diretoria</option></select>
+    </div>
+    <div id="violationsFeed"></div>
+    <div class="pag-container" id="violationsPag"></div>
+  </div>
+</div>
 
       <!-- ============================================
            TAB: HISTORICO
            ============================================ -->
       <div class="tab-panel" id="tabHistorico" role="tabpanel" aria-labelledby="tabBtnHistorico">
-        <div class="version-compare">
-          Comparar
-          <select class="version-select" aria-label="Versão de origem">
-            <option>v3</option>
-            <option>v2</option>
-            <option>v1</option>
-          </select>
-          com
-          <select class="version-select" aria-label="Versão de destino">
-            <option>v2</option>
-            <option>v1</option>
-          </select>
-          <button class="btn btn-secondary btn-sm">Comparar</button>
-        </div>
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchSubTab('historico',this,'histVersions')">Versões da Política</button>
+    <button class="sub-tab" onclick="switchSubTab('historico',this,'histAudit')">Audit Trail</button>
+  </div>
 
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-dot active"></div>
-            <div class="timeline-card">
-              <div class="timeline-header">
-                <div>
-                  <span class="timeline-version">v3</span><span class="timeline-ref">POL-2026-03-0015</span>
-                  <span class="status-badge status-active" style="margin-left:var(--spacing-sm);">Ativa</span>
-                </div>
-                <span class="timeline-date">20/03/2026 · 14:32</span>
-              </div>
-              <div class="timeline-author">Por Carlos M. (CPO)</div>
-              <div class="timeline-desc">Adicionadas flags Brasil (NF-e, CNPJ) e regras de VR/VA per diem CLT. Ajuste nos limites de auto-aprovação.</div>
-              <div class="timeline-impact">Impacto: 8 times · 6 centros de custo afetados</div>
-              <div class="diff-block">
-                <div class="diff-added">+ NF-e obrigatória acima de R$ 200</div>
-                <div class="diff-added">+ Validação CNPJ ativo na Receita Federal</div>
-                <div class="diff-added">+ VR/VA: limite per diem CLT R$ 44,60</div>
-                <div class="diff-removed">- Limite auto-aprovação: R$ 1.500 → R$ 2.000</div>
-              </div>
-              <div class="timeline-actions">
-                <button class="btn btn-secondary btn-sm">Ver esta versão</button>
-              </div>
-            </div>
-          </div>
+  <!-- SUB: Versões -->
+  <div class="sub-panel active" id="histVersions">
+    <div class="stats-bar">3 versões publicadas · Versão atual: v3 (20/03/2026) · Próxima revisão sugerida: 20/06/2026</div>
+    <div class="version-compare">Comparar <select class="version-select"><option>v3</option><option>v2</option><option>v1</option></select> com <select class="version-select"><option>v2</option><option>v1</option></select> <button class="btn btn-secondary btn-sm">Comparar</button></div>
+    <div class="timeline">
+      <div class="timeline-item"><div class="timeline-dot active"></div><div class="timeline-card">
+        <div class="timeline-header"><div><span class="timeline-version">v3</span><span class="timeline-ref">POL-2026-03-0015</span><span class="status-badge status-active" style="margin-left:var(--spacing-sm);">Ativa</span></div><span class="timeline-date">20/03/2026 · 14:32</span></div>
+        <div class="timeline-author">Por Carlos M. (CPO)</div>
+        <div class="timeline-desc">Adicionadas flags Brasil (NF-e, CNPJ) e regras de VR/VA per diem CLT. Ajuste nos limites de auto-aprovação.</div>
+        <div class="timeline-impact">Impacto: 8 times · 6 centros de custo · 90 colaboradores afetados</div>
+        <div style="font-size:12px;color:var(--gray-500);">Notificações: 90 colaboradores notificados via email em 20/03/2026</div>
+        <div class="diff-block"><div class="diff-added">+ NF-e obrigatória acima de R$ 200</div><div class="diff-added">+ Validação CNPJ ativo na Receita Federal</div><div class="diff-added">+ VR/VA: limite per diem CLT R$ 44,60</div><div class="diff-removed">- Limite auto-aprovação: R$ 1.500 → R$ 2.000</div></div>
+        <div class="timeline-actions"><button class="btn btn-secondary btn-sm">Ver esta versão</button><button class="btn btn-ghost btn-sm" onclick="showToast('Notificação reenviada para 90 colaboradores.','success')">Notificar colaboradores</button></div>
+      </div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card">
+        <div class="timeline-header"><span class="timeline-version">v2</span><span class="timeline-ref">POL-2026-03-0010</span><span class="timeline-date">10/03/2026 · 09:15</span></div>
+        <div class="timeline-author">Por André C. (CEO)</div>
+        <div class="timeline-desc">Configuração do Policy Agent em modo Recomendação. Adicionadas regras de viagem e exceções para Diretoria.</div>
+        <div class="timeline-impact">Impacto: 5 times · 4 centros de custo · 45 colaboradores afetados</div>
+        <div style="font-size:12px;color:var(--gray-500);">Notificações: 45 colaboradores notificados via email em 10/03/2026</div>
+        <div class="diff-block"><div class="diff-added">+ Policy Agent: modo Recomendação ativado</div><div class="diff-added">+ Regras de viagem: classe econômica obrigatória</div><div class="diff-added">+ Exceção Diretoria: classe executiva voos &gt;4h</div></div>
+        <div class="timeline-actions"><button class="btn btn-secondary btn-sm">Ver esta versão</button><button class="btn btn-ghost btn-sm" onclick="showToast('Versão v2 restaurada com sucesso.','success')">Restaurar</button></div>
+      </div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card">
+        <div class="timeline-header"><span class="timeline-version">v1</span><span class="timeline-ref">POL-2026-03-0001</span><span class="timeline-date">01/03/2026 · 16:45</span></div>
+        <div class="timeline-author">Por Matheus R. (Tech Lead)</div>
+        <div class="timeline-desc">Versão inicial da política. Regras básicas de solicitação e reembolso. Sem Policy Agent.</div>
+        <div class="timeline-actions"><button class="btn btn-secondary btn-sm">Ver esta versão</button><button class="btn btn-ghost btn-sm" onclick="showToast('Versão v1 restaurada com sucesso.','success')">Restaurar</button></div>
+      </div></div>
+    </div>
+  </div>
 
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-card">
-              <div class="timeline-header">
-                <span class="timeline-version">v2</span><span class="timeline-ref">POL-2026-03-0010</span>
-                <span class="timeline-date">10/03/2026 · 09:15</span>
-              </div>
-              <div class="timeline-author">Por André C. (CEO)</div>
-              <div class="timeline-desc">Configuração do Policy Agent em modo Recomendação. Adicionadas regras de viagem e exceções para Diretoria.</div>
-              <div class="timeline-impact">Impacto: 5 times · 4 centros de custo afetados</div>
-              <div class="diff-block">
-                <div class="diff-added">+ Policy Agent: modo Recomendação ativado</div>
-                <div class="diff-added">+ Regras de viagem: classe econômica obrigatória</div>
-                <div class="diff-added">+ Exceção Diretoria: classe executiva voos &gt;4h</div>
-              </div>
-              <div class="timeline-actions">
-                <button class="btn btn-secondary btn-sm">Ver esta versão</button>
-                <button class="btn btn-ghost btn-sm" onclick="showToast('Versão v2 restaurada com sucesso.','success')">Restaurar</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-card">
-              <div class="timeline-header">
-                <span class="timeline-version">v1</span><span class="timeline-ref">POL-2026-03-0001</span>
-                <span class="timeline-date">01/03/2026 · 16:45</span>
-              </div>
-              <div class="timeline-author">Por Matheus R. (Tech Lead)</div>
-              <div class="timeline-desc">Versão inicial da política. Regras básicas de solicitação e reembolso. Sem Policy Agent.</div>
-              <div class="timeline-actions">
-                <button class="btn btn-secondary btn-sm">Ver esta versão</button>
-                <button class="btn btn-ghost btn-sm" onclick="showToast('Versão v1 restaurada com sucesso.','success')">Restaurar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- SUB: Audit Trail -->
+  <div class="sub-panel" id="histAudit">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-md);flex-wrap:wrap;gap:var(--spacing-sm);">
+      <div class="stats-bar" id="auditStats" style="margin-bottom:0;flex:1;">156 ações registradas · Último: há 35 min</div>
+      <button class="btn btn-secondary btn-sm" onclick="showToast('Exportação CSV iniciada. Arquivo será enviado por email.','success')">Exportar CSV ↓</button>
+    </div>
+    <div class="filters-row">
+      <select class="filter-select" id="afPeriod" onchange="renderAuditTrail()" aria-label="Período"><option value="30">Últimos 30 dias</option><option value="7">Últimos 7 dias</option><option value="90">Últimos 90 dias</option></select>
+      <select class="filter-select" id="afType" onchange="renderAuditTrail()" aria-label="Tipo"><option value="">Todos</option><option value="POL">Edição de regra</option><option value="EXC">Exceção</option><option value="AUD">Decisão do Agent</option><option value="OVR">Override humano</option><option value="CFG">Configuração</option><option value="VER">Versão publicada</option><option value="CMP">Regra de compliance</option></select>
+      <select class="filter-select" id="afAuthor" onchange="renderAuditTrail()" aria-label="Autor"><option value="">Todos</option><option>André A.</option><option>Carlos M.</option><option>Martha P.</option><option>Policy Agent</option><option>Ana Pereira</option></select>
+    </div>
+    <div id="auditFeed"></div>
+    <div class="pag-container" id="auditPag"></div>
+  </div>
+</div>
 
     </div><!-- /content-wrapper -->
   </main>
@@ -2977,6 +3050,28 @@ a:hover { text-decoration: underline; }
         </div>
         <button class="btn btn-primary" onclick="showToast('Política criada com sucesso!','success');closeModal('createPolicyModal')">Criar Política</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: New Compliance Rule -->
+<div class="modal-overlay" id="newRuleModal" onclick="if(event.target===this)closeModal('newRuleModal')">
+  <div class="modal" style="max-width:600px;" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+    <div class="modal-header"><div><div class="modal-title" style="font-size:20px;">Criar Regra de Compliance</div></div><button class="modal-close" onclick="closeModal('newRuleModal')" aria-label="Fechar">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Nome da Regra</label><input type="text" class="form-input" placeholder="Ex: Bloqueio — Fornecedor X"></div>
+      <div style="margin-bottom:var(--spacing-md);"><label class="form-label" style="display:block;margin-bottom:var(--spacing-sm);">QUANDO:</label>
+        <div class="form-row"><span class="kw">Se</span><select class="filter-select"><option>Fornecedor</option><option>Categoria</option><option>Valor</option><option>Horário</option><option>Dia da semana</option><option>Tipo</option><option>Frequência</option></select><select class="filter-select"><option>é igual a</option><option>contém</option><option>está na lista</option><option>maior que</option><option>menor que</option></select><input type="text" class="search-input" style="min-width:150px;" placeholder="valor"></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:var(--spacing-xs);">+ Adicionar condição (AND/OR)</button>
+      </div>
+      <div style="margin-bottom:var(--spacing-md);"><label class="form-label" style="display:block;margin-bottom:var(--spacing-sm);">ENTÃO:</label>
+        <select class="filter-select"><option>Bloqueio</option><option>Escalar para admin</option><option>Alertar gestor</option><option>Alertar gestor + admin</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Descrição</label><textarea class="ai-textarea" style="min-height:60px;" placeholder="Descreva o que esta regra faz..."></textarea></div>
+      <div style="margin-bottom:var(--spacing-md);"><label class="form-label" style="display:block;margin-bottom:var(--spacing-sm);">Escopo:</label>
+        <div class="scope-options"><label class="scope-option"><input type="radio" name="ruleScope" checked> Empresa toda</label><label class="scope-option"><input type="radio" name="ruleScope"> Centro de Custo específico</label><label class="scope-option"><input type="radio" name="ruleScope"> Time específico</label></div>
+      </div>
+      <div style="display:flex;gap:var(--spacing-sm);justify-content:flex-end;"><button class="btn btn-secondary" onclick="closeModal('newRuleModal')">Cancelar</button><button class="btn btn-primary" onclick="showToast('Regra de compliance criada com sucesso.','success');closeModal('newRuleModal')">Criar Regra</button></div>
     </div>
   </div>
 </div>
@@ -3255,6 +3350,123 @@ document.addEventListener('keydown', function(e) {
     document.getElementById('fabDrawer').classList.remove('open');
   }
 });
+
+// Sub-tab switching
+function switchSubTab(context, btn, panelId) {
+  var parent = btn.closest('.tab-panel');
+  parent.querySelectorAll('.sub-tab').forEach(function(t) { t.classList.remove('active'); });
+  parent.querySelectorAll('.sub-panel').forEach(function(p) { p.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+  // Initialize data on first show
+  if (panelId === 'compViolacoes' && !violationsRendered) renderViolations();
+  if (panelId === 'histAudit' && !auditRendered) renderAuditTrail();
+}
+
+// ========= VIOLATIONS DATA & RENDERING =========
+var violationsRendered = false;
+var violationsData = [
+  {type:'block',time:'há 2 horas',user:'João Mendes',vendor:'iFood',value:'R$ 387,00',rule:'Recibo duplicado (flag do sistema)',detail:'Recibo idêntico ao da despesa #DEP-2026-03-0847 de 15/03',status:'Bloqueado · Aguardando revisão do admin',cc:'Engenharia'},
+  {type:'escalate',time:'há 5 horas',user:'Francisco Duarte',vendor:'Hotel Ibis',value:'R$ 1.850,00',rule:'Valor divergente (flag do sistema)',detail:'Valor 2.3x acima da média histórica (R$ 804)',status:'Escalado para Ana Pereira (admin)',cc:'Marketing'},
+  {type:'alert',time:'há 1 dia',user:'Sandra Ferreira',vendor:'Uber',value:'R$ 234,00',rule:'Uber após 22h (regra personalizada)',detail:'Corrida às 23:47 de sábado',status:'Gestor notificado · Aguardando ação',cc:'Operações'},
+  {type:'block',time:'há 1 dia',user:'Marcos Miranda',vendor:'Padaria da Esquina',value:'R$ 45,00',rule:'Bloqueio — Padaria da Esquina (personalizada)',detail:'Fornecedor bloqueado por André A. em 15/03/2026',status:'Bloqueado · Auto-rejeitado',cc:'Diretoria'},
+  {type:'alert',time:'há 2 dias',user:'Ana Pereira',vendor:'Decolar',value:'R$ 8.750,00',rule:'Gasto acima de R$ 5.000 (flag do sistema)',detail:'Transação única acima do limite',status:'Gestor + admin notificados',cc:'Administrativo'},
+  {type:'escalate',time:'há 2 dias',user:'Ricardo Lopes',vendor:'Magazine Luiza',value:'R$ 2.100,00',rule:'Comprovante AI-generated (flag do sistema)',detail:'Análise detectou padrão de geração por IA',status:'Escalado para admin',cc:'Operações'},
+  {type:'block',time:'há 3 dias',user:'Camila Vieira',vendor:'Rest. Fasano',value:'R$ 4.500,00',rule:'Valor divergente (flag do sistema)',detail:'Valor 3.1x acima da média (R$ 1.450)',status:'Bloqueado · Revisado e aprovado como exceção',cc:'Administrativo'},
+  {type:'alert',time:'há 3 dias',user:'Gabriel Santos',vendor:'99',value:'R$ 189,00',rule:'Gasto fora de horário (flag do sistema)',detail:'Corrida às 02:15 de terça-feira',status:'Gestor notificado',cc:'Operações'},
+  {type:'escalate',time:'há 4 dias',user:'João Mendes',vendor:'Uber Eats',value:'R$ 456,00',rule:'Split de despesas (personalizada)',detail:'2 pedidos no mesmo dia totalizando R$ 912 (limite R$ 500)',status:'Escalado para admin',cc:'Engenharia'},
+  {type:'block',time:'há 5 dias',user:'Thiago Barbosa',vendor:'Kabum',value:'R$ 3.200,00',rule:'Categoria proibida: Entretenimento (personalizada)',detail:'Compra categorizada como Entretenimento/Games',status:'Bloqueado · Aguardando reclassificação',cc:'Vendas'},
+  {type:'alert',time:'há 6 dias',user:'Fernanda Souza',vendor:'Rappi',value:'R$ 267,00',rule:'Alimentação > R$ 500/mês (personalizada)',detail:'Total do mês: R$ 523. Limite: R$ 500',status:'Gestor notificado',cc:'Marketing'},
+  {type:'escalate',time:'há 7 dias',user:'Pedro Almeida',vendor:'Posto Shell',value:'R$ 890,00',rule:'CNPJ inativo (flag do sistema)',detail:'CNPJ 55.666.777/0001-88 com situação irregular',status:'Escalado para compliance',cc:'Engenharia'}
+];
+
+var vPage = 1;
+var V_PAGE_SIZE = 10;
+
+function renderViolations() {
+  violationsRendered = true;
+  var typeF = document.getElementById('vfType').value;
+  var ccF = document.getElementById('vfCC').value;
+  var filtered = violationsData.filter(function(v) {
+    if (typeF && v.type !== typeF) return false;
+    if (ccF && v.cc !== ccF) return false;
+    return true;
+  });
+  var total = filtered.length;
+  var totalPages = Math.ceil(total / V_PAGE_SIZE) || 1;
+  if (vPage > totalPages) vPage = 1;
+  var start = (vPage - 1) * V_PAGE_SIZE;
+  var page = filtered.slice(start, start + V_PAGE_SIZE);
+
+  var typeMap = {block:{cls:'v-block',tcls:'vt-block',label:'BLOQUEIO'},escalate:{cls:'v-escalate',tcls:'vt-escalate',label:'ESCALAR'},alert:{cls:'v-alert',tcls:'vt-alert',label:'ALERTA'}};
+  var html = page.map(function(v) {
+    var t = typeMap[v.type];
+    return '<div class="violation-item"><div class="violation-indicator ' + t.cls + '"></div><div style="flex:1;"><div><span class="violation-type ' + t.tcls + '">' + t.label + '</span><span class="violation-time">' + v.time + '</span></div><div class="violation-desc">' + v.user + ' — ' + v.vendor + ' ' + v.value + '</div><div class="violation-rule">Regra: ' + v.rule + '</div><div class="violation-detail">' + v.detail + '</div><div class="violation-status">Status: ' + v.status + '</div><div class="violation-link"><a href="index-v6-despesas.html">Ver despesa →</a></div></div></div>';
+  }).join('');
+  document.getElementById('violationsFeed').innerHTML = html || '<div style="text-align:center;padding:var(--spacing-lg);color:var(--gray-500);">Nenhuma violação encontrada</div>';
+
+  var blocks = filtered.filter(function(v){return v.type==='block';}).length;
+  var alerts = filtered.filter(function(v){return v.type==='alert';}).length;
+  var escalations = filtered.filter(function(v){return v.type==='escalate';}).length;
+  document.getElementById('violationsStats').textContent = total + ' violações · ' + blocks + ' bloqueios · ' + alerts + ' alertas · ' + escalations + ' escalações';
+
+  // Pagination
+  document.getElementById('violationsPag').innerHTML = '<span>Mostrando ' + (start+1) + '–' + Math.min(start+V_PAGE_SIZE,total) + ' de ' + total + '</span><div class="pag-buttons"><button class="btn btn-ghost btn-sm" onclick="vPage--;renderViolations()"' + (vPage<=1?' disabled':'') + '>←</button><button class="btn btn-ghost btn-sm" onclick="vPage++;renderViolations()"' + (vPage>=totalPages?' disabled':'') + '>→</button></div>';
+}
+
+// ========= AUDIT TRAIL DATA & RENDERING =========
+var auditRendered = false;
+var auditData = [
+  {icon:'🔵',code:'POL-2026-03-0022',type:'POL',label:'Edição de regra',time:'há 35 min',desc:'André A. alterou limite de auto-aprovação de R$ 2.000 para R$ 2.500 em "Solicitações"',detail:'Escopo: Geral · Impacto: todos os times',author:'André A.',links:'<a href="#">Ver regra →</a>'},
+  {icon:'🟣',code:'EXC-2026-03-0019',type:'EXC',label:'Exceção criada',time:'há 2 horas',desc:'Carlos M. criou exceção para Time "Vendas Enterprise": auto-aprovação até R$ 8.000',detail:'Escopo: Time · Justificativa: "Equipe viaja muito, limite padrão gera gargalo"',author:'Carlos M.',links:'<a href="index-v6-times.html">Ver exceção →</a>'},
+  {icon:'🤖',code:'AUD-2026-03-1847',type:'AUD',label:'Decisão do Agent',time:'há 3 horas',desc:'Policy Agent auto-aprovou despesa #DEP-2026-03-0892 (iFood R$ 87,50 — Maria Oliveira)',detail:'Confiança: 98% · Regra: "Auto-aprovação ≤ R$ 2.000"',author:'Policy Agent',links:'<a href="index-v6-despesas.html">Ver despesa →</a>'},
+  {icon:'🟠',code:'OVR-2026-03-0008',type:'OVR',label:'Override humano',time:'há 5 horas',desc:'Ana Pereira reverteu decisão do Agent para despesa #DEP-2026-03-0856',detail:'Agent: Rejeitar (82%) → Humano: Aprovar. Motivo: "Evento corporativo aprovado pelo CEO"',author:'Ana Pereira',links:'<a href="index-v6-despesas.html">Ver despesa →</a>'},
+  {icon:'🤖',code:'AUD-2026-03-1845',type:'AUD',label:'Decisão do Agent',time:'há 6 horas',desc:'Policy Agent recomendou revisão para despesa #DEP-2026-03-0851 (Decolar R$ 8.750 — Francisco D.)',detail:'Confiança: 58% · Regra: "Viagens > R$ 5.000"',author:'Policy Agent',links:''},
+  {icon:'⚙️',code:'CFG-2026-03-0003',type:'CFG',label:'Mudança de configuração',time:'há 1 dia',desc:'André A. alterou modo do Policy Agent: Teste → Recomendação',detail:'Threshold de confiança mantido em 85%',author:'André A.',links:''},
+  {icon:'📋',code:'CMP-2026-03-0005',type:'CMP',label:'Regra de compliance',time:'há 2 dias',desc:'André A. criou regra "Bloqueio — Padaria da Esquina"',detail:'Tipo: Bloqueio · Escopo: Empresa toda',author:'André A.',links:''},
+  {icon:'🟣',code:'EXC-2026-03-0018',type:'EXC',label:'Exceção criada',time:'há 2 dias',desc:'Martha P. criou exceção para CC "Internacional — EUA": auto-aprovação até R$ 25.000',detail:'Escopo: CC · Ref: EXC-2026-03-0038',author:'Martha P.',links:'<a href="index-v6-centros-custo.html">Ver exceção →</a>'},
+  {icon:'🤖',code:'AUD-2026-03-1840',type:'AUD',label:'Decisão do Agent',time:'há 2 dias',desc:'Policy Agent auto-aprovou 12 despesas em lote (total R$ 2.340)',detail:'Todas < R$ 500 · Confiança média: 97%',author:'Policy Agent',links:''},
+  {icon:'🟠',code:'OVR-2026-03-0007',type:'OVR',label:'Override humano',time:'há 3 dias',desc:'Carlos M. reverteu rejeição do Agent para despesa #DEP-2026-03-0832 (Magazine Luiza R$ 1.200)',detail:'Motivo: "Política desatualizada — esta categoria deveria permitir até R$ 2.000"',author:'Carlos M.',links:''},
+  {icon:'📄',code:'VER-2026-03-0003',type:'VER',label:'Versão publicada',time:'20/03/2026',desc:'Carlos M. publicou versão v3 da política',detail:'Mudanças: +3 regras Brasil, ajuste limite · Impacto: 8 times · 6 CCs',author:'Carlos M.',links:''},
+  {icon:'🔵',code:'POL-2026-03-0020',type:'POL',label:'Edição de regra',time:'18/03/2026',desc:'Martha P. adicionou flag "NF-e ausente" para despesas acima de R$ 200',detail:'Escopo: Geral · Flag Brasil 🇧🇷',author:'Martha P.',links:''},
+  {icon:'🟣',code:'EXC-2026-03-0015',type:'EXC',label:'Exceção removida',time:'17/03/2026',desc:'André A. removeu exceção do Time "QA" para fluxo Reembolsos',detail:'Time QA volta para regra geral (R$ 3.000/mês)',author:'André A.',links:''},
+  {icon:'⚙️',code:'CFG-2026-03-0002',type:'CFG',label:'Mudança de configuração',time:'15/03/2026',desc:'André A. alterou threshold de confiança do Agent: 80% → 85%',detail:'Modo: Recomendação (mantido)',author:'André A.',links:''},
+  {icon:'📋',code:'CMP-2026-03-0004',type:'CMP',label:'Regra de compliance',time:'15/03/2026',desc:'Carlos M. criou regra "Categoria proibida: Entretenimento"',detail:'Exceção: Diretoria · Escopo: Empresa',author:'Carlos M.',links:''},
+  {icon:'🤖',code:'AUD-2026-03-1820',type:'AUD',label:'Decisão do Agent',time:'14/03/2026',desc:'Policy Agent rejeitou automaticamente despesa #DEP-2026-03-0798 (recibo duplicado)',detail:'Confiança: 99% · Flag: Recibo duplicado',author:'Policy Agent',links:''},
+  {icon:'🟠',code:'OVR-2026-03-0006',type:'OVR',label:'Override humano',time:'13/03/2026',desc:'Sandra Ferreira contestou auto-aprovação de despesa Rest. Fasano R$ 4.500',detail:'Motivo: "Avaliação incorreta do Agent — valor fora do padrão"',author:'Sandra Ferreira',links:''},
+  {icon:'📄',code:'VER-2026-03-0002',type:'VER',label:'Versão publicada',time:'10/03/2026',desc:'André C. publicou versão v2 da política',detail:'Agent ativado em modo Recomendação · Impacto: 5 times · 4 CCs',author:'André A.',links:''},
+  {icon:'🔵',code:'POL-2026-03-0010',type:'POL',label:'Edição de regra',time:'10/03/2026',desc:'André A. adicionou regras de viagem: classe econômica obrigatória, hospedagem até R$ 500/noite',detail:'Escopo: Geral',author:'André A.',links:''},
+  {icon:'🟣',code:'EXC-2026-03-0008',type:'EXC',label:'Exceção criada',time:'08/03/2026',desc:'Martha P. criou exceção para Time "Diretoria": CFO aprova > R$ 5.000',detail:'Escopo: Time Diretoria · Ref: EXC-2026-03-0008',author:'Martha P.',links:'<a href="index-v6-times.html">Ver exceção →</a>'},
+  {icon:'📄',code:'VER-2026-03-0001',type:'VER',label:'Versão publicada',time:'01/03/2026',desc:'Matheus R. publicou versão v1 da política (inicial)',detail:'Regras básicas de solicitação e reembolso. Sem Agent.',author:'Martha P.',links:''}
+];
+
+var aPage = 1;
+var A_PAGE_SIZE = 10;
+
+function renderAuditTrail() {
+  auditRendered = true;
+  var typeF = document.getElementById('afType').value;
+  var authorF = document.getElementById('afAuthor').value;
+  var filtered = auditData.filter(function(a) {
+    if (typeF && a.type !== typeF) return false;
+    if (authorF && a.author !== authorF) return false;
+    return true;
+  });
+  var total = filtered.length;
+  var totalPages = Math.ceil(total / A_PAGE_SIZE) || 1;
+  if (aPage > totalPages) aPage = 1;
+  var start = (aPage - 1) * A_PAGE_SIZE;
+  var page = filtered.slice(start, start + A_PAGE_SIZE);
+
+  var html = page.map(function(a) {
+    return '<div class="audit-entry"><div class="audit-entry-header"><span class="audit-entry-icon">' + a.icon + '</span><span class="audit-entry-code">' + a.code + '</span><span class="audit-entry-type">· ' + a.label + '</span><span class="audit-entry-time">' + a.time + '</span></div><div class="audit-entry-desc">' + a.desc + '</div><div class="audit-entry-detail">' + a.detail + '</div>' + (a.links ? '<div class="audit-entry-actions">' + a.links + '</div>' : '') + '</div>';
+  }).join('');
+  document.getElementById('auditFeed').innerHTML = html || '<div style="text-align:center;padding:var(--spacing-lg);color:var(--gray-500);">Nenhuma ação encontrada</div>';
+
+  document.getElementById('auditStats').textContent = total + ' ações registradas · Último: ' + (filtered.length ? filtered[0].time : '—');
+
+  document.getElementById('auditPag').innerHTML = '<span>Mostrando ' + (start+1) + '–' + Math.min(start+A_PAGE_SIZE,total) + ' de ' + total + '</span><div class="pag-buttons"><button class="btn btn-ghost btn-sm" onclick="aPage--;renderAuditTrail()"' + (aPage<=1?' disabled':'') + '>←</button><button class="btn btn-ghost btn-sm" onclick="aPage++;renderAuditTrail()"' + (aPage>=totalPages?' disabled':'') + '>→</button></div>';
+}
 </script>
 
 </body>
